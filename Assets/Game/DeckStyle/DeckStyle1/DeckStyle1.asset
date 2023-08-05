@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f6f7276fe45340149a42c489621d50e, type: 3}
+  m_Name: DeckStyle1
+  m_EditorClassIdentifier: 
+  spades:
+  - {fileID: 21300000, guid: 2a5a268ededeb40b58255b096585f468, type: 3}
+  - {fileID: 21300000, guid: db329d89a144b4a058aa845e56945b17, type: 3}
+  - {fileID: 21300000, guid: 3798b2fee54d8419da71c2d5d63c632f, type: 3}
+  - {fileID: 21300000, guid: 27b442123a69b4595a1dcdc03a37caaa, type: 3}
+  - {fileID: 21300000, guid: f0fa70bfa97a54777bc40bb2879a86bd, type: 3}
+  - {fileID: 21300000, guid: 14829969d00c744688bd2d18d192555b, type: 3}
+  - {fileID: 21300000, guid: 3014d584a92e0494bb327869175ed935, type: 3}
+  - {fileID: 21300000, guid: 57f484a5109a447e8ac7c9436b4a0536, type: 3}
+  - {fileID: 21300000, guid: 7b9468fc8304c497ab4b9231a377812b, type: 3}
+  - {fileID: 21300000, guid: 1d7a247807c1c419a8db7428b4d6aa2c, type: 3}
+  - {fileID: 21300000, guid: f62c9935a822d4dcab414c64e6811010, type: 3}
+  - {fileID: 21300000, guid: fb7ea0bd1de4b49ef967e576972fa612, type: 3}
+  - {fileID: 21300000, guid: f6ca3fc6f88d547dd9afd7df302861ca, type: 3}
+  diamonds:
+  - {fileID: 21300000, guid: d5eedc67d4fc2456eae23e0cd412693f, type: 3}
+  - {fileID: 21300000, guid: a8816bcc741bb477a9f14d4d0e0355f0, type: 3}
+  - {fileID: 21300000, guid: e6b8df47075424561bcbf019dd4561ac, type: 3}
+  - {fileID: 21300000, guid: 1cfa9c4cb38524fe3920dcba6d07a666, type: 3}
+  - {fileID: 21300000, guid: f42e0c3eb643a46beaf4949982d112db, type: 3}
+  - {fileID: 21300000, guid: 39841bd0bb23742048ab7b65d4cf68ec, type: 3}
+  - {fileID: 21300000, guid: e2a63cc7cb3574f978b934ebb366e21f, type: 3}
+  - {fileID: 21300000, guid: bb5fe9e5888cc461a82ca9d6c6aca5ad, type: 3}
+  - {fileID: 21300000, guid: 6e55a47360abb406192e3ecb676dd447, type: 3}
+  - {fileID: 21300000, guid: 15b0fec96866d4899badd23bc4bd26eb, type: 3}
+  - {fileID: 21300000, guid: 212a111d15d314caaa98af8f55525862, type: 3}
+  - {fileID: 21300000, guid: 2cdd0d1e0e63c45ba9e22a971a0b41f7, type: 3}
+  - {fileID: 21300000, guid: 0231c866b8b684c9ca6312c62d7d24eb, type: 3}
+  hearts:
+  - {fileID: 21300000, guid: 51ef7c3b359194c0093ef74be39522e4, type: 3}
+  - {fileID: 21300000, guid: 738077119cdfa460a891560aee4f57b7, type: 3}
+  - {fileID: 21300000, guid: 1668f1121679e42d088183edb429c57d, type: 3}
+  - {fileID: 21300000, guid: e8cf1712c028f4567b7e414a0ff56eee, type: 3}
+  - {fileID: 21300000, guid: 3ad6764f245cf4ff8a21c612ec6c0ead, type: 3}
+  - {fileID: 21300000, guid: 0acd6880b66794089a12293bcc771f63, type: 3}
+  - {fileID: 21300000, guid: a612f6b1c796946338e14f66bd25d9a7, type: 3}
+  - {fileID: 21300000, guid: ec6a74aa354bf4233b1bc0d9420f6f8f, type: 3}
+  - {fileID: 21300000, guid: f774b0d216d5643d2842891f2ef70cd7, type: 3}
+  - {fileID: 21300000, guid: 0ff4ee62de89646789d671052081c990, type: 3}
+  - {fileID: 21300000, guid: 490255f451a564785954f9201b67d32b, type: 3}
+  - {fileID: 21300000, guid: e74d812b03e0b4d28a3da4d9861bceac, type: 3}
+  - {fileID: 21300000, guid: de15b17661c924af0b4cc5d21c5aca39, type: 3}
+  clubs:
+  - {fileID: 21300000, guid: 775dde2649f2c4acd93d5d77d3e7a8b4, type: 3}
+  - {fileID: 21300000, guid: e62bb37218ab243558bb62af18dc8029, type: 3}
+  - {fileID: 21300000, guid: b2e92f5a0b9b24fd6837d5b1effee4d1, type: 3}
+  - {fileID: 21300000, guid: fc849411f9d7c46f8a7e3a1d4364983a, type: 3}
+  - {fileID: 21300000, guid: 8a7005171172d4314941be892713fbc5, type: 3}
+  - {fileID: 21300000, guid: a619a4774382841828cbf4db525fa8a6, type: 3}
+  - {fileID: 21300000, guid: 2c4d8ca6dc6f4410bb174193f1fb18f3, type: 3}
+  - {fileID: 21300000, guid: 5c1136cd0333a4004871c25e773ba23a, type: 3}
+  - {fileID: 21300000, guid: 01731fd32ecd94e55a1a2b376572d26b, type: 3}
+  - {fileID: 21300000, guid: 8b23959f13f0b4223943097caec45482, type: 3}
+  - {fileID: 21300000, guid: 35d9d5944fecb42d48f9e06c9417eab6, type: 3}
+  - {fileID: 21300000, guid: 45b24d82b2faa40fc85425ae39bafd4e, type: 3}
+  - {fileID: 21300000, guid: 3d5d43135bac64739b98cf8372eb03e3, type: 3}
+  jocker: {fileID: 21300000, guid: 6ac9c7f0ee8fa4b90bbae2c4e10e0843, type: 3}
+  deckShow: {fileID: 21300000, guid: 4115ebbc1780f423e8a3e7e05a0e665f, type: 3}

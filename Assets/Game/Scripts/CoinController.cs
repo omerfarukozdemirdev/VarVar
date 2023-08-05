@@ -1,0 +1,52 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class CoinController : MonoBehaviour
+{
+    [SerializeField] private Text coinCountText;
+    [SerializeField] private GameObject coinAttraction;
+    private int coinCount;
+
+    private void Awake()
+    {
+        coinCount = PlayerPrefs.GetInt("CoinCount");
+        SetCoinCountText();
+    }
+
+    public void EarnCoin(int count)
+    {
+        coinCount += count;
+        PlayerPrefs.SetInt("CoinCount", coinCount);
+
+        coinAttraction.SetActive(false);
+        coinAttraction.SetActive(true);
+    }
+
+    public void EarningCoin()
+    {
+        FindObjectOfType<MakeNoise>().PlaySFX(22, 0);
+        SetCoinCountText();
+    }
+
+    public bool SpendCoin(int count)
+    {
+        if (count > coinCount)
+        {
+            FindObjectOfType<MakeNoise>().PlaySFX(8, 0);
+            return false;
+        }
+
+        coinCount -= count;
+        PlayerPrefs.SetInt("CoinCount", coinCount);
+
+        SetCoinCountText();
+        FindObjectOfType<MakeNoise>().PlaySFX(22, 0);
+
+        return true;
+    }
+
+    void SetCoinCountText()
+    {
+        coinCountText.text = coinCount.ToString();
+    }
+}

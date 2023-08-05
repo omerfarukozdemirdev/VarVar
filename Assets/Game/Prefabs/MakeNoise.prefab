@@ -1,0 +1,381 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1273421887436081622
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1273421887436081616}
+  - component: {fileID: 1273421887436081617}
+  m_Layer: 0
+  m_Name: MakeNoise
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1273421887436081616
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273421887436081622}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1273421887549619032}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1273421887436081617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273421887436081622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41eb8f2e42e0445579a455f826699360, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sountMult: 1
+  AudioList:
+  - name: CardsCreate
+    id: 0
+    volume: 0.45
+    pitch: 0.6
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 05ddca24f1b244249bec31ff92530802, type: 3}
+    - {fileID: 8300000, guid: 5c3fb5b54f572442891cc99f998ecec8, type: 3}
+    - {fileID: 8300000, guid: fb5e2dd1ac8fa44b69b6e6ee1205159f, type: 3}
+    - {fileID: 8300000, guid: ab842b3d94b1f47afa21b9d2e0d90f01, type: 3}
+  - name: DealerMovement
+    id: 1
+    volume: 0.225
+    pitch: 0.7
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 22c80affe7f2b4faa98c2b7b0c4285b1, type: 3}
+  - name: Shuffle_S1
+    id: 2
+    volume: 0.15
+    pitch: 1.2
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 11f1b4a4b84eb4c419bccd9dd13e18cc, type: 3}
+  - name: Shuffle_S2
+    id: 3
+    volume: 0.45
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 762a8e40708e848ebb7c72c34dac7043, type: 3}
+  - name: Shuffle_S3
+    id: 4
+    volume: 0.15
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 244c2c16fa3a84c2cb897fb47eedae44, type: 3}
+  - name: DealCards
+    id: 5
+    volume: 0.45
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 037c704aa82be4ffa83b2c7e52d83748, type: 3}
+  - name: PlayerHand
+    id: 6
+    volume: 0.225
+    pitch: 0.85
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: bd64ecb5243a041288139df0bf362328, type: 3}
+  - name: BetStart
+    id: 7
+    volume: 0.45
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 370674f8c9ece5443ae967bcd108cfa1, type: 3}
+  - name: Pass
+    id: 8
+    volume: 0.45
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 04f608b418795f946a8106b4e8ef01c7, type: 3}
+  - name: VAR
+    id: 9
+    volume: 0.45
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 54823b9692c35544e96c3c2c012470d3, type: 3}
+  - name: BetUP
+    id: 10
+    volume: 0.45
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: c147f2cb10e62ce4d90402cbe8389504, type: 3}
+  - name: BetPopup
+    id: 11
+    volume: 0.45
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: f996b2870a5a021458d62c58d6283190, type: 3}
+  - name: MoneyToKasa
+    id: 12
+    volume: 0.45
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 0e12fddb02a7e3a4a9d87510d136b4b8, type: 3}
+  - name: StartGame
+    id: 13
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: b765bcce0fc282842aa531f00d2ad067, type: 3}
+  - name: NextActor
+    id: 14
+    volume: 0.075
+    pitch: 1.1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: c89b262e082ec47cb955bee126aae6cc, type: 3}
+  - name: PickCard
+    id: 15
+    volume: 0.15
+    pitch: 1.2
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 86a43d580ee224ce3aad33d880e10f87, type: 3}
+    - {fileID: 8300000, guid: f4e07d5224b0d4e709ee2bbb01c8642b, type: 3}
+    - {fileID: 8300000, guid: 01ef6b3eb03bc4740ba1a6edd29e31e9, type: 3}
+    - {fileID: 8300000, guid: d31c64a9b2fa247f4ad16bdba8b6af67, type: 3}
+  - name: ThrowCard
+    id: 16
+    volume: 0.15
+    pitch: 1.2
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 222d70977b4d447fc9b2c3e1ca7d1e57, type: 3}
+  - name: ClosePopup
+    id: 17
+    volume: 0.15
+    pitch: 0.9
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: c89b262e082ec47cb955bee126aae6cc, type: 3}
+  - name: HandCompleted
+    id: 18
+    volume: 0.225
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 9b73dde00a5a31b43acacd447e81b1dc, type: 3}
+  - name: PlayerUIPickCard
+    id: 19
+    volume: 0.12
+    pitch: 1.4
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: daa4b3eb8e27f4a928f9472f00b24992, type: 3}
+  - name: PlayerUIReleaseCard
+    id: 20
+    volume: 0.12
+    pitch: 1.2
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 87061e1def03a4f2d9f7ea13c622e3ff, type: 3}
+  - name: BuyCoin
+    id: 21
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 0d9af7477ab3b8e41b919bf27bd35a6a, type: 3}
+  - name: EarnCoin
+    id: 22
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: bccdb2fef07591e49bdc62fcf1787c5b, type: 3}
+  - name: SmallMenuOpen
+    id: 23
+    volume: 0.25
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 70b109839e87482469afb9f544ec30b7, type: 3}
+  - name: SmallMenuClose
+    id: 24
+    volume: 0.1
+    pitch: 1
+    loop: 0
+    lastPlayed: 0
+    clip:
+    - {fileID: 8300000, guid: 7777d99be276f9e4f9ee213abd0c60f7, type: 3}
+--- !u!1 &1273421887549619033
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1273421887549619032}
+  - component: {fileID: 1273421887549619035}
+  m_Layer: 0
+  m_Name: Music
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1273421887549619032
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273421887549619033}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1273421887436081616}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1273421887549619035
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273421887549619033}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 21952e61866474f1496d47b457ba137e, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.05
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
