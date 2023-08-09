@@ -10,6 +10,10 @@ public class HandCompletedPanel : MonoBehaviour
     [SerializeField] Text rewardText;
     [SerializeField] Image[] cardSprites;
 
+    [SerializeField] GameObject nextButton;
+    [SerializeField] GameObject mainMenuButton;
+
+
     private GameControl gameControl;
 
     private void Awake()
@@ -20,6 +24,17 @@ public class HandCompletedPanel : MonoBehaviour
 
     public void OpenPanel(ActorControl actorControl)
     {
+        if (gameControl.gameCounter==gameControl.gameLimit)
+        {
+            nextButton.SetActive(false);
+            mainMenuButton.SetActive(true);
+        }
+        else
+        {
+            nextButton.SetActive(true);
+            mainMenuButton.SetActive(false);
+        }
+
         actorAvatar.sprite = actorControl.actorAvatar.sprite;
         actorNameText.text = actorControl.actorName;
         rewardText.text = gameControl.rewardMoney.ToString();

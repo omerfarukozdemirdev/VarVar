@@ -26,6 +26,7 @@ public class StatisticsRow : MonoBehaviour
         passImage.sprite = actor.pass ? statisticsPanel.TrueSprite : statisticsPanel.FalseSprite;
         winImage.sprite = actor.handCompleted ? statisticsPanel.TrueSprite : statisticsPanel.FalseSprite;
         gameMoneyText.text = actor.handCompleted ? statisticsPanel.GameControl.rewardMoney.ToString() : "0";
+        gameNumberText.text = statisticsPanel.GameControl.gameCounter.ToString();
     }
 
     // Update is called once per frame

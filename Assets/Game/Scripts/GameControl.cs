@@ -56,6 +56,10 @@ public class GameControl : MonoBehaviour
 
     [HideInInspector]public MakeNoise makeNoise;
 
+    public int gameCounter;
+    public int gameLimit;
+
+
     private void Awake()
     {
         tableAnimationControl = FindObjectOfType<TableAnimationControl>();
@@ -86,6 +90,9 @@ public class GameControl : MonoBehaviour
 
         for (int i = 1; i < actorControls.Count; i++)
             actorControls[i].actorAvatar.sprite = gameConfig.avatars[Random.Range(0, gameConfig.avatars.Length)];
+
+        gameCounter = 1;
+
     }
 
     private void Start()
@@ -120,7 +127,6 @@ public class GameControl : MonoBehaviour
         if (cardDealerInd > actorControls.Count - 1)
             cardDealerInd = 0;
         rewardMoney = 0;
-        
     }
 
     public void Menu()
@@ -142,6 +148,9 @@ public class GameControl : MonoBehaviour
         //PlayerPrefs.SetInt("CD", cardDealerInd);
 
         //UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+
+        gameCounter++;
+
         FindObjectOfType<HandCompletedPanel>(true).ClosePanel();
         for (int i = 0; i < throwedCardObjs.Length; i++)
         {
@@ -697,6 +706,11 @@ public class GameControl : MonoBehaviour
         rewardMoneyText.text = "$" + rewardMoney;
         rewardMoneyText.gameObject.SetActive(false);
         rewardMoneyText.gameObject.SetActive(true);
+    }
+
+    public void BackMainMenu()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
 }
 
