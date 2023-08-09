@@ -22,7 +22,7 @@ public class ActorControl : MonoBehaviour
 
     [SerializeField] GameObject moneyAtractorParticle;
 
-    private int handCompleteStep;
+    [SerializeField] private int handCompleteStep;
     public bool handCompleted;
 
     public bool pass;
@@ -60,6 +60,10 @@ public class ActorControl : MonoBehaviour
         handCompleted = false;
 
         moneyIn = 0;
+
+        GetComponent<CanvasGroup>().alpha = 1;
+        speechBalloon.transform.localScale = Vector3.one;
+        money.transform.localScale = Vector3.one;
     }
 
     public void DisableSpeechBaloon()

@@ -39,7 +39,7 @@ public class GameControl : MonoBehaviour
     [SerializeField] GameObject throwedCardBtn;
     [SerializeField] GameObject deckCardBtn;
 
-    [HideInInspector] public int cardDealerInd;
+     public int cardDealerInd;
     private int orderOfPlayInd;
     private int desicionInd;
     private int playingInd;
@@ -52,7 +52,7 @@ public class GameControl : MonoBehaviour
     private TableAnimationControl tableAnimationControl;
     [HideInInspector] public PlayerControl playerControl;
 
-    List<int> values = new List<int>() {1,2,3,4,5,6,7,8,9,10,11,12,13};
+    [SerializeField] List<int> values = new List<int>() {1,2,3,4,5,6,7,8,9,10,11,12,13};
 
     [HideInInspector]public MakeNoise makeNoise;
 
@@ -119,6 +119,8 @@ public class GameControl : MonoBehaviour
         cardDealerInd++;
         if (cardDealerInd > actorControls.Count - 1)
             cardDealerInd = 0;
+        rewardMoney = 0;
+        
     }
 
     public void Menu()
@@ -132,14 +134,32 @@ public class GameControl : MonoBehaviour
     {
         FindObjectOfType<MakeNoise>().PlaySFX(9, 0);
 
-        cardDealerInd++;
-        if (cardDealerInd > actorControls.Count - 1)
-            cardDealerInd = 0;
+        //cardDealerInd++;
+        //if (cardDealerInd > actorControls.Count - 1)
+        //    cardDealerInd = 0;
 
-        gameConfig.cardDealerInd = cardDealerInd;
+        //gameConfig.cardDealerInd = cardDealerInd;
         //PlayerPrefs.SetInt("CD", cardDealerInd);
 
-        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+        //UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+        FindObjectOfType<HandCompletedPanel>(true).ClosePanel();
+        for (int i = 0; i < throwedCardObjs.Length; i++)
+        {
+            throwedCardObjs[i].transform.SetParent(null);
+            throwedCardObjs[i].SetActive(false);
+        }
+        ResetValues();
+
+        gameConfig.cardDealerInd = cardDealerInd;
+
+        tableAnimationControl.Reset();
+
+        playerControl.ResetValues();
+
+        actorControls.ForEach(x => x.ResetValues());
+
+        Invoke("StartGame", 1f);
+
     }
 
     void StartGame()
@@ -214,7 +234,8 @@ public class GameControl : MonoBehaviour
 
     void DealCardsToActors()
     {
-        for(int i = 1; i < actorControls.Count; i++)
+        values = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+        for (int i = 1; i < actorControls.Count; i++)
         {
             List<Card> predefinedCards = new List<Card>(PredefinedCards());
             int remainingCards = 9 - predefinedCards.Count;

@@ -265,4 +265,14 @@ public class TableAnimationControl : MonoBehaviour
         gameControl.NextActor();
     }
 
+    public void Reset()
+    {
+        for (int i = 0; i < cardCloses.Count; i++)
+            Destroy(cardCloses[i].gameObject);
+        cardCloses.Clear();
+        CreateCardCloses(104);
+        //StartCoroutine(ArrangeCardsBlocks());
+
+    }
+
 }

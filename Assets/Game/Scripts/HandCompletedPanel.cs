@@ -47,4 +47,9 @@ public class HandCompletedPanel : MonoBehaviour
 
         panelBG.SetActive(true);
     }
+
+    public void ClosePanel()
+    {
+        panelBG.SetActive(false);
+    }
 }
