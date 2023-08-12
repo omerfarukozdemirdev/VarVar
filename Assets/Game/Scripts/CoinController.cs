@@ -20,6 +20,8 @@ public class CoinController : MonoBehaviour
 
         coinAttraction.SetActive(false);
         coinAttraction.SetActive(true);
+        SetCoinCountText();
+
     }
 
     public void EarningCoin()

@@ -31,6 +31,12 @@ public class ActorControl : MonoBehaviour
     private HandAranger handAranger;
     private GameControl gameControl;
 
+    public int winCounter;
+    public int passCounter;
+    public int totalWinMoney;
+    public int totalBetMoney;
+    public int totalCoins;
+
     private void Awake()
     {
         gameControl = FindObjectOfType<GameControl>();
@@ -41,6 +47,11 @@ public class ActorControl : MonoBehaviour
         moneyAtractorParticle.SetActive(false);
 
         actorNameText.text = actorName;
+
+        winCounter = 0;
+        passCounter = 0;
+        totalWinMoney = 0;
+        totalBetMoney = 0;
     }
 
     public void ResetValues()
@@ -64,6 +75,8 @@ public class ActorControl : MonoBehaviour
         GetComponent<CanvasGroup>().alpha = 1;
         speechBalloon.transform.localScale = Vector3.one;
         money.transform.localScale = Vector3.one;
+
+        
     }
 
     public void DisableSpeechBaloon()
@@ -219,6 +232,8 @@ public class ActorControl : MonoBehaviour
 
             GetComponent<CanvasGroup>().alpha = .1f;
             iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * .9f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+
+            passCounter++;
         }
         else
         {
@@ -262,6 +277,7 @@ public class ActorControl : MonoBehaviour
             iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
         }
 
+
         yield return new WaitForSeconds(.5f);
 
         gameControl.ActorDecisiton();
@@ -275,7 +291,8 @@ public class ActorControl : MonoBehaviour
             {
                 gameControl.makeNoise.PlaySFX(18,0);
                 FindObjectOfType<HandCompletedPanel>(true).OpenPanel(this);
-
+                winCounter++;
+                totalWinMoney += gameControl.rewardMoney;
                 return;
             }
 

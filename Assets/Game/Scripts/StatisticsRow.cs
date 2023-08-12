@@ -6,11 +6,10 @@ using UnityEngine.UI;
 public class StatisticsRow : MonoBehaviour
 {
     [SerializeField] private Text playerNameText;
-    [SerializeField] private Text gameNumberText;
-    [SerializeField] private Image passImage;
-    [SerializeField] private Image winImage;
-    [SerializeField] private Text gameMoneyText;
-    [SerializeField] private Text totalMoneyText;
+    [SerializeField] private Text winNumberText;
+    [SerializeField] private Text passNumberText;
+    [SerializeField] private Text betMoneyText;
+    [SerializeField] private Text winMoneyText;
     [SerializeField] private ActorControl actor;
     [SerializeField] private StatisticsPanel statisticsPanel;
 
@@ -23,10 +22,11 @@ public class StatisticsRow : MonoBehaviour
     private void OnEnable()
     {
         playerNameText.text = actor.actorName;
-        passImage.sprite = actor.pass ? statisticsPanel.TrueSprite : statisticsPanel.FalseSprite;
-        winImage.sprite = actor.handCompleted ? statisticsPanel.TrueSprite : statisticsPanel.FalseSprite;
-        gameMoneyText.text = actor.handCompleted ? statisticsPanel.GameControl.rewardMoney.ToString() : "0";
-        gameNumberText.text = statisticsPanel.GameControl.gameCounter.ToString();
+        winNumberText.text = actor.winCounter.ToString();
+        passNumberText.text = actor.passCounter.ToString();
+        betMoneyText.text = actor.totalBetMoney.ToString();
+        winMoneyText.text = actor.totalWinMoney.ToString();
+        //
     }
 
     // Update is called once per frame

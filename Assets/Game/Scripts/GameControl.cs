@@ -58,6 +58,8 @@ public class GameControl : MonoBehaviour
 
     public int gameCounter;
     public int gameLimit;
+    public Text gameTourText;
+    [SerializeField] private CoinController coinController;
 
 
     private void Awake()
@@ -127,6 +129,7 @@ public class GameControl : MonoBehaviour
         if (cardDealerInd > actorControls.Count - 1)
             cardDealerInd = 0;
         rewardMoney = 0;
+        passCount = 0;
     }
 
     public void Menu()
@@ -149,6 +152,9 @@ public class GameControl : MonoBehaviour
 
         //UnityEngine.SceneManagement.SceneManager.LoadScene(2);
 
+
+        actorControls.ForEach(x => x.ResetValues());
+
         gameCounter++;
 
         FindObjectOfType<HandCompletedPanel>(true).ClosePanel();
@@ -165,7 +171,6 @@ public class GameControl : MonoBehaviour
 
         playerControl.ResetValues();
 
-        actorControls.ForEach(x => x.ResetValues());
 
         Invoke("StartGame", 1f);
 
@@ -185,6 +190,8 @@ public class GameControl : MonoBehaviour
         DisableEnableTakeCardBtns(false);
 
         tableAnimationControl.StartGame();
+
+        gameTourText.text = gameCounter.ToString() + ". el";
     }
 
     void DisableEnableTakeCardBtns(bool tf)
@@ -650,6 +657,8 @@ public class GameControl : MonoBehaviour
     void PlayerHandCompleted()
     {
         makeNoise.PlaySFX(18, 0);
+        coinController.EarnCoin(100);
+        playerControl.actorControl.totalCoins += 100;
         FindObjectOfType<HandCompletedPanel>(true).OpenPanel(playerControl.actorControl);
 
         FindObjectOfType<MoneyController>().EarnMoney(rewardMoney);
@@ -712,6 +721,13 @@ public class GameControl : MonoBehaviour
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
+
+    public void NewGame()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+
+    }
+
 }
 
 

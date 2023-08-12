@@ -24,6 +24,8 @@ public class HandCompletedPanel : MonoBehaviour
 
     public void OpenPanel(ActorControl actorControl)
     {
+        gameControl.actorControls.ForEach(x => x.totalBetMoney = x.totalBetMoney + x.moneyIn);
+
         if (gameControl.gameCounter==gameControl.gameLimit)
         {
             nextButton.SetActive(false);
