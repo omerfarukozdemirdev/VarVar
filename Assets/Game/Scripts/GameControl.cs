@@ -59,8 +59,9 @@ public class GameControl : MonoBehaviour
     public int gameCounter;
     public int gameLimit;
     public Text gameTourText;
-    [SerializeField] private CoinController coinController;
-
+    public CoinController coinController;
+    public DrinkController drinkController;
+    public int drinkCounter;
 
     private void Awake()
     {
@@ -727,6 +728,8 @@ public class GameControl : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(2);
 
     }
+
+
 
 }
 

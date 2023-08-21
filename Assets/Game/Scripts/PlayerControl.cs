@@ -41,6 +41,7 @@ public class PlayerControl : MonoBehaviour
         finishCardAreaAnimator = finishCardArea.GetComponent<Animator>();
 
         actorControl.player = true;
+        actorControl.totalCoins = PlayerPrefs.GetInt("CoinCount");
         DisableUICards();
     }
 

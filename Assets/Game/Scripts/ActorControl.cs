@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +37,7 @@ public class ActorControl : MonoBehaviour
     public int totalWinMoney;
     public int totalBetMoney;
     public int totalCoins;
+    public GameObject drink;
 
     private void Awake()
     {
@@ -52,6 +54,11 @@ public class ActorControl : MonoBehaviour
         passCounter = 0;
         totalWinMoney = 0;
         totalBetMoney = 0;
+
+        if (!player)
+        {
+            totalCoins = 150;
+        }
     }
 
     public void ResetValues()
@@ -293,6 +300,8 @@ public class ActorControl : MonoBehaviour
                 FindObjectOfType<HandCompletedPanel>(true).OpenPanel(this);
                 winCounter++;
                 totalWinMoney += gameControl.rewardMoney;
+                totalCoins += 100;
+                gameControl.coinController.EarnCoin(100);
                 return;
             }
 
@@ -305,6 +314,8 @@ public class ActorControl : MonoBehaviour
 
     IEnumerator PickCard()
     {
+        
+
         iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
 
         yield return new WaitForSeconds(Random.Range(.1f, .6f));
@@ -330,6 +341,7 @@ public class ActorControl : MonoBehaviour
 
     IEnumerator ThrowCard()
     {
+
         yield return new WaitForSeconds(Random.Range(.5f, .8f));
 
         Card card;
@@ -351,5 +363,23 @@ public class ActorControl : MonoBehaviour
 
         yield return new WaitForSeconds(.5f);
         iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+
+        TakeDrink();
+    }
+
+    void TakeDrink()
+    {
+        gameControl.drinkCounter++;
+        if (!pass)
+        {
+            if (gameControl.drinkCounter%5==0)
+            {
+                Debug.Log("drinkk");
+                var drinkContent = drink.transform.GetChild(0);
+                drinkContent.GetComponent<Image>().sprite = gameControl.drinkController.drinks[Random.Range(0,gameControl.drinkController.drinks.Length)].Icon;
+                iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
+                iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce, "delay", 3f));
+            }
+        }
     }
 }
