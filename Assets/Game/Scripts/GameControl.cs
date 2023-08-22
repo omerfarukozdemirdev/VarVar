@@ -131,6 +131,8 @@ public class GameControl : MonoBehaviour
             cardDealerInd = 0;
         rewardMoney = 0;
         passCount = 0;
+        drinkController.drinkButton.SetActive(false);
+
     }
 
     public void Menu()
@@ -478,6 +480,8 @@ public class GameControl : MonoBehaviour
 
         makeNoise.PlaySFX(13, 0);
         NextActor();
+
+        drinkController.drinkButton.SetActive(true);
     }
 
     public void NextActor()

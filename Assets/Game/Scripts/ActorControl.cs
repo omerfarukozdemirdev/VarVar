@@ -378,7 +378,7 @@ public class ActorControl : MonoBehaviour
                 var drinkContent = drink.transform.GetChild(0);
                 drinkContent.GetComponent<Image>().sprite = gameControl.drinkController.drinks[Random.Range(0,gameControl.drinkController.drinks.Length)].Icon;
                 iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
-                iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce, "delay", 3f));
+                iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce, "delay", 12f));
             }
         }
     }

@@ -14,6 +14,8 @@ public class DrinkController : MonoBehaviour
 
     [SerializeField] private GameControl gameControl;
 
+    public GameObject drinkButton;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,7 +37,7 @@ public class DrinkController : MonoBehaviour
         drinkPanel.SetActive(false);
         drinkContent.GetComponent<Image>().sprite = drinks[index].Icon;
         iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
-        iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce,"delay",3f));
+        iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce,"delay",12f));
         gameControl.coinController.SpendCoin(drinks[index].Price);
         gameControl.actorControls[0].totalCoins -= drinks[index].Price;
     }
