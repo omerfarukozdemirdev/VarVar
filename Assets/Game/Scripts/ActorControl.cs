@@ -297,6 +297,8 @@ public class ActorControl : MonoBehaviour
             if (handCompleted)
             {
                 gameControl.makeNoise.PlaySFX(18,0);
+                gameControl.makeNoise.PlaySFX(25, 0);
+
                 FindObjectOfType<HandCompletedPanel>(true).OpenPanel(this);
                 winCounter++;
                 totalWinMoney += gameControl.rewardMoney;
@@ -314,8 +316,6 @@ public class ActorControl : MonoBehaviour
 
     IEnumerator PickCard()
     {
-        
-
         iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
 
         yield return new WaitForSeconds(Random.Range(.1f, .6f));
@@ -341,7 +341,6 @@ public class ActorControl : MonoBehaviour
 
     IEnumerator ThrowCard()
     {
-
         yield return new WaitForSeconds(Random.Range(.5f, .8f));
 
         Card card;
@@ -372,7 +371,7 @@ public class ActorControl : MonoBehaviour
         gameControl.drinkCounter++;
         if (!pass)
         {
-            if (gameControl.drinkCounter%5==0)
+            if (gameControl.drinkCounter % 5 == 0)
             {
                 Debug.Log("drinkk");
                 var drinkContent = drink.transform.GetChild(0);

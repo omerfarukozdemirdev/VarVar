@@ -35,14 +35,16 @@ public class MenuController : MonoBehaviour
 
         gameConfig.backgroundInd = PlayerPrefs.GetInt("BG");
         SetBG();
+
+        FindObjectOfType<MakeNoise>().PlaySFX(29, 0);
     }
 
     public void PlayGame()
     {
         gameConfig.cardDealerInd = -1;
 
-        FindObjectOfType<MakeNoise>().PlaySFX(10, 0);
-        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+        FindObjectOfType<MakeNoise>().PlaySFX(30, 0);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(3);
     }
 
     public void SetPlayerName()

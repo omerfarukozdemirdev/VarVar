@@ -26,13 +26,13 @@ public class ShopController : MonoBehaviour
     {
         coinController.EarnCoin(menuController.gameConfig.shopMenuCoins[ind].coincount);
         CloseShopMenu();
-        makeNoise.PlaySFX(21, 0);
+        makeNoise.PlaySFX(22, 0);
     }
 
     public void OpenShopMenu()
     {
         panel.SetActive(true);
-        makeNoise.PlaySFX(11, 0);
+        makeNoise.PlaySFX(27, 0);
     }
 
     public void CloseShopMenu()

@@ -1,1 +1,0 @@
-All art assets you need to make your card / Klondike / Poker / Solitaire game!

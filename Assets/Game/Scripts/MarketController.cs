@@ -44,7 +44,7 @@ public class MarketController : MonoBehaviour
     public void OpenInventory()
     {
         panel.SetActive(true);
-        makeNoise.PlaySFX(11, 0);
+        makeNoise.PlaySFX(27, 0);
     }
 
     public void CloseInventory()
@@ -56,7 +56,7 @@ public class MarketController : MonoBehaviour
     public void ChangeTab(int ind)
     {
         SetTab(ind);
-        makeNoise.PlaySFX(11, 0);
+        makeNoise.PlaySFX(28, 0);
     }
 
     void SetTab(int ind)

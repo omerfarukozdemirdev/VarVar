@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class MoneyController : MonoBehaviour
 {
     [SerializeField] private Text moneyCountText;
-    [SerializeField] private GameObject moneyAttraction;
+    //[SerializeField] private GameObject moneyAttraction;
     private int moneyCount;
 
     private void Awake()
@@ -20,8 +20,8 @@ public class MoneyController : MonoBehaviour
         moneyCount += count;
         PlayerPrefs.SetInt("MoneyCount", moneyCount);
 
-        moneyAttraction.SetActive(false);
-        moneyAttraction.SetActive(true);
+        //moneyAttraction.SetActive(false);
+        //moneyAttraction.SetActive(true);
     }
 
     public void EarningMoney()

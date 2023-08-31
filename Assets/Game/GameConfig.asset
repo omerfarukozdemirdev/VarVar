@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68a528326efba42e5a4609a20e461c9d, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
+  cardDealerInd: -1
   avatarInd: 0
   avatars:
   - {fileID: 21300000, guid: f7b5815900ed74a6b81c1cab9b8dc749, type: 3}
@@ -119,11 +120,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 4a9f004938ef14d478d3ec04fa5035ac, type: 3}
   - {fileID: 21300000, guid: 740694f491eb34699bbf2b975b6f1fa4, type: 3}
   - {fileID: 21300000, guid: d74ff125507d94e6ab5aed81f6f48df1, type: 3}
-  deckStyleInd: 1
+  deckStyleInd: 0
   deckStyles:
+  - {fileID: 11400000, guid: d20e44946a15d463f8b7e4353e67a0cf, type: 2}
   - {fileID: 11400000, guid: cf885e8a848f8409491905d9b4d75de3, type: 2}
   - {fileID: 11400000, guid: 8c0c42aeea7f64c74abad8481d451db0, type: 2}
-  - {fileID: 11400000, guid: d20e44946a15d463f8b7e4353e67a0cf, type: 2}
   - {fileID: 11400000, guid: 2f3f213d60ea04f5eb5bb31c3b987134, type: 2}
   - {fileID: 11400000, guid: 6a5e9c9051be34bbab0303990db8b8b6, type: 2}
   - {fileID: 11400000, guid: d258c2063a2254febb4084823aad5f5a, type: 2}
@@ -201,7 +202,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: f7a17a23f8e5e4b4f8d9fbf913e86984, type: 3}
   - {fileID: 21300000, guid: 9640ef1781dc74793aee71d4729fbd92, type: 3}
   - {fileID: 21300000, guid: 564bd5c54b36a4003863b4ae2721ff4d, type: 3}
-  tableInd: 3
+  tableInd: 1
   tables:
   - {fileID: 21300000, guid: 6dd8f87d8457f4ef3ae2c4766c65022a, type: 3}
   - {fileID: 21300000, guid: 4e248cd9dd15a4c82a6a181776b4c853, type: 3}

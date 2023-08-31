@@ -95,7 +95,6 @@ public class GameControl : MonoBehaviour
             actorControls[i].actorAvatar.sprite = gameConfig.avatars[Random.Range(0, gameConfig.avatars.Length)];
 
         gameCounter = 1;
-
     }
 
     private void Start()
@@ -137,9 +136,9 @@ public class GameControl : MonoBehaviour
 
     public void Menu()
     {
-        FindObjectOfType<MakeNoise>().PlaySFX(9, 0);
+        FindObjectOfType<MakeNoise>().PlaySFX(26, 0);
         gameConfig.cardDealerInd = -1;
-        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
 
     public void NextTour()
@@ -662,6 +661,8 @@ public class GameControl : MonoBehaviour
     void PlayerHandCompleted()
     {
         makeNoise.PlaySFX(18, 0);
+        makeNoise.PlaySFX(25, 0);
+
         coinController.EarnCoin(100);
         playerControl.actorControl.totalCoins += 100;
         FindObjectOfType<HandCompletedPanel>(true).OpenPanel(playerControl.actorControl);
@@ -724,12 +725,12 @@ public class GameControl : MonoBehaviour
 
     public void BackMainMenu()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
     }
 
     public void NewGame()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(3);
 
     }
 
