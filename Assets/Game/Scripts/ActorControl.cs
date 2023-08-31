@@ -373,7 +373,6 @@ public class ActorControl : MonoBehaviour
         {
             if (gameControl.drinkCounter % 5 == 0)
             {
-                Debug.Log("drinkk");
                 var drinkContent = drink.transform.GetChild(0);
                 drinkContent.GetComponent<Image>().sprite = gameControl.drinkController.drinks[Random.Range(0,gameControl.drinkController.drinks.Length)].Icon;
                 iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));

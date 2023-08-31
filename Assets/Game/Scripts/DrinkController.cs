@@ -9,8 +9,16 @@ public class DrinkController : MonoBehaviour
     [SerializeField] private GameObject drinkPanel;
 
     [SerializeField] private GameControl gameControl;
-
+    [SerializeField] private GameObject errorDrinkPanel;
     public GameObject drinkButton;
+
+    private MakeNoise makeNoise;
+
+    void Awake()
+    {
+        makeNoise = FindObjectOfType<MakeNoise>();
+
+    }
 
     void Start()
     {
@@ -27,12 +35,64 @@ public class DrinkController : MonoBehaviour
 
     void DrinkButtonOnClick(int index)
     {
-        var drinkContent = gameControl.actorControls[0].drink.transform.GetChild(0);
+        if (gameControl.actorControls[0].totalCoins >= gameControl.drinkController.drinks[index].Price)
+        {
+            CloseDrinkPanel();
+            CloseDrinkButton();
+            var drinkContent = gameControl.actorControls[0].drink.transform.GetChild(0);
+            drinkContent.GetComponent<Image>().sprite = drinks[index].Icon;
+            iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
+            iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce, "delay", 12f, "onComplete", "OpenDrinkButton", "onCompleteTarget", gameObject));
+            gameControl.coinController.SpendCoin(drinks[index].Price);
+            gameControl.actorControls[0].totalCoins -= drinks[index].Price;
+        }
+        else
+        {
+            OpenErrorDrinkPanel();
+        }
+
+       
+
+    }
+
+    public void OpenDrinkPanel()
+    {
+        drinkPanel.SetActive(true);
+        makeNoise.PlaySFX(27, 0);
+
+    }
+
+    public void CloseDrinkPanel()
+    {
         drinkPanel.SetActive(false);
-        drinkContent.GetComponent<Image>().sprite = drinks[index].Icon;
-        iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
-        iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce,"delay",12f));
-        gameControl.coinController.SpendCoin(drinks[index].Price);
-        gameControl.actorControls[0].totalCoins -= drinks[index].Price;
+        makeNoise.PlaySFX(17, 0);
+
+    }
+
+    void CloseDrinkButton()
+    {
+        drinkButton.SetActive(false);
+
+    }
+
+    void OpenDrinkButton()
+    {
+        drinkButton.SetActive(true);
+
+    }
+
+
+    public void OpenErrorDrinkPanel()
+    {
+        errorDrinkPanel.SetActive(true);
+        makeNoise.PlaySFX(27, 0);
+
+    }
+
+    public void CloseErrorDrinkPanel()
+    {
+        errorDrinkPanel.SetActive(false);
+        makeNoise.PlaySFX(17, 0);
+
     }
 }

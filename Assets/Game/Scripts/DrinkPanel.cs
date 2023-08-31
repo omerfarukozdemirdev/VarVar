@@ -8,16 +8,16 @@ public class DrinkPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        for (int i = 0; i < gameControl.drinkController.drinks.Length; i++)
-        {
-            if (gameControl.actorControls[0].totalCoins >= gameControl.drinkController.drinks[i].Price)
-            {
-                content.GetChild(i).GetComponent<Button>().interactable = true;
-            }
-            else
-            {
-                content.GetChild(i).GetComponent<Button>().interactable = false;
-            }
-        }
+        //for (int i = 0; i < gameControl.drinkController.drinks.Length; i++)
+        //{
+        //    if (gameControl.actorControls[0].totalCoins >= gameControl.drinkController.drinks[i].Price)
+        //    {
+        //        content.GetChild(i).GetComponent<Button>().interactable = true;
+        //    }
+        //    else
+        //    {
+        //        content.GetChild(i).GetComponent<Button>().interactable = false;
+        //    }
+        //}
     }
 }

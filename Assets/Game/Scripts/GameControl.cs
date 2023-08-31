@@ -62,6 +62,7 @@ public class GameControl : MonoBehaviour
     public CoinController coinController;
     public DrinkController drinkController;
     public int drinkCounter;
+    [SerializeField] GameObject statisticPanel;
 
     private void Awake()
     {
@@ -95,6 +96,8 @@ public class GameControl : MonoBehaviour
             actorControls[i].actorAvatar.sprite = gameConfig.avatars[Random.Range(0, gameConfig.avatars.Length)];
 
         gameCounter = 1;
+        gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
+
     }
 
     private void Start()
@@ -193,7 +196,7 @@ public class GameControl : MonoBehaviour
 
         tableAnimationControl.StartGame();
 
-        gameTourText.text = gameCounter.ToString() + ". el";
+        gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
     }
 
     void DisableEnableTakeCardBtns(bool tf)
@@ -668,6 +671,9 @@ public class GameControl : MonoBehaviour
         FindObjectOfType<HandCompletedPanel>(true).OpenPanel(playerControl.actorControl);
 
         FindObjectOfType<MoneyController>().EarnMoney(rewardMoney);
+        actorControls[0].winCounter++;
+        actorControls[0].totalWinMoney += rewardMoney;
+
     }
 
     public void OpenCompleteHandWarningPanel()
@@ -735,7 +741,19 @@ public class GameControl : MonoBehaviour
     }
 
 
+    public void OpenStatisticPanel()
+    {
+        statisticPanel.SetActive(true);
+        makeNoise.PlaySFX(27, 0);
 
+    }
+
+    public void CloseStatisticPanel()
+    {
+        statisticPanel.SetActive(false);
+        makeNoise.PlaySFX(17, 0);
+
+    }
 }
 
 
