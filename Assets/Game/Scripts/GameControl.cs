@@ -63,6 +63,7 @@ public class GameControl : MonoBehaviour
     public DrinkController drinkController;
     public int drinkCounter;
     [SerializeField] GameObject statisticPanel;
+    [SerializeField] GameObject playerWinPanel;
 
     private void Awake()
     {
@@ -92,8 +93,8 @@ public class GameControl : MonoBehaviour
 
         actorControls[0].actorName = pName;
 
-        for (int i = 1; i < actorControls.Count; i++)
-            actorControls[i].actorAvatar.sprite = gameConfig.avatars[Random.Range(0, gameConfig.avatars.Length)];
+        //for (int i = 1; i < actorControls.Count; i++)
+        //    actorControls[i].actorAvatar.sprite = gameConfig.avatars[Random.Range(0, gameConfig.avatars.Length)];
 
         gameCounter = 1;
         gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
@@ -668,8 +669,8 @@ public class GameControl : MonoBehaviour
 
         coinController.EarnCoin(100);
         playerControl.actorControl.totalCoins += 100;
-        FindObjectOfType<HandCompletedPanel>(true).OpenPanel(playerControl.actorControl);
-
+        //FindObjectOfType<HandCompletedPanel>(true).OpenPanel(playerControl.actorControl);
+        playerWinPanel.SetActive(true);
         FindObjectOfType<MoneyController>().EarnMoney(rewardMoney);
         actorControls[0].winCounter++;
         actorControls[0].totalWinMoney += rewardMoney;
@@ -753,6 +754,13 @@ public class GameControl : MonoBehaviour
         statisticPanel.SetActive(false);
         makeNoise.PlaySFX(17, 0);
 
+    }
+
+    public void OpenPlayerHandCompletedPanel()
+    {
+        playerWinPanel.SetActive(false);
+        FindObjectOfType<HandCompletedPanel>(true).OpenPanel(playerControl.actorControl);
+        makeNoise.PlaySFX(27, 0);
     }
 }
 

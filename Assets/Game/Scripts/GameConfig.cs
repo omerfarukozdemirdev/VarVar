@@ -7,6 +7,9 @@ public class GameConfig : ScriptableObject
 
     public int avatarInd;
     public Sprite[] avatars;
+    public Sprite[] maleAvatars;
+    public Sprite[] femaleAvatars;
+
 
     public int deckStyleInd;
     public DeckStyle[] deckStyles;

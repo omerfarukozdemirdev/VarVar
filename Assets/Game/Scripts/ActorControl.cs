@@ -39,6 +39,11 @@ public class ActorControl : MonoBehaviour
     public int totalCoins;
     public GameObject drink;
 
+    private NameGenerator nameGenerator;
+
+    public Gender gender;
+
+
     private void Awake()
     {
         gameControl = FindObjectOfType<GameControl>();
@@ -48,17 +53,59 @@ public class ActorControl : MonoBehaviour
         money.SetActive(false);
         moneyAtractorParticle.SetActive(false);
 
-        actorNameText.text = actorName;
+
 
         winCounter = 0;
         passCounter = 0;
         totalWinMoney = 0;
         totalBetMoney = 0;
 
+        
+
+    }
+
+    private void Start()
+    {
         if (!player)
         {
             totalCoins = 150;
+
+
+            nameGenerator = new NameGenerator();
+
+            InitGender();
         }
+    }
+
+    void SetRandomGender()
+    {
+        Gender[] genders = (Gender[])System.Enum.GetValues(typeof(Gender));
+
+        Gender randomGender = genders[Random.Range(0, genders.Length)];
+
+        gender = randomGender;
+    }
+
+    void InitGender()
+    {
+        SetRandomGender();
+
+        switch (gender)
+        {
+            case Gender.Male:
+                actorName = nameGenerator.GetRandomMaleName();
+                actorAvatar.sprite= gameControl.gameConfig.maleAvatars[Random.Range(0, gameControl.gameConfig.maleAvatars.Length)];
+                break;
+            case Gender.Female:
+                actorName = nameGenerator.GetRandomFemaleName();
+                actorAvatar.sprite = gameControl.gameConfig.femaleAvatars[Random.Range(0, gameControl.gameConfig.femaleAvatars.Length)];
+                break;
+            default:
+                break;
+        }
+
+        actorNameText.text = actorName;
+
     }
 
     public void ResetValues()
@@ -380,4 +427,12 @@ public class ActorControl : MonoBehaviour
             }
         }
     }
+
+
+}
+
+public enum Gender
+{
+    Male,
+    Female
 }
