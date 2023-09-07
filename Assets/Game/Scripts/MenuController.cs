@@ -21,19 +21,19 @@ public class MenuController : MonoBehaviour
 
         playerName.text = pName;
 
-        gameConfig.avatarInd = PlayerPrefs.GetInt("Avatar");
+        gameConfig.avatarInd = 0;//PlayerPrefs.GetInt("Avatar");
         SetAvatar();
 
-        gameConfig.deckStyleInd = PlayerPrefs.GetInt("DeckStyle");
+        gameConfig.deckStyleInd = 0;//PlayerPrefs.GetInt("DeckStyle");
         SetDeckStyle();
 
-        gameConfig.cardBackInd = PlayerPrefs.GetInt("DeckBack");
+        gameConfig.cardBackInd = 0;// PlayerPrefs.GetInt("DeckBack");
         SetDeckBack();
 
-        gameConfig.tableInd = PlayerPrefs.GetInt("Desk");
+        gameConfig.tableInd = 0;// PlayerPrefs.GetInt("Desk");
         SetDesk();
 
-        gameConfig.backgroundInd = PlayerPrefs.GetInt("BG");
+        gameConfig.backgroundInd = 0;// PlayerPrefs.GetInt("BG");
         SetBG();
 
         FindObjectOfType<MakeNoise>().PlaySFX(29, 0);
