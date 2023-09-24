@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
 
 public class GameControl : MonoBehaviour
 {
@@ -35,7 +36,7 @@ public class GameControl : MonoBehaviour
     public List<Card> deck;
     public List<Card> throwedCards = new List<Card>();
     public GameObject[] throwedCardObjs;
-    private GameObject lastThrowedCard;
+    [SerializeField] private GameObject lastThrowedCard;
     [SerializeField] GameObject throwedCardBtn;
     [SerializeField] GameObject deckCardBtn;
 
@@ -64,6 +65,7 @@ public class GameControl : MonoBehaviour
     public int drinkCounter;
     [SerializeField] GameObject statisticPanel;
     [SerializeField] GameObject playerWinPanel;
+
 
     private void Awake()
     {
@@ -468,6 +470,7 @@ public class GameControl : MonoBehaviour
 
     IEnumerator StartPlaying()
     {
+        Debug.Log("start");
         yield return new WaitForSeconds(.1f);
 
         makeNoise.PlaySFX(12,0);
@@ -482,6 +485,11 @@ public class GameControl : MonoBehaviour
         yield return new WaitForSeconds(1.2f);
 
         makeNoise.PlaySFX(13, 0);
+
+        StartCoroutine(FirstGroundCard());
+
+        yield return new WaitForSeconds(2.5f);
+
         NextActor();
 
         drinkController.drinkButton.SetActive(true);
@@ -489,6 +497,7 @@ public class GameControl : MonoBehaviour
 
     public void NextActor()
     {
+
         makeNoise.PlaySFX(14,0);
         if (playingActors[playingInd].player)
         {
@@ -503,6 +512,27 @@ public class GameControl : MonoBehaviour
         playingInd++;
         if (playingInd > playingActors.Count - 1)
             playingInd = 0;
+    }
+
+    IEnumerator FirstGroundCard()
+    {
+
+
+        lastThrowedCard = throwedCardObjs[throwedCards.Count];
+
+        Card card = deck[0];
+
+        SpriteRenderer spriteRenderer = lastThrowedCard.GetComponentInChildren<SpriteRenderer>();
+        spriteRenderer.sprite = CardSpriteConverter.GetCardSpriteInd(card, gameConfig.deckStyles[gameConfig.deckStyleInd]);
+        spriteRenderer.sortingOrder = throwedCards.Count;
+        spriteRenderer.size = new Vector2(2.56f, 3.5f);
+
+        tableAnimationControl.FirsGroundCard(lastThrowedCard);
+        yield return new WaitForSeconds(1f);
+        lastThrowedCard.SetActive(true);
+        deck.Remove(deck[0]);
+        throwedCards.Add(card);
+        
     }
 
     public void PickCard(ActorControl actorControl, bool fromDeck)

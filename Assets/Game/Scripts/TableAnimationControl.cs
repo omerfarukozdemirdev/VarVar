@@ -275,4 +275,11 @@ public class TableAnimationControl : MonoBehaviour
 
     }
 
+    public void FirsGroundCard(GameObject firstCard)
+    {
+        firstCard.transform.SetParent(throwedCardsPos);
+        cardCloses[cardCloses.Count - 1].FirstPick();
+        cardCloses.Remove(cardCloses[cardCloses.Count - 1]);
+
+    }
 }

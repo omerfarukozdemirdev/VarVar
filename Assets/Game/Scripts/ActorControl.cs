@@ -360,6 +360,9 @@ public class ActorControl : MonoBehaviour
 
     IEnumerator PickCard()
     {
+        // oyuncu kart çekiyor
+
+
         iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
 
         yield return new WaitForSeconds(Random.Range(.1f, .6f));
@@ -371,8 +374,7 @@ public class ActorControl : MonoBehaviour
             Card throwedCard = gameControl.throwedCards[gameControl.throwedCards.Count - 1];
             for (int i = 0; i < missingCards.Count; i++)
             {
-                if (throwedCard.suit == missingCards[i].suit &&
-                    throwedCard.value == missingCards[i].value)
+                if (throwedCard.suit == missingCards[i].suit && throwedCard.value == missingCards[i].value)
                 {
                     pickFromDeck = false;
                     break;
@@ -380,7 +382,11 @@ public class ActorControl : MonoBehaviour
             }
         }
 
+        Debug.Log("kart çekildi. desteden mi: " + pickFromDeck);
+
         gameControl.PickCard(this, pickFromDeck);
+
+
     }
 
     IEnumerator ThrowCard()
