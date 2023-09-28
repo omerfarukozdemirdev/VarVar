@@ -105,6 +105,12 @@ public class ActorControl : MonoBehaviour
 
     }
 
+
+    public void SetNameText(string name)
+    {
+        actorNameText.text = name;
+    }
+
     public void ResetValues()
     {
         cardsInHand = new List<Card>();

@@ -47,6 +47,14 @@ public class MenuController : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(3);
     }
 
+    public void PlayMultiplayerGame()
+    {
+        gameConfig.cardDealerInd = -1;
+
+        FindObjectOfType<MakeNoise>().PlaySFX(30, 0);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(4);
+    }
+
     public void SetPlayerName()
     {
         PlayerPrefs.SetString("PlayerName" , playerName.text);

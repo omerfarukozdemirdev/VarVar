@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
 
 public class GameControl : MonoBehaviour
 {
@@ -105,7 +105,16 @@ public class GameControl : MonoBehaviour
 
     private void Start()
     {
-        Invoke("StartGame", .5f);
+        if (SceneManager.GetActiveScene().name=="Multiplayer")
+        {
+            
+        }
+        else if (SceneManager.GetActiveScene().name=="Game")
+        {
+            Invoke("StartGame", .5f);
+            
+        }
+
     }
 
     private void Update()

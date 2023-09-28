@@ -15291,7 +15291,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 73642212}
         m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
-        m_MethodName: PlayGame
+        m_MethodName: PlayMultiplayerGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
