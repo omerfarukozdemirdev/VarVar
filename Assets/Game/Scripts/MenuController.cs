@@ -16,7 +16,7 @@ public class MenuController : MonoBehaviour
     {
         string pName = "Player";
 
-        if(PlayerPrefs.HasKey("PlayerName"))
+        if (PlayerPrefs.HasKey("PlayerName"))
             pName = PlayerPrefs.GetString("PlayerName");
 
         playerName.text = pName;
@@ -41,6 +41,7 @@ public class MenuController : MonoBehaviour
 
     public void PlayGame()
     {
+        GameManager.Instance.CurrentGameMode = GameManager.GameMode.Quick;
         gameConfig.cardDealerInd = -1;
 
         FindObjectOfType<MakeNoise>().PlaySFX(30, 0);
@@ -49,6 +50,7 @@ public class MenuController : MonoBehaviour
 
     public void PlayMultiplayerGame()
     {
+        GameManager.Instance.CurrentGameMode = GameManager.GameMode.Friends;
         gameConfig.cardDealerInd = -1;
 
         FindObjectOfType<MakeNoise>().PlaySFX(30, 0);
@@ -57,7 +59,7 @@ public class MenuController : MonoBehaviour
 
     public void SetPlayerName()
     {
-        PlayerPrefs.SetString("PlayerName" , playerName.text);
+        PlayerPrefs.SetString("PlayerName", playerName.text);
     }
 
     public void SetAvatar()
@@ -67,7 +69,7 @@ public class MenuController : MonoBehaviour
 
     public void SetDeckStyle()
     {
-        for(int i = 0; i < cards.Length; i++)
+        for (int i = 0; i < cards.Length; i++)
         {
             Card card = new Card();
             card.value = i + 1;
@@ -98,7 +100,7 @@ public class MenuController : MonoBehaviour
 
     public void SetDeckBack()
     {
-        for(int i = 0; i < cardBacks.Length; i++)
+        for (int i = 0; i < cardBacks.Length; i++)
             cardBacks[i].sharedMaterial = gameConfig.cardBacks[gameConfig.cardBackInd];
     }
 

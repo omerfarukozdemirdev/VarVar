@@ -53,5 +53,8 @@
     },
     "dotnet.defaultSolution": "VarVar.sln",
     "javascript.suggest.completeFunctionCalls": false,
-    "typescript.suggest.completeFunctionCalls": false
+    "typescript.suggest.completeFunctionCalls": false,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true
 }

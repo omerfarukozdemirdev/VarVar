@@ -15,6 +15,8 @@ public class LobbyUI : MonoBehaviour
     private static readonly Dictionary<NetworkPlayer, LobbyItemUI> ListItems = new Dictionary<NetworkPlayer, LobbyItemUI>();
     private static bool IsSubscribed;
 
+    private bool nextStepIsAllReady;
+
     private void Awake()
     {
         Setup();
@@ -23,15 +25,19 @@ public class LobbyUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     void LateUpdate()
     {
-        if (IsAllReady())
+        if (IsAllReady() && !nextStepIsAllReady)
         {
             NetworkUIManager.Instance.CloseLobbyPanel();
             NetworkUIManager.Instance.SetTable();
+            //Invoke("StartGame", 1f);
+            FindObjectOfType<GameControl>().Invoke("FriendsModeStartGame", 1f);
+            //FindObjectOfType<GameControl>().FriendsModeStartGame();
+            nextStepIsAllReady = true;
         }
     }
 

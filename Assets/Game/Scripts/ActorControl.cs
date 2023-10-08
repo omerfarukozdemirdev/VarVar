@@ -23,7 +23,7 @@ public class ActorControl : MonoBehaviour
 
     [SerializeField] GameObject moneyAtractorParticle;
 
-    [SerializeField] private int handCompleteStep;
+    public int handCompleteStep;
     public bool handCompleted;
 
     public bool pass;
@@ -91,7 +91,7 @@ public class ActorControl : MonoBehaviour
         {
             case Gender.Male:
                 actorName = nameGenerator.GetRandomMaleName();
-                actorAvatar.sprite= gameControl.gameConfig.maleAvatars[Random.Range(0, gameControl.gameConfig.maleAvatars.Length)];
+                actorAvatar.sprite = gameControl.gameConfig.maleAvatars[Random.Range(0, gameControl.gameConfig.maleAvatars.Length)];
                 break;
             case Gender.Female:
                 actorName = nameGenerator.GetRandomFemaleName();
@@ -133,7 +133,7 @@ public class ActorControl : MonoBehaviour
         speechBalloon.transform.localScale = Vector3.one;
         money.transform.localScale = Vector3.one;
 
-        
+
     }
 
     public void DisableSpeechBaloon()
@@ -144,7 +144,6 @@ public class ActorControl : MonoBehaviour
     public void ArrangeHand()
     {
         cardsInHand = new List<Card>(handAranger.Arrange(cardsInHand));
-
         missingCards = new List<Card>(handAranger.MissingCards());
         remainingCards = new List<Card>(handAranger.RemainingCards());
 
@@ -324,7 +323,7 @@ public class ActorControl : MonoBehaviour
 
             yield return new WaitForSeconds(.5f);
 
-            if(gameControl.betUp)
+            if (gameControl.betUp)
                 SetMoney(1000);
             else
                 SetMoney(500);
@@ -346,7 +345,7 @@ public class ActorControl : MonoBehaviour
         {
             if (handCompleted)
             {
-                gameControl.makeNoise.PlaySFX(18,0);
+                gameControl.makeNoise.PlaySFX(18, 0);
                 gameControl.makeNoise.PlaySFX(25, 0);
 
                 FindObjectOfType<HandCompletedPanel>(true).OpenPanel(this);
@@ -430,7 +429,7 @@ public class ActorControl : MonoBehaviour
             if (gameControl.drinkCounter % 5 == 0)
             {
                 var drinkContent = drink.transform.GetChild(0);
-                drinkContent.GetComponent<Image>().sprite = gameControl.drinkController.drinks[Random.Range(0,gameControl.drinkController.drinks.Length)].Icon;
+                drinkContent.GetComponent<Image>().sprite = gameControl.drinkController.drinks[Random.Range(0, gameControl.drinkController.drinks.Length)].Icon;
                 iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
                 iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce, "delay", 12f));
             }

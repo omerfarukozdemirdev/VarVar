@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 using System;
-using static UnityEngine.CullingGroup;
 using System.Linq;
 
 public class NetworkPlayer : NetworkBehaviour
@@ -21,16 +20,41 @@ public class NetworkPlayer : NetworkBehaviour
     public bool IsLeader => Object != null && Object.IsValid && Object.HasStateAuthority;
 
 
+    [UnitySerializeField]
+    [Networked]
+    [Capacity(150)]
+    public NetworkLinkedList<NetworkCard> CardsInHand => default;
+
+
+    [UnitySerializeField]
+    [Networked]
+    [Capacity(150)]
+    public NetworkLinkedList<NetworkCard> MissingCards => default;
+
+
+
+    [UnitySerializeField]
+    [Networked]
+    [Capacity(150)]
+    public NetworkLinkedList<NetworkCard> RemainingCards => default;
+
+
+    private HandAranger handAranger;
+
+    [SerializeField][Networked] public int HandCompleteStep { get; set; }
+    [Networked] public NetworkBool HandCompleted { get; set; }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        handAranger = FindObjectOfType<HandAranger>();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public override void Spawned()
@@ -42,12 +66,12 @@ public class NetworkPlayer : NetworkBehaviour
             Local = this;
 
             PlayerChanged?.Invoke(this);
-            RPC_SetPlayerStats("Player_" + (Players.Count+1));
+            RPC_SetPlayerStats("Player_" + (Players.Count + 1));
 
         }
 
         Players.Add(this);
-        
+
         PlayerJoined?.Invoke(this);
 
 
@@ -84,5 +108,7 @@ public class NetworkPlayer : NetworkBehaviour
     }
 
     private static void OnStateChanged(Changed<NetworkPlayer> changed) => PlayerChanged?.Invoke(changed.Behaviour);
+
+
 
 }

@@ -40,7 +40,7 @@ public class GameControl : MonoBehaviour
     [SerializeField] GameObject throwedCardBtn;
     [SerializeField] GameObject deckCardBtn;
 
-     public int cardDealerInd;
+    public int cardDealerInd;
     private int orderOfPlayInd;
     private int desicionInd;
     private int playingInd;
@@ -53,9 +53,9 @@ public class GameControl : MonoBehaviour
     private TableAnimationControl tableAnimationControl;
     [HideInInspector] public PlayerControl playerControl;
 
-    [SerializeField] List<int> values = new List<int>() {1,2,3,4,5,6,7,8,9,10,11,12,13};
+    [SerializeField] List<int> values = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
 
-    [HideInInspector]public MakeNoise makeNoise;
+    [HideInInspector] public MakeNoise makeNoise;
 
     public int gameCounter;
     public int gameLimit;
@@ -65,6 +65,8 @@ public class GameControl : MonoBehaviour
     public int drinkCounter;
     [SerializeField] GameObject statisticPanel;
     [SerializeField] GameObject playerWinPanel;
+
+
 
 
     private void Awake()
@@ -77,7 +79,7 @@ public class GameControl : MonoBehaviour
         completeHandWarningPanel.SetActive(false);
 
         throwedCardObjs = new GameObject[52];
-        for(int i = 0; i < throwedCardObjs.Length; i++)
+        for (int i = 0; i < throwedCardObjs.Length; i++)
         {
             throwedCardObjs[i] = Instantiate(Resources.Load("CardSprite")) as GameObject;
             throwedCardObjs[i].SetActive(false);
@@ -105,14 +107,17 @@ public class GameControl : MonoBehaviour
 
     private void Start()
     {
-        if (SceneManager.GetActiveScene().name=="Multiplayer")
+
+
+        switch (GameManager.Instance.CurrentGameMode)
         {
-            
-        }
-        else if (SceneManager.GetActiveScene().name=="Game")
-        {
-            Invoke("StartGame", .5f);
-            
+            case GameManager.GameMode.Quick:
+                Invoke("StartGame", .5f);
+                break;
+            case GameManager.GameMode.Friends:
+                break;
+            case GameManager.GameMode.Tournament:
+                break;
         }
 
     }
@@ -193,6 +198,31 @@ public class GameControl : MonoBehaviour
 
     }
 
+    public void FriendsModeStartGame()
+    {
+
+        if (NetworkPlayer.Local.IsLeader)
+        {
+            CreateDeck();
+            ShuffleDeck();
+            DealCardsToActors();
+            ChooseRandomCardDealer();
+
+
+
+        }
+
+        SortOrderOfPlayActors();
+        DisableEnableTakeCardBtns(false);
+        tableAnimationControl.StartGame();
+
+
+
+
+
+        // gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
+    }
+
     void StartGame()
     {
         CreateDeck();
@@ -231,7 +261,7 @@ public class GameControl : MonoBehaviour
                 for (int _value = 1; _value <= 13; _value++)
                 {
                     // Yeni kartı oluştur
-                    Card newCard = new Card() {suit = (CardSuit)_suit, value = _value };
+                    Card newCard = new Card() { suit = (CardSuit)_suit, value = _value };
                     // Desteye ekle
                     deck.Add(newCard);
                 }
@@ -249,6 +279,8 @@ public class GameControl : MonoBehaviour
             deck[i] = deck[randomIndex];
             deck[randomIndex] = temp;
         }
+
+        NetworkGameManager.Instance?.UpdateNetworkDeck();
     }
 
     Card FindCardInDeck(Card card)
@@ -278,28 +310,42 @@ public class GameControl : MonoBehaviour
             {
                 randomCards.Add(deck[0]);
                 deck.Remove(deck[0]);
+
             }
 
             actorControls[i].cardsInHand = new List<Card>();
 
             for (int p = 0; p < predefinedCards.Count; p++)
+            {
                 actorControls[i].cardsInHand.Add(predefinedCards[p]);
-
+            }
             for (int r = 0; r < randomCards.Count; r++)
+            {
                 actorControls[i].cardsInHand.Add(randomCards[r]);
+            }
 
             actorControls[i].ArrangeHand();
+
         }
 
         List<Card> cards = new List<Card>();
+
         for (int c = 0; c < 9; c++)
         {
             cards.Add(deck[0]);
             deck.Remove(deck[0]);
+
         }
 
         actorControls[0].cardsInHand = new List<Card>(cards);
         actorControls[0].ArrangeHand();
+
+        for (int i = 0; i < actorControls.Count; i++)
+        {
+            NetworkGameManager.Instance?.UpdateAllCards(i);
+        }
+
+
     }
 
     List<Card> PredefinedCards()
@@ -317,7 +363,7 @@ public class GameControl : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            Card card = new Card() { suit = CardSuit.Spades, value = val};
+            Card card = new Card() { suit = CardSuit.Spades, value = val };
 
             switch (i)
             {
@@ -333,13 +379,14 @@ public class GameControl : MonoBehaviour
             }
 
             Card c = FindCardInDeck(card);
-            if(c!= null)
+            if (c != null)
             {
                 predefinedCards.Add(c);
                 deck.Remove(c);
+
             }
         }
- 
+
         return predefinedCards;
     }
 
@@ -354,12 +401,29 @@ public class GameControl : MonoBehaviour
             cardDealerInd = gameConfig.cardDealerInd;
         else
             cardDealerInd = Random.Range(0, actorControls.Count);
+
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            NetworkGameManager.Instance.NetworkCardDealerInd = cardDealerInd;
+        }
     }
 
     void SortOrderOfPlayActors()
     {
         orderOfPlayActors = new List<ActorControl>();
-        int startInd = cardDealerInd;
+
+
+        int startInd = 0;
+
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            startInd = NetworkGameManager.Instance.NetworkCardDealerInd;
+        }
+        else
+        {
+            startInd = cardDealerInd;
+        }
+
 
         for (int i = 0; i < actorControls.Count; i++)
         {
@@ -383,7 +447,7 @@ public class GameControl : MonoBehaviour
     {
         desicionActors = new List<ActorControl>();
 
-        for(int i = 1; i < orderOfPlayActors.Count; i++)
+        for (int i = 1; i < orderOfPlayActors.Count; i++)
             desicionActors.Add(orderOfPlayActors[i]);
 
         desicionInd = 0;
@@ -400,10 +464,10 @@ public class GameControl : MonoBehaviour
                 for (int i = 0; i < orderOfPlayActors.Count - 1; i++)
                     if (!orderOfPlayActors[i].pass && orderOfPlayActors[i].moneyIn < 1000 && betUPActor != orderOfPlayActors[i])
                         newDesicitonActors.Add(orderOfPlayActors[i]);
- 
+
                 desicionActors = new List<ActorControl>(newDesicitonActors);
 
-                if(desicionActors.Count > 0)
+                if (desicionActors.Count > 0)
                 {
                     desicionInd = 0;
                     betUpTurn = true;
@@ -448,7 +512,7 @@ public class GameControl : MonoBehaviour
         }
         else
         {
-            if(!desicionActors[desicionInd].pass)
+            if (!desicionActors[desicionInd].pass)
                 desicionActors[desicionInd].DecideBet();
 
             desicionInd++;
@@ -468,7 +532,7 @@ public class GameControl : MonoBehaviour
 
     void SetRewardBetUpText()
     {
-        if(betUp)
+        if (betUp)
             rewardBetUpText.text = "4";
         else
             rewardBetUpText.text = "1";
@@ -482,7 +546,7 @@ public class GameControl : MonoBehaviour
         Debug.Log("start");
         yield return new WaitForSeconds(.1f);
 
-        makeNoise.PlaySFX(12,0);
+        makeNoise.PlaySFX(12, 0);
         for (int i = 0; i < orderOfPlayActors.Count; i++)
         {
             if (orderOfPlayActors[i].moneyIn > 0)
@@ -507,7 +571,7 @@ public class GameControl : MonoBehaviour
     public void NextActor()
     {
 
-        makeNoise.PlaySFX(14,0);
+        makeNoise.PlaySFX(14, 0);
         if (playingActors[playingInd].player)
         {
             DisableEnableTakeCardBtns(true);
@@ -540,13 +604,17 @@ public class GameControl : MonoBehaviour
         yield return new WaitForSeconds(1f);
         lastThrowedCard.SetActive(true);
         deck.Remove(deck[0]);
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            NetworkGameManager.Instance.NetworkDeck.Remove(NetworkGameManager.Instance.NetworkDeck[0]);
+        }
         throwedCards.Add(card);
-        
+
     }
 
     public void PickCard(ActorControl actorControl, bool fromDeck)
     {
-        makeNoise.PlaySFX(15,0);
+        makeNoise.PlaySFX(15, 0);
 
         if (fromDeck)
         {
@@ -557,7 +625,10 @@ public class GameControl : MonoBehaviour
 
             actorControl.AddCard(deck[0]);
             deck.Remove(deck[0]);
-
+            if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+            {
+                NetworkGameManager.Instance.NetworkDeck.Remove(NetworkGameManager.Instance.NetworkDeck[0]);
+            }
             CheckDeckCardCount();
         }
         else
@@ -599,7 +670,7 @@ public class GameControl : MonoBehaviour
         lastThrowedCard.SetActive(true);
 
         SpriteRenderer spriteRenderer = lastThrowedCard.GetComponentInChildren<SpriteRenderer>();
-        spriteRenderer.sprite = CardSpriteConverter.GetCardSpriteInd(cardType,gameConfig.deckStyles[gameConfig.deckStyleInd]);
+        spriteRenderer.sprite = CardSpriteConverter.GetCardSpriteInd(cardType, gameConfig.deckStyles[gameConfig.deckStyleInd]);
         spriteRenderer.sortingOrder = throwedCards.Count;
         spriteRenderer.size = new Vector2(2.56f, 3.5f);
 
@@ -608,7 +679,7 @@ public class GameControl : MonoBehaviour
 
     public void TakeCardFromThrowed()
     {
-        makeNoise.PlaySFX(15,0);
+        makeNoise.PlaySFX(15, 0);
 
         DisableEnableTakeCardBtns(false);
 
@@ -631,13 +702,16 @@ public class GameControl : MonoBehaviour
 
         playerControl.TakeCard(deck[0]);
         deck.Remove(deck[0]);
-
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            NetworkGameManager.Instance.NetworkDeck.Remove(NetworkGameManager.Instance.NetworkDeck[0]);
+        }
         CheckDeckCardCount();
     }
 
     void CheckDeckCardCount()
     {
-        if(deck.Count == 0)
+        if (deck.Count == 0)
         {
             deck = new List<Card>(throwedCards);
             ShuffleDeck();
@@ -650,7 +724,7 @@ public class GameControl : MonoBehaviour
 
     void OpenDesicitonPanel()
     {
-        makeNoise.PlaySFX(11,0);
+        makeNoise.PlaySFX(11, 0);
 
         if (betUp)
         {
@@ -668,7 +742,7 @@ public class GameControl : MonoBehaviour
 
     public void CloseDesicionPanel(int ind)
     {
-        switch(ind)
+        switch (ind)
         {
             case 0: // VAR
 
