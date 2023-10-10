@@ -21,9 +21,8 @@ public class NetworkPlayer : NetworkBehaviour
 
 
     [UnitySerializeField]
-    [Networked]
     [Capacity(150)]
-    public NetworkLinkedList<NetworkCard> CardsInHand => default;
+    [Networked(OnChanged = nameof(OnNetworkCardsInHandChanged))] public NetworkLinkedList<NetworkCard> CardsInHand => default;
 
 
     [UnitySerializeField]
@@ -109,6 +108,24 @@ public class NetworkPlayer : NetworkBehaviour
 
     private static void OnStateChanged(Changed<NetworkPlayer> changed) => PlayerChanged?.Invoke(changed.Behaviour);
 
+    private static void OnNetworkCardsInHandChanged(Changed<NetworkPlayer> changed)
+    {
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+            {
+                if (NetworkPlayer.Players[i].HasInputAuthority)
+                {
+                    NetworkGameManager.Instance.GameControl.playerControl.actorControl = NetworkGameManager.Instance.GameControl.actorControls[i];
+                    NetworkGameManager.Instance.GameControl.playerControl.actorControl.player = true;
+                }
+                Debug.Log(NetworkPlayer.Players[i].CardsInHand.Count);
+                NetworkGameManager.Instance.CardListFromNetworkCardList(NetworkGameManager.Instance.GameControl.actorControls[i].cardsInHand, NetworkPlayer.Players[i].CardsInHand);
+                NetworkGameManager.Instance.CardListFromNetworkCardList(NetworkGameManager.Instance.GameControl.actorControls[i].missingCards, NetworkPlayer.Players[i].MissingCards);
+                NetworkGameManager.Instance.CardListFromNetworkCardList(NetworkGameManager.Instance.GameControl.actorControls[i].remainingCards, NetworkPlayer.Players[i].RemainingCards);
 
+            }
+        }
+    }
 
 }

@@ -129,6 +129,6 @@ public class NetworkGameManager : NetworkBehaviour
 
     private static void OnNetworkCardDealerIndChanged(Changed<NetworkGameManager> changed)
     {
-        changed.Behaviour.GameControl.cardDealerInd = changed.Behaviour.NetworkCardDealerInd;
+        //changed.Behaviour.GameControl.cardDealerInd = changed.Behaviour.NetworkCardDealerInd;
     }
 }

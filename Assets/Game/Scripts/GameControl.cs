@@ -201,6 +201,8 @@ public class GameControl : MonoBehaviour
     public void FriendsModeStartGame()
     {
 
+
+
         if (NetworkPlayer.Local.IsLeader)
         {
             CreateDeck();
@@ -211,6 +213,32 @@ public class GameControl : MonoBehaviour
 
 
         }
+
+        for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+        {
+            Debug.Log("sss");
+            if (NetworkPlayer.Players[i].HasInputAuthority)
+            {
+                Debug.Log("input " + NetworkPlayer.Players[i].Id);
+                cardDealerInd = NetworkGameManager.Instance.NetworkCardDealerInd - i;
+                if (cardDealerInd == -1)
+                {
+                    cardDealerInd = 3;
+                }
+                else if (cardDealerInd == -2)
+                {
+                    cardDealerInd = 2;
+
+                }
+                else if (cardDealerInd == -3)
+                {
+                    cardDealerInd = 1;
+
+                }
+            }
+
+        }
+
 
         SortOrderOfPlayActors();
         DisableEnableTakeCardBtns(false);
@@ -404,7 +432,7 @@ public class GameControl : MonoBehaviour
 
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            NetworkGameManager.Instance.NetworkCardDealerInd = cardDealerInd;
+            NetworkGameManager.Instance.NetworkCardDealerInd = 0;
         }
     }
 
@@ -415,14 +443,14 @@ public class GameControl : MonoBehaviour
 
         int startInd = 0;
 
-        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-        {
-            startInd = NetworkGameManager.Instance.NetworkCardDealerInd;
-        }
-        else
-        {
-            startInd = cardDealerInd;
-        }
+        // if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        // {
+        //     startInd = NetworkGameManager.Instance.NetworkCardDealerInd;
+        // }
+        // else
+        // {
+        startInd = cardDealerInd;
+        // }
 
 
         for (int i = 0; i < actorControls.Count; i++)

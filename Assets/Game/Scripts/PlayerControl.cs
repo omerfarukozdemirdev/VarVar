@@ -39,8 +39,10 @@ public class PlayerControl : MonoBehaviour
         gameControl = FindObjectOfType<GameControl>();
         throwedCardAreaAnimator = throwedCardArea.GetComponent<Animator>();
         finishCardAreaAnimator = finishCardArea.GetComponent<Animator>();
-
-        actorControl.player = true;
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        {
+            actorControl.player = true;
+        }
         actorControl.totalCoins = PlayerPrefs.GetInt("CoinCount");
         DisableUICards();
     }
@@ -89,7 +91,7 @@ public class PlayerControl : MonoBehaviour
             if (pos.x >= throwedCardArea.transform.GetChild(0).position.x && pos.x <= throwedCardArea.transform.GetChild(1).position.x &&
                 pos.y >= throwedCardArea.transform.GetChild(2).position.y && pos.y <= throwedCardArea.transform.GetChild(3).position.y)
             {
-                throwedCardAreaAnimator.SetBool("Blink" , true);
+                throwedCardAreaAnimator.SetBool("Blink", true);
                 inThrowedArea = true;
             }
 
@@ -203,7 +205,7 @@ public class PlayerControl : MonoBehaviour
 
     void CardReleased()
     {
-        gameControl.makeNoise.PlaySFX(20,0);
+        gameControl.makeNoise.PlaySFX(20, 0);
 
         Animator animator = cardPicked.GetChild(0).GetComponent<Animator>();
         animator.ResetTrigger("Picked");
@@ -262,7 +264,7 @@ public class PlayerControl : MonoBehaviour
 
         yield return new WaitForSeconds(.1f);
 
-        if(cardPicked != null)
+        if (cardPicked != null)
         {
             if (!Input.GetMouseButton(0))
             {
