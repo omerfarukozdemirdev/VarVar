@@ -43,6 +43,8 @@ public class NetworkPlayer : NetworkBehaviour
     [SerializeField][Networked] public int HandCompleteStep { get; set; }
     [Networked] public NetworkBool HandCompleted { get; set; }
 
+
+    [Networked(OnChanged = nameof(OnNetworkDesicionIndChanged))] public int DesicionInd { get; set; }
     // Start is called before the first frame update
     void Start()
     {
@@ -128,4 +130,14 @@ public class NetworkPlayer : NetworkBehaviour
         }
     }
 
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, InvokeResim = true)]
+    public void Rpc_ChangeDesicionInd(int desicitionInd)
+    {
+        DesicionInd = desicitionInd;
+    }
+
+    private static void OnNetworkDesicionIndChanged(Changed<NetworkPlayer> changed)
+    {
+        NetworkGameManager.Instance.DesicionInd = changed.Behaviour.DesicionInd;
+    }
 }

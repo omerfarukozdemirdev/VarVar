@@ -12,33 +12,33 @@ public class NetworkUIManager : NetworkBehaviour
 
     public LobbyUI LobbyUI;
 
-    public List<int> NewPlayerIndexList=new List<int>();
+    public List<int> NewPlayerIndexList = new List<int>();
 
 
     private void Awake()
     {
-        
+
         Instance = this;
-        
+
     }
 
     public void Setup()
     {
 
-        NetworkGameManager=NetworkGameManager.Instance;
+        NetworkGameManager = NetworkGameManager.Instance;
         LobbyUI = FindObjectOfType<LobbyUI>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void CloseLobbyPanel()
@@ -49,23 +49,27 @@ public class NetworkUIManager : NetworkBehaviour
     public void SetTable()
     {
         //oyuncuları masaya doğru sıraya göre oturtma
-        if (NetworkPlayer.Local) 
-        { 
+        if (NetworkPlayer.Local)
+        {
 
             for (int i = NetworkPlayer.Players.IndexOf(NetworkPlayer.Local); i < NetworkPlayer.Players.Count; i++)
             {
                 NewPlayerIndexList.Add(i);
             }
 
-            for (int i = 0;i< NetworkPlayer.Players.IndexOf(NetworkPlayer.Local);i++)
+            for (int i = 0; i < NetworkPlayer.Players.IndexOf(NetworkPlayer.Local); i++)
             {
                 NewPlayerIndexList.Add(i);
 
             }
 
-            for (int i = 0;i<NetworkPlayer.Players.Count;i++)
+            for (int i = 0; i < NetworkPlayer.Players.Count; i++)
             {
-                NetworkGameManager.GameControl.actorControls[i].SetNameText( NetworkPlayer.Players[NewPlayerIndexList[i]].Username.ToString());
+                //NetworkGameManager.GameControl.actorControls[i].SetNameText( NetworkPlayer.Players[NewPlayerIndexList[i]].Username.ToString());
+                NetworkGameManager.GameControl.actorLocations[i].transform.position = NetworkGameManager.GameControl.actorPositions[NewPlayerIndexList[i]];
+                NetworkGameManager.GameControl.actorLocations[i].transform.rotation = Quaternion.Euler(NetworkGameManager.GameControl.actorRotations[NewPlayerIndexList[i]]);
+                NetworkGameManager.GameControl.actorControls[i].SetNameText(NetworkPlayer.Players[i].Username.ToString());
+
             }
         }
     }

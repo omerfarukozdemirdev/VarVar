@@ -26,6 +26,7 @@ public class NetworkGameManager : NetworkBehaviour
 
     [Networked(OnChanged = nameof(OnNetworkCardDealerIndChanged))] public int NetworkCardDealerInd { get; set; }
 
+    [Networked(OnChanged = nameof(OnNetworkDesicionIndChanged))] public int DesicionInd { get; set; }
 
     private void Awake()
     {
@@ -130,5 +131,17 @@ public class NetworkGameManager : NetworkBehaviour
     private static void OnNetworkCardDealerIndChanged(Changed<NetworkGameManager> changed)
     {
         //changed.Behaviour.GameControl.cardDealerInd = changed.Behaviour.NetworkCardDealerInd;
+    }
+
+    private static void OnNetworkDesicionIndChanged(Changed<NetworkGameManager> changed)
+    {
+        changed.Behaviour.GameControl.desicionInd = changed.Behaviour.DesicionInd;
+        changed.Behaviour.GameControl.ActorDecisiton();
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void Rpc_ChangeDesicionInd(int desicitionInd)
+    {
+        DesicionInd = desicitionInd;
     }
 }

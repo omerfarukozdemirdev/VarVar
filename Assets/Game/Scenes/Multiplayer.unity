@@ -3637,6 +3637,7 @@ MonoBehaviour:
   - {fileID: 1018616246}
   - {fileID: 853683593}
   orderOfPlayActors: []
+  desicionActors: []
   deck: []
   throwedCards: []
   throwedCardObjs: []
@@ -3644,6 +3645,8 @@ MonoBehaviour:
   throwedCardBtn: {fileID: 1275573877}
   deckCardBtn: {fileID: 273927914}
   cardDealerInd: 0
+  orderOfPlayInd: 0
+  desicionInd: 0
   passCount: 0
   betUp: 0
   playerControl: {fileID: 0}
@@ -3657,6 +3660,30 @@ MonoBehaviour:
   drinkCounter: 0
   statisticPanel: {fileID: 410013130}
   playerWinPanel: {fileID: 1646510340}
+  actorPositions:
+  - {x: 5, y: 0, z: 4}
+  - {x: -5, y: 0, z: 4}
+  - {x: -6, y: 0, z: 0.2}
+  - {x: -5.5, y: 0, z: -3.8}
+  - {x: 0, y: 0, z: -4.5}
+  - {x: 5.5, y: 0, z: 3.8}
+  - {x: 6, y: 0, z: 0.2}
+  actorRotations:
+  - {x: 0, y: -135, z: 0}
+  - {x: 0, y: 135, z: 0}
+  - {x: 0, y: 90, z: 0}
+  - {x: 0, y: 45, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: -45, z: 0}
+  - {x: 0, y: -90, z: 0}
+  actorLocations:
+  - {fileID: 1863182325}
+  - {fileID: 46797321}
+  - {fileID: 1770108919}
+  - {fileID: 682780448}
+  - {fileID: 2011361646}
+  - {fileID: 880083742}
+  - {fileID: 1037312034}
 --- !u!4 &327959629
 Transform:
   m_ObjectHideFlags: 0

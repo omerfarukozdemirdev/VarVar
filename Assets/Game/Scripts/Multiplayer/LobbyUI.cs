@@ -33,7 +33,7 @@ public class LobbyUI : MonoBehaviour
         if (IsAllReady() && !nextStepIsAllReady)
         {
             NetworkUIManager.Instance.CloseLobbyPanel();
-            NetworkUIManager.Instance.SetTable();
+            //NetworkUIManager.Instance.SetTable();
             //Invoke("StartGame", 1f);
             FindObjectOfType<GameControl>().Invoke("FriendsModeStartGame", 1f);
             //FindObjectOfType<GameControl>().FriendsModeStartGame();

@@ -31,7 +31,7 @@ public class GameControl : MonoBehaviour
 
     public List<ActorControl> actorControls = new List<ActorControl>();
     public List<ActorControl> orderOfPlayActors = new List<ActorControl>();
-    private List<ActorControl> desicionActors = new List<ActorControl>();
+    [SerializeField] private List<ActorControl> desicionActors = new List<ActorControl>();
     private List<ActorControl> playingActors = new List<ActorControl>();
     public List<Card> deck;
     public List<Card> throwedCards = new List<Card>();
@@ -41,8 +41,8 @@ public class GameControl : MonoBehaviour
     [SerializeField] GameObject deckCardBtn;
 
     public int cardDealerInd;
-    private int orderOfPlayInd;
-    private int desicionInd;
+    [SerializeField] private int orderOfPlayInd;
+    public int desicionInd;
     private int playingInd;
 
     [HideInInspector] public int passCount;
@@ -65,6 +65,11 @@ public class GameControl : MonoBehaviour
     public int drinkCounter;
     [SerializeField] GameObject statisticPanel;
     [SerializeField] GameObject playerWinPanel;
+
+    public Vector3[] actorPositions;
+    public Vector3[] actorRotations;
+    public GameObject[] actorLocations;
+    public List<int> NewPlayerIndexList = new List<int>();
 
 
 
@@ -200,7 +205,11 @@ public class GameControl : MonoBehaviour
 
     public void FriendsModeStartGame()
     {
+        if (NetworkPlayer.Local)
+        {
+            SetTable();
 
+        }
 
 
         if (NetworkPlayer.Local.IsLeader)
@@ -208,38 +217,38 @@ public class GameControl : MonoBehaviour
             CreateDeck();
             ShuffleDeck();
             DealCardsToActors();
-            ChooseRandomCardDealer();
 
 
 
         }
 
-        for (int i = 0; i < NetworkPlayer.Players.Count; i++)
-        {
-            Debug.Log("sss");
-            if (NetworkPlayer.Players[i].HasInputAuthority)
-            {
-                Debug.Log("input " + NetworkPlayer.Players[i].Id);
-                cardDealerInd = NetworkGameManager.Instance.NetworkCardDealerInd - i;
-                if (cardDealerInd == -1)
-                {
-                    cardDealerInd = 3;
-                }
-                else if (cardDealerInd == -2)
-                {
-                    cardDealerInd = 2;
+        // for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+        // {
+        //     Debug.Log("sss");
+        //     if (NetworkPlayer.Players[i].HasInputAuthority)
+        //     {
+        //         Debug.Log("input " + NetworkPlayer.Players[i].Id);
+        //         cardDealerInd = NetworkGameManager.Instance.NetworkCardDealerInd - i;
+        //         if (cardDealerInd == -1)
+        //         {
+        //             cardDealerInd = 3;
+        //         }
+        //         else if (cardDealerInd == -2)
+        //         {
+        //             cardDealerInd = 2;
 
-                }
-                else if (cardDealerInd == -3)
-                {
-                    cardDealerInd = 1;
+        //         }
+        //         else if (cardDealerInd == -3)
+        //         {
+        //             cardDealerInd = 1;
 
-                }
-            }
+        //         }
+        //     }
 
-        }
+        // }
 
 
+        ChooseRandomCardDealer();
         SortOrderOfPlayActors();
         DisableEnableTakeCardBtns(false);
         tableAnimationControl.StartGame();
@@ -249,6 +258,56 @@ public class GameControl : MonoBehaviour
 
 
         // gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
+    }
+
+    public void SetTable()
+    {
+        //oyuncuları masaya doğru sıraya göre oturtma
+        if (NetworkPlayer.Local)
+        {
+
+            if (NetworkPlayer.Players.IndexOf(NetworkPlayer.Local) == 0)
+            {
+                NewPlayerIndexList = new List<int>() { 0, 1, 2, 3 };
+            }
+            else if (NetworkPlayer.Players.IndexOf(NetworkPlayer.Local) == 1)
+            {
+                NewPlayerIndexList = new List<int>() { 3, 0, 1, 2 };
+            }
+            else if (NetworkPlayer.Players.IndexOf(NetworkPlayer.Local) == 2)
+            {
+                NewPlayerIndexList = new List<int>() { 2, 3, 0, 1 };
+            }
+            else if (NetworkPlayer.Players.IndexOf(NetworkPlayer.Local) == 3)
+            {
+                NewPlayerIndexList = new List<int>() { 1, 2, 3, 0 };
+            }
+
+
+
+            // for (int i = NetworkPlayer.Players.IndexOf(NetworkPlayer.Local); i < NetworkPlayer.Players.Count; i++)
+            // {
+            //     NewPlayerIndexList.Add(i);
+            // }
+
+            // for (int i = 0; i < NetworkPlayer.Players.IndexOf(NetworkPlayer.Local); i++)
+            // {
+            //     NewPlayerIndexList.Add(i);
+
+            // }
+
+            for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+            {
+                //NetworkGameManager.GameControl.actorControls[i].SetNameText( NetworkPlayer.Players[NewPlayerIndexList[i]].Username.ToString());
+                actorLocations[i].transform.position = actorPositions[NewPlayerIndexList[i]];
+                actorLocations[i].transform.rotation = Quaternion.Euler(actorRotations[NewPlayerIndexList[i]]);
+                actorControls[i].SetNameText(NetworkPlayer.Players[i].Username.ToString());
+                // 0-1-2-3 for 1
+                // 3-0-1-2 for 2
+                // 2-3-0-1 for 3
+                // 1-2-3-1 for 4
+            }
+        }
     }
 
     void StartGame()
@@ -432,7 +491,7 @@ public class GameControl : MonoBehaviour
 
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            NetworkGameManager.Instance.NetworkCardDealerInd = 0;
+            cardDealerInd = 0;
         }
     }
 
@@ -440,18 +499,12 @@ public class GameControl : MonoBehaviour
     {
         orderOfPlayActors = new List<ActorControl>();
 
+        int startInd;
 
-        int startInd = 0;
-
-        // if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        // if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
         // {
-        //     startInd = NetworkGameManager.Instance.NetworkCardDealerInd;
-        // }
-        // else
-        // {
+        startInd = 0;
         startInd = cardDealerInd;
-        // }
-
 
         for (int i = 0; i < actorControls.Count; i++)
         {
@@ -461,6 +514,24 @@ public class GameControl : MonoBehaviour
 
             orderOfPlayActors.Add(actorControls[startInd]);
         }
+        // }
+        // else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        // {
+        //     startInd = 0;
+        //     // startInd = cardDealerInd;
+
+        //     for (int i = 0; i < actorControls.Count; i++)
+        //     {
+        //         startInd++;
+        //         if (startInd > actorControls.Count - 1)
+        //             startInd = 0;
+
+        //         orderOfPlayActors.Add(actorControls[startInd]);
+        //     }
+        // }
+
+
+
     }
 
     public void StartBets()
@@ -498,6 +569,15 @@ public class GameControl : MonoBehaviour
                 if (desicionActors.Count > 0)
                 {
                     desicionInd = 0;
+                    if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+                    {
+                        //NetworkGameManager.Instance.Rpc_ChangeDesicionInd(3);
+                        var local = NetworkPlayer.Local;
+                        if (local && local.Object && local.Object.IsValid)
+                        {
+                            local.Rpc_ChangeDesicionInd(desicionInd);
+                        }
+                    }
                     betUpTurn = true;
                     ActorDecisiton();
                     return;
@@ -540,10 +620,15 @@ public class GameControl : MonoBehaviour
         }
         else
         {
-            if (!desicionActors[desicionInd].pass)
-                desicionActors[desicionInd].DecideBet();
+            if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+            {
+                if (!desicionActors[desicionInd].pass)
+                    desicionActors[desicionInd].DecideBet();
 
-            desicionInd++;
+                desicionInd++;
+            }
+
+
         }
     }
 
@@ -793,7 +878,21 @@ public class GameControl : MonoBehaviour
         }
 
         playerControl.actorControl.DecidePlayer();
-        desicionInd++;
+
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        {
+            desicionInd++;
+        }
+        else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            //NetworkGameManager.Instance.Rpc_ChangeDesicionInd(3);
+            var local = NetworkPlayer.Local;
+            if (local && local.Object && local.Object.IsValid)
+            {
+                desicionInd++;
+                local.Rpc_ChangeDesicionInd(desicionInd);
+            }
+        }
 
         desicitonPanel.SetActive(false);
     }
