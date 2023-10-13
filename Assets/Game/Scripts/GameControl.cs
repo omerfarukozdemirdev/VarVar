@@ -31,7 +31,7 @@ public class GameControl : MonoBehaviour
 
     public List<ActorControl> actorControls = new List<ActorControl>();
     public List<ActorControl> orderOfPlayActors = new List<ActorControl>();
-    [SerializeField] private List<ActorControl> desicionActors = new List<ActorControl>();
+    public List<ActorControl> desicionActors = new List<ActorControl>();
     private List<ActorControl> playingActors = new List<ActorControl>();
     public List<Card> deck;
     public List<Card> throwedCards = new List<Card>();
@@ -501,8 +501,7 @@ public class GameControl : MonoBehaviour
 
         int startInd;
 
-        // if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
-        // {
+
         startInd = 0;
         startInd = cardDealerInd;
 
@@ -514,21 +513,7 @@ public class GameControl : MonoBehaviour
 
             orderOfPlayActors.Add(actorControls[startInd]);
         }
-        // }
-        // else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-        // {
-        //     startInd = 0;
-        //     // startInd = cardDealerInd;
 
-        //     for (int i = 0; i < actorControls.Count; i++)
-        //     {
-        //         startInd++;
-        //         if (startInd > actorControls.Count - 1)
-        //             startInd = 0;
-
-        //         orderOfPlayActors.Add(actorControls[startInd]);
-        //     }
-        // }
 
 
 
@@ -571,12 +556,8 @@ public class GameControl : MonoBehaviour
                     desicionInd = 0;
                     if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
                     {
-                        //NetworkGameManager.Instance.Rpc_ChangeDesicionInd(3);
-                        var local = NetworkPlayer.Local;
-                        if (local && local.Object && local.Object.IsValid)
-                        {
-                            local.Rpc_ChangeDesicionInd(desicionInd);
-                        }
+                        NetworkGameManager.Instance.Rpc_ChangeDesicionInd(desicionInd);
+
                     }
                     betUpTurn = true;
                     ActorDecisiton();
@@ -855,43 +836,52 @@ public class GameControl : MonoBehaviour
 
     public void CloseDesicionPanel(int ind)
     {
+
         switch (ind)
         {
             case 0: // VAR
 
                 playerControl.actorControl.pass = false;
                 playerControl.actorControl.betUp = false;
+                NetworkPlayer.Local?.RPC_ChangePassState(false);
+                NetworkPlayer.Local?.RPC_ChangeBetUpState(false);
+
+
 
                 break;
             case 1: // PASS
 
                 playerControl.actorControl.pass = true;
                 playerControl.actorControl.betUp = false;
+                NetworkPlayer.Local?.RPC_ChangePassState(true);
+                NetworkPlayer.Local?.RPC_ChangeBetUpState(false);
 
                 break;
             case 2: // BETUP
 
                 playerControl.actorControl.pass = false;
                 playerControl.actorControl.betUp = true;
+                NetworkPlayer.Local?.RPC_ChangePassState(false);
+                NetworkPlayer.Local?.RPC_ChangeBetUpState(true);
 
                 break;
         }
 
-        playerControl.actorControl.DecidePlayer();
 
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
         {
+            playerControl.actorControl.DecidePlayer();
+
             desicionInd++;
         }
         else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            //NetworkGameManager.Instance.Rpc_ChangeDesicionInd(3);
-            var local = NetworkPlayer.Local;
-            if (local && local.Object && local.Object.IsValid)
-            {
-                desicionInd++;
-                local.Rpc_ChangeDesicionInd(desicionInd);
-            }
+            NetworkGameManager.Instance.Rpc_DecidePlayer();
+
+            desicionInd++;
+
+            NetworkGameManager.Instance.Rpc_ChangeDesicionInd(desicionInd);
+
         }
 
         desicitonPanel.SetActive(false);

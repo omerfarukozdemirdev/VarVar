@@ -43,8 +43,9 @@ public class NetworkPlayer : NetworkBehaviour
     [SerializeField][Networked] public int HandCompleteStep { get; set; }
     [Networked] public NetworkBool HandCompleted { get; set; }
 
+    [Networked(OnChanged = nameof(OnNetworkPlayerPassChanged))] public NetworkBool Pass { get; set; }
+    [Networked(OnChanged = nameof(OnNetworkPlayerBetUpChanged))] public NetworkBool BetUp { get; set; }
 
-    [Networked(OnChanged = nameof(OnNetworkDesicionIndChanged))] public int DesicionInd { get; set; }
     // Start is called before the first frame update
     void Start()
     {
@@ -62,19 +63,19 @@ public class NetworkPlayer : NetworkBehaviour
     {
         base.Spawned();
 
-        if (Object.HasInputAuthority)
-        {
-            Local = this;
-
-            PlayerChanged?.Invoke(this);
-            RPC_SetPlayerStats("Player_" + (Players.Count + 1));
-
-        }
 
         Players.Add(this);
 
         PlayerJoined?.Invoke(this);
 
+        if (Object.HasInputAuthority)
+        {
+            Local = this;
+
+            PlayerChanged?.Invoke(this);
+            RPC_SetPlayerStats("Player_" + (Players.IndexOf(Local) + 1));
+            //ActorControl = FindObjectOfType<GameControl>().actorControls[Players.IndexOf(NetworkPlayer.Local)];
+        }
 
     }
 
@@ -130,14 +131,37 @@ public class NetworkPlayer : NetworkBehaviour
         }
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority, InvokeResim = true)]
-    public void Rpc_ChangeDesicionInd(int desicitionInd)
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    public void RPC_ChangePassState(NetworkBool state)
     {
-        DesicionInd = desicitionInd;
+        Pass = state;
     }
 
-    private static void OnNetworkDesicionIndChanged(Changed<NetworkPlayer> changed)
+    private static void OnNetworkPlayerPassChanged(Changed<NetworkPlayer> changed)
     {
-        NetworkGameManager.Instance.DesicionInd = changed.Behaviour.DesicionInd;
+
+
+        NetworkGameManager.Instance.GameControl.desicionActors[NetworkGameManager.Instance.DesicionInd - 1].pass = changed.Behaviour.Pass;
+        Debug.Log(NetworkGameManager.Instance.DesicionInd - 1);
+        Debug.Log(changed.Behaviour.Pass);
+        Debug.Log(NetworkGameManager.Instance.GameControl.desicionActors[NetworkGameManager.Instance.DesicionInd - 1].pass);
+        Debug.Log(NetworkGameManager.Instance.GameControl.desicionActors[NetworkGameManager.Instance.DesicionInd - 1]);
+
     }
+
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    public void RPC_ChangeBetUpState(NetworkBool state)
+    {
+        BetUp = state;
+    }
+
+    private static void OnNetworkPlayerBetUpChanged(Changed<NetworkPlayer> changed)
+    {
+
+        NetworkGameManager.Instance.GameControl.actorControls[NetworkPlayer.Players.IndexOf(NetworkPlayer.Local)].betUp = changed.Behaviour.BetUp;
+
+    }
+
+
 }

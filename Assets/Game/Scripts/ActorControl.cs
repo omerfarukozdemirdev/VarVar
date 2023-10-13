@@ -218,18 +218,24 @@ public class ActorControl : MonoBehaviour
                 pass = false;
 
                 if (Random.Range(0, 2) == 0)
+                {
                     betUp = true;
+
+                }
             }
             else if (handCompleteStep < 5)
             {
                 if (gameControl.betUp)
                 {
                     if (Random.Range(0, 4) == 0)
+                    {
                         pass = false;
+                    }
                 }
                 else
                 {
                     pass = false;
+
                 }
 
             }
@@ -238,21 +244,33 @@ public class ActorControl : MonoBehaviour
                 if (gameControl.betUp)
                 {
                     if (Random.Range(0, 8) == 0)
+                    {
                         pass = false;
+
+                    }
                 }
                 else
                 {
                     if (Random.Range(0, 4) == 0)
+                    {
                         pass = false;
+
+                    }
                 }
             }
         }
 
         if (gameControl.passCount > 2)
+        {
             pass = false;
+
+        }
 
         if (pass)
             gameControl.passCount++;
+
+        // NetworkPlayer.Local?.RPC_ChangePassState(pass);
+        // NetworkPlayer.Local?.RPC_ChangeBetUpState(betUp);
 
         StartCoroutine(Decide());
     }

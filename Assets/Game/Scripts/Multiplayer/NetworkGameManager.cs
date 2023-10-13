@@ -136,12 +136,21 @@ public class NetworkGameManager : NetworkBehaviour
     private static void OnNetworkDesicionIndChanged(Changed<NetworkGameManager> changed)
     {
         changed.Behaviour.GameControl.desicionInd = changed.Behaviour.DesicionInd;
-        changed.Behaviour.GameControl.ActorDecisiton();
+        //changed.Behaviour.GameControl.ActorDecisiton();
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     public void Rpc_ChangeDesicionInd(int desicitionInd)
     {
         DesicionInd = desicitionInd;
     }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_DecidePlayer()
+    {
+        GameControl.desicionActors[GameControl.desicionInd].DecidePlayer();
+        // GameControl.orderOfPlayActors[GameControl.desicionInd].DecidePlayer();
+
+    }
+
 }
