@@ -28,6 +28,8 @@ public class NetworkGameManager : NetworkBehaviour
 
     [Networked(OnChanged = nameof(OnNetworkDesicionIndChanged))] public int DesicionInd { get; set; }
 
+    public bool Host;
+
     private void Awake()
     {
         if (Instance)
@@ -150,6 +152,39 @@ public class NetworkGameManager : NetworkBehaviour
     {
         GameControl.desicionActors[GameControl.desicionInd].DecidePlayer();
         // GameControl.orderOfPlayActors[GameControl.desicionInd].DecidePlayer();
+
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_UpdateDeck()
+    {
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            if (GameControl.deck.Count == 0)
+            {
+                CardListFromNetworkCardList(GameControl.deck, NetworkDeck);
+            }
+        }
+
+
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_RemoveCardFromDeck(int i)
+    {
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            GameControl.deck.Remove(GameControl.deck[i]);
+            NetworkDeck.Remove(NetworkDeck[i]);
+        }
+
+
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_PlayCard()
+    {
+        GameControl.playingActors[GameControl.playingInd].PlayCard();
 
     }
 

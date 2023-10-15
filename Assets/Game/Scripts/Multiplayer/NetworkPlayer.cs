@@ -77,6 +77,13 @@ public class NetworkPlayer : NetworkBehaviour
             //ActorControl = FindObjectOfType<GameControl>().actorControls[Players.IndexOf(NetworkPlayer.Local)];
         }
 
+        if (IsLeader)
+        {
+            FindObjectOfType<NetworkGameManager>().Host = true;
+            FindObjectOfType<GameControl>().Host = true;
+
+        }
+
     }
 
     private void OnDisable()

@@ -32,7 +32,7 @@ public class GameControl : MonoBehaviour
     public List<ActorControl> actorControls = new List<ActorControl>();
     public List<ActorControl> orderOfPlayActors = new List<ActorControl>();
     public List<ActorControl> desicionActors = new List<ActorControl>();
-    private List<ActorControl> playingActors = new List<ActorControl>();
+    public List<ActorControl> playingActors = new List<ActorControl>();
     public List<Card> deck;
     public List<Card> throwedCards = new List<Card>();
     public GameObject[] throwedCardObjs;
@@ -43,7 +43,7 @@ public class GameControl : MonoBehaviour
     public int cardDealerInd;
     [SerializeField] private int orderOfPlayInd;
     public int desicionInd;
-    private int playingInd;
+    public int playingInd;
 
     [HideInInspector] public int passCount;
     [HideInInspector] public bool betUp;
@@ -71,6 +71,7 @@ public class GameControl : MonoBehaviour
     public GameObject[] actorLocations;
     public List<int> NewPlayerIndexList = new List<int>();
 
+    public bool Host;
 
 
 
@@ -222,32 +223,8 @@ public class GameControl : MonoBehaviour
 
         }
 
-        // for (int i = 0; i < NetworkPlayer.Players.Count; i++)
-        // {
-        //     Debug.Log("sss");
-        //     if (NetworkPlayer.Players[i].HasInputAuthority)
-        //     {
-        //         Debug.Log("input " + NetworkPlayer.Players[i].Id);
-        //         cardDealerInd = NetworkGameManager.Instance.NetworkCardDealerInd - i;
-        //         if (cardDealerInd == -1)
-        //         {
-        //             cardDealerInd = 3;
-        //         }
-        //         else if (cardDealerInd == -2)
-        //         {
-        //             cardDealerInd = 2;
 
-        //         }
-        //         else if (cardDealerInd == -3)
-        //         {
-        //             cardDealerInd = 1;
-
-        //         }
-        //     }
-
-        // }
-
-
+        NetworkGameManager.Instance.Rpc_UpdateDeck();
         ChooseRandomCardDealer();
         SortOrderOfPlayActors();
         DisableEnableTakeCardBtns(false);
@@ -673,7 +650,17 @@ public class GameControl : MonoBehaviour
         }
         else
         {
-            playingActors[playingInd].PlayCard();
+            if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+            {
+                playingActors[playingInd].PlayCard();
+            }
+            else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+            {
+                //NetworkGameManager.Instance.Rpc_PlayCard();
+                playingActors[playingInd].PlayCard();
+                Debug.Log("buraya bak");
+            }
+
         }
 
         playingInd++;
@@ -697,10 +684,19 @@ public class GameControl : MonoBehaviour
         tableAnimationControl.FirsGroundCard(lastThrowedCard);
         yield return new WaitForSeconds(1f);
         lastThrowedCard.SetActive(true);
-        deck.Remove(deck[0]);
-        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
         {
-            NetworkGameManager.Instance.NetworkDeck.Remove(NetworkGameManager.Instance.NetworkDeck[0]);
+            deck.Remove(deck[0]);
+
+        }
+        else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            if (Host)
+            {
+                NetworkGameManager.Instance.Rpc_RemoveCardFromDeck(0);
+
+            }
+
         }
         throwedCards.Add(card);
 
@@ -718,10 +714,15 @@ public class GameControl : MonoBehaviour
             tableAnimationControl.cardCloses.Remove(cardClose);
 
             actorControl.AddCard(deck[0]);
-            deck.Remove(deck[0]);
-            if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+            if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
             {
-                NetworkGameManager.Instance.NetworkDeck.Remove(NetworkGameManager.Instance.NetworkDeck[0]);
+                deck.Remove(deck[0]);
+
+            }
+            else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+            {
+                //NetworkGameManager.Instance.Rpc_RemoveCardFromDeck(0);
+
             }
             CheckDeckCardCount();
         }
@@ -795,10 +796,15 @@ public class GameControl : MonoBehaviour
         tableAnimationControl.cardCloses.Remove(cardClose);
 
         playerControl.TakeCard(deck[0]);
-        deck.Remove(deck[0]);
-        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
         {
-            NetworkGameManager.Instance.NetworkDeck.Remove(NetworkGameManager.Instance.NetworkDeck[0]);
+            deck.Remove(deck[0]);
+
+        }
+        else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            //NetworkGameManager.Instance.Rpc_RemoveCardFromDeck(0);
+
         }
         CheckDeckCardCount();
     }
