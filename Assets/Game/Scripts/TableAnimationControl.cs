@@ -13,7 +13,7 @@ public class TableAnimationControl : MonoBehaviour
     public Transform cardCloseParent;
     public List<CardClose> cardCloses;
 
-    [SerializeField] Transform throwedCardsPos;
+    public Transform throwedCardsPos;
 
     private GameControl gameControl;
 
@@ -259,6 +259,8 @@ public class TableAnimationControl : MonoBehaviour
         iTween.MoveTo(throwedCard, iTween.Hash("position", destPos, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
         iTween.RotateTo(throwedCard, iTween.Hash("y", Random.Range(500, 900), "time", .3f));
         iTween.ScaleTo(throwedCard, iTween.Hash("scale", Vector3.one * 1.1f, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
+
+        NetworkGameManager.Instance?.Rpc_PlayerThrowCardAnimations();
 
         yield return new WaitForSecondsRealtime(1f);
 

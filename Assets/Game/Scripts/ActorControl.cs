@@ -414,6 +414,8 @@ public class ActorControl : MonoBehaviour
 
     IEnumerator ThrowCard()
     {
+        Debug.Log("kart atıldı ");
+
         yield return new WaitForSeconds(Random.Range(.5f, .8f));
 
         Card card;

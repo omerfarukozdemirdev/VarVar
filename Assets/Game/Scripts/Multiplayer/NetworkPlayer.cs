@@ -129,7 +129,7 @@ public class NetworkPlayer : NetworkBehaviour
                     NetworkGameManager.Instance.GameControl.playerControl.actorControl = NetworkGameManager.Instance.GameControl.actorControls[i];
                     NetworkGameManager.Instance.GameControl.playerControl.actorControl.player = true;
                 }
-                Debug.Log(NetworkPlayer.Players[i].CardsInHand.Count);
+                //Debug.Log(NetworkPlayer.Players[i].CardsInHand.Count);
                 NetworkGameManager.Instance.CardListFromNetworkCardList(NetworkGameManager.Instance.GameControl.actorControls[i].cardsInHand, NetworkPlayer.Players[i].CardsInHand);
                 NetworkGameManager.Instance.CardListFromNetworkCardList(NetworkGameManager.Instance.GameControl.actorControls[i].missingCards, NetworkPlayer.Players[i].MissingCards);
                 NetworkGameManager.Instance.CardListFromNetworkCardList(NetworkGameManager.Instance.GameControl.actorControls[i].remainingCards, NetworkPlayer.Players[i].RemainingCards);

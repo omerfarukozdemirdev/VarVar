@@ -36,7 +36,7 @@ public class GameControl : MonoBehaviour
     public List<Card> deck;
     public List<Card> throwedCards = new List<Card>();
     public GameObject[] throwedCardObjs;
-    [SerializeField] private GameObject lastThrowedCard;
+    public GameObject lastThrowedCard;
     [SerializeField] GameObject throwedCardBtn;
     [SerializeField] GameObject deckCardBtn;
 
@@ -50,7 +50,7 @@ public class GameControl : MonoBehaviour
     private bool betUpTurn;
     private ActorControl betUPActor;
 
-    private TableAnimationControl tableAnimationControl;
+    public TableAnimationControl tableAnimationControl;
     [HideInInspector] public PlayerControl playerControl;
 
     [SerializeField] List<int> values = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
@@ -657,8 +657,8 @@ public class GameControl : MonoBehaviour
             else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
             {
                 //NetworkGameManager.Instance.Rpc_PlayCard();
-                playingActors[playingInd].PlayCard();
-                Debug.Log("buraya bak");
+                //playingActors[playingInd].PlayCard();
+                //Debug.Log("buraya bak");
             }
 
         }
@@ -699,7 +699,7 @@ public class GameControl : MonoBehaviour
 
         }
         throwedCards.Add(card);
-
+        NetworkGameManager.Instance?.NetworkCardListFromCardList(NetworkGameManager.Instance.NetworkThrowedCards, throwedCards);
     }
 
     public void PickCard(ActorControl actorControl, bool fromDeck)
@@ -721,7 +721,7 @@ public class GameControl : MonoBehaviour
             }
             else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
             {
-                //NetworkGameManager.Instance.Rpc_RemoveCardFromDeck(0);
+                NetworkGameManager.Instance.Rpc_RemoveCardFromDeck(0);
 
             }
             CheckDeckCardCount();
@@ -730,6 +730,7 @@ public class GameControl : MonoBehaviour
         {
             Card cardType = throwedCards[throwedCards.Count - 1];
             throwedCards.Remove(cardType);
+            //NetworkGameManager.Instance?.Rpc_UpdateThrowedCards();
 
             actorControl.AddCard(cardType);
             StartCoroutine(PickCardFromThrowed(actorControl.actorTransform.GetChild(0).position));
@@ -755,7 +756,19 @@ public class GameControl : MonoBehaviour
     {
         makeNoise.PlaySFX(16, 0);
 
-        throwedCards.Add(cardType);
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        { 
+            throwedCards.Add(cardType);
+
+        }
+        else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            NetworkGameManager.Instance?.Rpc_AddThrowedCards(NetworkGameManager.Instance.CardToNetworkCard(cardType));
+
+        }
+
+
+
         actorControl.RemoveCard(cardType);
 
         float yOffset = 0;//(throwedCards.Count * .0001f) + .0001f;
@@ -768,7 +781,7 @@ public class GameControl : MonoBehaviour
         spriteRenderer.sprite = CardSpriteConverter.GetCardSpriteInd(cardType, gameConfig.deckStyles[gameConfig.deckStyleInd]);
         spriteRenderer.sortingOrder = throwedCards.Count;
         spriteRenderer.size = new Vector2(2.56f, 3.5f);
-
+        NetworkGameManager.Instance?.Rpc_AddSpriteRendererToThrowedCard(NetworkGameManager.Instance.CardToNetworkCard(cardType));
         tableAnimationControl.ThrowCard(lastThrowedCard, actorControl, yOffset);
     }
 
@@ -780,6 +793,8 @@ public class GameControl : MonoBehaviour
 
         Card cardType = throwedCards[throwedCards.Count - 1];
         throwedCards.Remove(cardType);
+        //NetworkGameManager.Instance?.Rpc_UpdateThrowedCards();
+
         lastThrowedCard.SetActive(false);
 
         playerControl.TakeCard(cardType);
@@ -803,7 +818,8 @@ public class GameControl : MonoBehaviour
         }
         else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            //NetworkGameManager.Instance.Rpc_RemoveCardFromDeck(0);
+
+            NetworkGameManager.Instance.Rpc_RemoveCardFromDeck(0);
 
         }
         CheckDeckCardCount();
