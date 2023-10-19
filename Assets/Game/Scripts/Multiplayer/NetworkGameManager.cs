@@ -34,6 +34,9 @@ public class NetworkGameManager : NetworkBehaviour
 
     [Networked(OnChanged = nameof(OnNetworkDesicionIndChanged))] public int DesicionInd { get; set; }
 
+    [Networked(OnChanged = nameof(OnNetworkPlayingIndChanged))] public int NetworkPlayingInd { get; set; }
+
+
     public bool Host;
 
     public GameObject NetworkLastThrowedCard;
@@ -231,6 +234,9 @@ public class NetworkGameManager : NetworkBehaviour
             iTween.MoveTo(throwedCard, iTween.Hash("position", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
             iTween.RotateTo(throwedCard, iTween.Hash("y", UnityEngine.Random.Range(500, 900), "time", .3f));
             iTween.ScaleTo(throwedCard, iTween.Hash("scale", Vector3.one * 1.1f, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
+
+            GameControl.NextActor();
+            
         }
 
 
@@ -263,6 +269,25 @@ public class NetworkGameManager : NetworkBehaviour
             GameControl.throwedCards.Add(NetworkCardToCard(networkCard));
 
             //CardListFromNetworkCardList(GameControl.throwedCards, NetworkThrowedCards);
+        }
+
+
+    }
+
+    private static void OnNetworkPlayingIndChanged(Changed<NetworkGameManager> changed)
+    {
+        changed.Behaviour.GameControl.playingInd = changed.Behaviour.NetworkPlayingInd;
+    }
+
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_UpdateNetworkPlayingInd()
+    {
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            NetworkPlayingInd = NetworkPlayingInd + 1;
+            if (NetworkPlayingInd > GameControl.playingActors.Count - 1)
+                NetworkPlayingInd = 0;
         }
 
 

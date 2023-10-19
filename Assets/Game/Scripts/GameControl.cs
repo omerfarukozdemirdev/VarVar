@@ -228,6 +228,7 @@ public class GameControl : MonoBehaviour
         ChooseRandomCardDealer();
         SortOrderOfPlayActors();
         DisableEnableTakeCardBtns(false);
+        playingInd = 0;
         tableAnimationControl.StartGame();
 
 
@@ -663,9 +664,19 @@ public class GameControl : MonoBehaviour
 
         }
 
-        playingInd++;
-        if (playingInd > playingActors.Count - 1)
-            playingInd = 0;
+        //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        //{
+            playingInd++;
+            if (playingInd > playingActors.Count - 1)
+                playingInd = 0;
+        //}
+        //else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        //{
+
+        //    NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd();
+        //}
+
+        
     }
 
     IEnumerator FirstGroundCard()
