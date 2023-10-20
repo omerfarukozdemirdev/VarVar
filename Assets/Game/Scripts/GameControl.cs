@@ -664,19 +664,22 @@ public class GameControl : MonoBehaviour
 
         }
 
-        //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
-        //{
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        {
             playingInd++;
             if (playingInd > playingActors.Count - 1)
                 playingInd = 0;
-        //}
+        }
         //else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         //{
+        //    playingInd++;
+        //    if (playingInd > playingActors.Count - 1)
+        //        playingInd = 0;
+        //    NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd(playingInd);
 
-        //    NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd();
         //}
 
-        
+
     }
 
     IEnumerator FirstGroundCard()

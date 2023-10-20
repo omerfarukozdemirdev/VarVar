@@ -261,7 +261,7 @@ public class TableAnimationControl : MonoBehaviour
         iTween.ScaleTo(throwedCard, iTween.Hash("scale", Vector3.one * 1.1f, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
 
         NetworkGameManager.Instance?.Rpc_PlayerThrowCardAnimations();
-
+        NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd();
         yield return new WaitForSecondsRealtime(1f);
 
         gameControl.NextActor();

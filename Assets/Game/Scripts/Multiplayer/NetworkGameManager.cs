@@ -277,14 +277,16 @@ public class NetworkGameManager : NetworkBehaviour
     private static void OnNetworkPlayingIndChanged(Changed<NetworkGameManager> changed)
     {
         changed.Behaviour.GameControl.playingInd = changed.Behaviour.NetworkPlayingInd;
+        Debug.Log("testt");
     }
 
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void Rpc_UpdateNetworkPlayingInd()
     {
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
+            Debug.Log(NetworkPlayingInd);
             NetworkPlayingInd = NetworkPlayingInd + 1;
             if (NetworkPlayingInd > GameControl.playingActors.Count - 1)
                 NetworkPlayingInd = 0;
@@ -293,11 +295,24 @@ public class NetworkGameManager : NetworkBehaviour
 
     }
 
-    //[Rpc(RpcSources.All, RpcTargets.All)]
-    //public void Rpc_PlayCard()
-    //{
-    //    GameControl.playingActors[GameControl.playingInd].PlayCard();
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_UpdateNetworkPlayingInd(int i)
+    {
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            Debug.Log(NetworkPlayingInd);
+            NetworkPlayingInd =i;
 
-    //}
+        }
+
+
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_PlayCard()
+    {
+        GameControl.playingActors[GameControl.playingInd].PlayCard();
+
+    }
 
 }
