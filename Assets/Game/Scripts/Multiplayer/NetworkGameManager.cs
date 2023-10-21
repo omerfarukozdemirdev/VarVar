@@ -236,7 +236,8 @@ public class NetworkGameManager : NetworkBehaviour
             iTween.ScaleTo(throwedCard, iTween.Hash("scale", Vector3.one * 1.1f, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
 
             GameControl.NextActor();
-            
+            //NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd();
+
         }
 
 

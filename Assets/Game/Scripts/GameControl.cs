@@ -228,7 +228,7 @@ public class GameControl : MonoBehaviour
         ChooseRandomCardDealer();
         SortOrderOfPlayActors();
         DisableEnableTakeCardBtns(false);
-        playingInd = 0;
+        //playingInd = 0;
         tableAnimationControl.StartGame();
 
 
@@ -519,6 +519,8 @@ public class GameControl : MonoBehaviour
     {
         if (desicionInd > desicionActors.Count - 1)
         {
+            Debug.Log(playingInd);
+
             if (betUp && !betUpTurn)
             {
                 List<ActorControl> newDesicitonActors = new List<ActorControl>();
@@ -568,6 +570,8 @@ public class GameControl : MonoBehaviour
                 if (!orderOfPlayActors[i].pass)
                     playingActors.Add(orderOfPlayActors[i]);
             }
+            Debug.Log(playingInd);
+            //NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd(playingInd);
 
             StartCoroutine(StartPlaying());
             return;
@@ -636,6 +640,7 @@ public class GameControl : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
 
         NextActor();
+        //NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd();
 
         drinkController.drinkButton.SetActive(true);
     }
@@ -644,6 +649,7 @@ public class GameControl : MonoBehaviour
     {
 
         makeNoise.PlaySFX(14, 0);
+        Debug.Log(playingInd);
         if (playingActors[playingInd].player)
         {
             DisableEnableTakeCardBtns(true);
@@ -678,6 +684,7 @@ public class GameControl : MonoBehaviour
         //    NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd(playingInd);
 
         //}
+        Debug.Log(playingInd);
 
 
     }
