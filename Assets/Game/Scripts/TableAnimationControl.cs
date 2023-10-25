@@ -72,7 +72,7 @@ public class TableAnimationControl : MonoBehaviour
         GameObject g;
         for (int i = 0; i < count; i++)
         {
-            if(dontInstatiate)
+            if (dontInstatiate)
             {
                 g = oldList[i].gameObject;
                 g.SetActive(true);
@@ -169,7 +169,7 @@ public class TableAnimationControl : MonoBehaviour
     IEnumerator DealCards()
     {
         gameControl.makeNoise.PlaySFX(5, 0);
-        int[] dealCounts = new int[] {2,3,4};
+        int[] dealCounts = new int[] { 2, 3, 4 };
 
         for (int i = 0; i < dealCounts.Length; i++)
         {
@@ -265,11 +265,11 @@ public class TableAnimationControl : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(1f);
 
-        NetworkGameManager.Instance?.Rpc_PlayerThrowCardAnimations();
+        // NetworkGameManager.Instance?.Rpc_PlayerThrowCardAnimations();
 
 
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
-        { 
+        {
             gameControl.NextActor();
 
         }

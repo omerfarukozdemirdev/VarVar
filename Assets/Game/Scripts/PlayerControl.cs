@@ -205,7 +205,7 @@ public class PlayerControl : MonoBehaviour
 
     void CardReleased()
     {
-        Debug.Log("Player Kart Çekti");
+        //Debug.Log("Player Kart cekti");
         NetworkGameManager.Instance?.Rpc_PlayerTakeCardAnimations();
         gameControl.makeNoise.PlaySFX(20, 0);
 
@@ -232,7 +232,17 @@ public class PlayerControl : MonoBehaviour
 
     IEnumerator TakingCard(Card cardType)
     {
-        actorControl.AddCard(cardType);
+
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        {
+            actorControl.AddCard(cardType);
+
+        }
+        else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            NetworkPlayer.Players[gameControl.actorControls.IndexOf(gameControl.playerControl.actorControl)].RPC_AddCard(NetworkGameManager.Instance.CardToNetworkCard(cardType));
+        }
+
 
         cardsInLastSlot.SetActive(true);
         cardIns[cardIns.Length - 1].gameObject.SetActive(true);
@@ -312,7 +322,18 @@ public class PlayerControl : MonoBehaviour
         finishCardArea.SetActive(false);
 
         Card card = cardPicked.GetComponentInChildren<CardTypeHolder>().cardType;
-        actorControl.RemoveCard(card);
+
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        {
+            actorControl.RemoveCard(card);
+
+        }
+        else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            NetworkPlayer.Players[gameControl.actorControls.IndexOf(gameControl.playerControl.actorControl)].RPC_RemoveCard(NetworkGameManager.Instance.CardToNetworkCard(card));
+        }
+
+
         holdedCardInFinishArea = card;
 
         int ind = GetEmptySlot();

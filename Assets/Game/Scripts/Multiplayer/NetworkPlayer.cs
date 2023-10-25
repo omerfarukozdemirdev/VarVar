@@ -170,5 +170,22 @@ public class NetworkPlayer : NetworkBehaviour
 
     }
 
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    public void RPC_SetHandCompleted(NetworkBool state)
+    {
+        HandCompleted = state;
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    public void RPC_AddCard(NetworkCard networkCard)
+    {
+        CardsInHand.Add(networkCard);
+    }
+
+    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    public void RPC_RemoveCard(NetworkCard networkCard)
+    {
+        CardsInHand.Remove(networkCard);
+    }
 
 }

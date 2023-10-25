@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Fusion;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -519,7 +521,7 @@ public class GameControl : MonoBehaviour
     {
         if (desicionInd > desicionActors.Count - 1)
         {
-            Debug.Log(playingInd);
+            // Debug.Log(playingInd);
 
             if (betUp && !betUpTurn)
             {
@@ -570,7 +572,7 @@ public class GameControl : MonoBehaviour
                 if (!orderOfPlayActors[i].pass)
                     playingActors.Add(orderOfPlayActors[i]);
             }
-            Debug.Log(playingInd);
+            // Debug.Log(playingInd);
             //NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd(playingInd);
 
             StartCoroutine(StartPlaying());
@@ -649,7 +651,7 @@ public class GameControl : MonoBehaviour
     {
 
         makeNoise.PlaySFX(14, 0);
-        Debug.Log(playingInd);
+        //        Debug.Log(playingInd);
         if (playingActors[playingInd].player)
         {
             DisableEnableTakeCardBtns(true);
@@ -684,7 +686,7 @@ public class GameControl : MonoBehaviour
         //    NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd(playingInd);
 
         //}
-        Debug.Log(playingInd);
+        // Debug.Log(playingInd);
 
 
     }
@@ -778,19 +780,20 @@ public class GameControl : MonoBehaviour
         makeNoise.PlaySFX(16, 0);
 
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
-        { 
+        {
             throwedCards.Add(cardType);
+            actorControl.RemoveCard(cardType);
 
         }
         else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
             NetworkGameManager.Instance?.Rpc_AddThrowedCards(NetworkGameManager.Instance.CardToNetworkCard(cardType));
+            NetworkPlayer.Players[actorControls.IndexOf(playerControl.actorControl)].RPC_RemoveCard(NetworkGameManager.Instance.CardToNetworkCard(cardType));
 
         }
 
 
 
-        actorControl.RemoveCard(cardType);
 
         float yOffset = 0;//(throwedCards.Count * .0001f) + .0001f;
         //lastThrowedCard = Instantiate(cardImages.cardOpens[CardSpriteConverter.GetCardSpriteInd(cardType)]);
@@ -948,6 +951,11 @@ public class GameControl : MonoBehaviour
         actorControls[0].winCounter++;
         actorControls[0].totalWinMoney += rewardMoney;
 
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            NetworkPlayer.Players[actorControls.IndexOf(playerControl.actorControl)].RPC_SetHandCompleted(true);
+            NetworkGameManager.Instance.Rpc_ShowHandCompletedPanel(actorControls.IndexOf(playerControl.actorControl));
+        }
     }
 
     public void OpenCompleteHandWarningPanel()

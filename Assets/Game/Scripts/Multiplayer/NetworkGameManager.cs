@@ -252,7 +252,7 @@ public class NetworkGameManager : NetworkBehaviour
             NetworkLastThrowedCard.SetActive(true);
 
             SpriteRenderer spriteRenderer = NetworkLastThrowedCard.GetComponentInChildren<SpriteRenderer>();
-            spriteRenderer.sprite = CardSpriteConverter.GetCardSpriteInd(NetworkCardToCard(networkCard),GameControl.gameConfig.deckStyles[GameControl.gameConfig.deckStyleInd]);
+            spriteRenderer.sprite = CardSpriteConverter.GetCardSpriteInd(NetworkCardToCard(networkCard), GameControl.gameConfig.deckStyles[GameControl.gameConfig.deckStyleInd]);
             spriteRenderer.sortingOrder = NetworkThrowedCards.Count;
             spriteRenderer.size = new Vector2(2.56f, 3.5f);
         }
@@ -278,7 +278,12 @@ public class NetworkGameManager : NetworkBehaviour
     private static void OnNetworkPlayingIndChanged(Changed<NetworkGameManager> changed)
     {
         changed.Behaviour.GameControl.playingInd = changed.Behaviour.NetworkPlayingInd;
-        Debug.Log("testt");
+        // Debug.Log(changed.Behaviour.NetworkPlayingInd);
+
+        NetworkGameManager.Instance?.Rpc_PlayerThrowCardAnimations();
+        // Debug.Log(changed.Behaviour.NetworkPlayingInd);
+
+        //        Debug.Log("testt");
     }
 
 
@@ -287,7 +292,7 @@ public class NetworkGameManager : NetworkBehaviour
     {
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            Debug.Log(NetworkPlayingInd);
+            //Debug.Log(NetworkPlayingInd);
             NetworkPlayingInd = NetworkPlayingInd + 1;
             if (NetworkPlayingInd > GameControl.playingActors.Count - 1)
                 NetworkPlayingInd = 0;
@@ -301,8 +306,8 @@ public class NetworkGameManager : NetworkBehaviour
     {
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            Debug.Log(NetworkPlayingInd);
-            NetworkPlayingInd =i;
+            //Debug.Log(NetworkPlayingInd);
+            NetworkPlayingInd = i;
 
         }
 
@@ -313,6 +318,19 @@ public class NetworkGameManager : NetworkBehaviour
     public void Rpc_PlayCard()
     {
         GameControl.playingActors[GameControl.playingInd].PlayCard();
+
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_ShowHandCompletedPanel(int winID)
+    {
+        foreach (NetworkPlayer networkPlayer in NetworkPlayer.Players)
+        {
+            if (!networkPlayer.HandCompleted)
+            {
+                FindObjectOfType<HandCompletedPanel>(true).OpenPanel(GameControl.actorControls[winID]);
+            }
+        }
 
     }
 
