@@ -3638,6 +3638,7 @@ MonoBehaviour:
   - {fileID: 853683593}
   orderOfPlayActors: []
   desicionActors: []
+  playingActors: []
   deck: []
   throwedCards: []
   throwedCardObjs: []
@@ -3647,8 +3648,10 @@ MonoBehaviour:
   cardDealerInd: 0
   orderOfPlayInd: 0
   desicionInd: 0
+  playingInd: 0
   passCount: 0
   betUp: 0
+  tableAnimationControl: {fileID: 0}
   playerControl: {fileID: 0}
   values: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d000000
   makeNoise: {fileID: 0}
@@ -3684,6 +3687,8 @@ MonoBehaviour:
   - {fileID: 2011361646}
   - {fileID: 880083742}
   - {fileID: 1037312034}
+  NewPlayerIndexList: 
+  Host: 0
 --- !u!4 &327959629
 Transform:
   m_ObjectHideFlags: 0
@@ -26461,7 +26466,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 327959628}
         m_TargetAssemblyTypeName: GameControl, Assembly-CSharp
-        m_MethodName: NextTour
+        m_MethodName: NextTourFriends
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

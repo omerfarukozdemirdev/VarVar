@@ -141,6 +141,16 @@ public class NetworkGameManager : NetworkBehaviour
 
     private static void OnNetworkCardDealerIndChanged(Changed<NetworkGameManager> changed)
     {
+        changed.Behaviour.GameControl.cardDealerInd = changed.Behaviour.NetworkCardDealerInd;
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_ChangeCardDealerInd(int cardDealerInd)
+    {
+        if (GameControl.Host)
+        {
+            NetworkCardDealerInd = cardDealerInd;
+        }
     }
 
     private static void OnNetworkDesicionIndChanged(Changed<NetworkGameManager> changed)
@@ -378,6 +388,14 @@ public class NetworkGameManager : NetworkBehaviour
             NetworkLastThrowedCard = GameControl.throwedCardObjs[GameControl.throwedCards.Count];
             GameControl.lastThrowedCard = NetworkLastThrowedCard;
         }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_NextTour()
+    {
+
+        GameControl.NextTour();
+
     }
 
 }

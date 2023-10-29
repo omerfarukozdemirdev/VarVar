@@ -156,6 +156,7 @@ public class GameControl : MonoBehaviour
         cardDealerInd++;
         if (cardDealerInd > actorControls.Count - 1)
             cardDealerInd = 0;
+        NetworkGameManager.Instance?.Rpc_ChangeCardDealerInd(cardDealerInd);
         rewardMoney = 0;
         passCount = 0;
         drinkController.drinkButton.SetActive(false);
@@ -167,6 +168,17 @@ public class GameControl : MonoBehaviour
         FindObjectOfType<MakeNoise>().PlaySFX(26, 0);
         gameConfig.cardDealerInd = -1;
         UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+    }
+
+
+    public void NextTourQuick()
+    {
+        NextTour();
+    }
+
+    public void NextTourFriends()
+    {
+        NetworkGameManager.Instance?.Rpc_NextTour();
     }
 
     public void NextTour()
@@ -202,7 +214,16 @@ public class GameControl : MonoBehaviour
         playerControl.ResetValues();
 
 
-        Invoke("StartGame", 1f);
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        {
+            Invoke("StartGame", 1f);
+
+        }
+        else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            Invoke("FriendsModeStartGame", 1f);
+
+        }
 
     }
 

@@ -26,7 +26,7 @@ public class HandCompletedPanel : MonoBehaviour
     {
         gameControl.actorControls.ForEach(x => x.totalBetMoney = x.totalBetMoney + x.moneyIn);
 
-        if (gameControl.gameCounter==gameControl.gameLimit)
+        if (gameControl.gameCounter == gameControl.gameLimit)
         {
             nextButton.SetActive(false);
             mainMenuButton.SetActive(true);
@@ -41,7 +41,7 @@ public class HandCompletedPanel : MonoBehaviour
         actorNameText.text = actorControl.actorName;
         rewardText.text = gameControl.rewardMoney.ToString();
 
-        for(int i = 0; i < cardSprites.Length; i++)
+        for (int i = 0; i < cardSprites.Length; i++)
             cardSprites[i].gameObject.SetActive(false);
 
         List<Card> cards;
@@ -54,12 +54,21 @@ public class HandCompletedPanel : MonoBehaviour
             cards = actorControl.cardsInHand;
         }
 
-        for(int i = 0; i < cards.Count; i++)
+        for (int i = 0; i < cards.Count; i++)
         {
             //cardSprites[i].sprite = gameControl.cardImages.cardImages[CardSpriteConverter.GetCardSpriteInd(cards[i])];
             cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(cards[i], gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
 
             cardSprites[i].gameObject.SetActive(true);
+        }
+
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            if (!gameControl.Host)
+            {
+                nextButton.SetActive(false);
+
+            }
         }
 
         panelBG.SetActive(true);
