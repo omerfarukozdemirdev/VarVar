@@ -205,8 +205,6 @@ public class PlayerControl : MonoBehaviour
 
     void CardReleased()
     {
-        //Debug.Log("Player Kart cekti");
-        NetworkGameManager.Instance?.Rpc_PlayerTakeCardAnimations();
         gameControl.makeNoise.PlaySFX(20, 0);
 
         Animator animator = cardPicked.GetChild(0).GetComponent<Animator>();

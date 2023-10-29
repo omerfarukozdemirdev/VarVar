@@ -651,7 +651,7 @@ public class GameControl : MonoBehaviour
     {
 
         makeNoise.PlaySFX(14, 0);
-        //        Debug.Log(playingInd);
+        // Debug.Log(playingInd);
         if (playingActors[playingInd].player)
         {
             DisableEnableTakeCardBtns(true);
@@ -665,9 +665,7 @@ public class GameControl : MonoBehaviour
             }
             else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
             {
-                //NetworkGameManager.Instance.Rpc_PlayCard();
-                //playingActors[playingInd].PlayCard();
-                //Debug.Log("buraya bak");
+
             }
 
         }
@@ -678,15 +676,7 @@ public class GameControl : MonoBehaviour
             if (playingInd > playingActors.Count - 1)
                 playingInd = 0;
         }
-        //else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-        //{
-        //    playingInd++;
-        //    if (playingInd > playingActors.Count - 1)
-        //        playingInd = 0;
-        //    NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd(playingInd);
 
-        //}
-        // Debug.Log(playingInd);
 
 
     }
@@ -696,6 +686,11 @@ public class GameControl : MonoBehaviour
 
 
         lastThrowedCard = throwedCardObjs[throwedCards.Count];
+        if (Host)
+        {
+            NetworkGameManager.Instance?.Rpc_UpdateNetworkLastThrowedCard();
+
+        }
 
         Card card = deck[0];
 
@@ -765,7 +760,6 @@ public class GameControl : MonoBehaviour
     IEnumerator PickCardFromThrowed(Vector3 pos)
     {
         pos.y = transform.position.y;
-
         iTween.MoveTo(lastThrowedCard, iTween.Hash("position", pos, "time", .2f, "easetype", iTween.EaseType.easeOutQuad));
         iTween.RotateTo(lastThrowedCard, iTween.Hash("y", 0, "time", .2f));
         iTween.ScaleTo(lastThrowedCard, iTween.Hash("scale", Vector3.one * .5f, "time", .2f, "easetype", iTween.EaseType.easeOutQuad));
@@ -800,7 +794,7 @@ public class GameControl : MonoBehaviour
         //lastThrowedCard = Instantiate(Resources.Load("CardSprite")) as GameObject;
         lastThrowedCard = throwedCardObjs[throwedCards.Count];
         lastThrowedCard.SetActive(true);
-
+        NetworkGameManager.Instance?.Rpc_UpdateNetworkLastThrowedCard();
         SpriteRenderer spriteRenderer = lastThrowedCard.GetComponentInChildren<SpriteRenderer>();
         spriteRenderer.sprite = CardSpriteConverter.GetCardSpriteInd(cardType, gameConfig.deckStyles[gameConfig.deckStyleInd]);
         spriteRenderer.sortingOrder = throwedCards.Count;
@@ -816,16 +810,28 @@ public class GameControl : MonoBehaviour
         DisableEnableTakeCardBtns(false);
 
         Card cardType = throwedCards[throwedCards.Count - 1];
-        throwedCards.Remove(cardType);
         //NetworkGameManager.Instance?.Rpc_UpdateThrowedCards();
 
-        lastThrowedCard.SetActive(false);
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        {
+            throwedCards.Remove(cardType);
+            lastThrowedCard.SetActive(false);
+
+        }
+        else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            NetworkGameManager.Instance.Rpc_RemoveThrowedCards(NetworkGameManager.Instance.CardToNetworkCard(cardType));
+            NetworkGameManager.Instance.RPC_PickedCardFromThrowed();
+        }
 
         playerControl.TakeCard(cardType);
+
     }
 
     public void TakeCardFromDeck()
     {
+        Debug.Log("Player deckten Kart cekti");
+
         makeNoise.PlaySFX(15, 0);
 
         DisableEnableTakeCardBtns(false);
@@ -844,6 +850,7 @@ public class GameControl : MonoBehaviour
         {
 
             NetworkGameManager.Instance.Rpc_RemoveCardFromDeck(0);
+            NetworkGameManager.Instance?.Rpc_PlayerTakeCardAnimations();
 
         }
         CheckDeckCardCount();

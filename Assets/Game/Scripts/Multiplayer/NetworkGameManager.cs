@@ -96,12 +96,10 @@ public class NetworkGameManager : NetworkBehaviour
     public void NetworkCardListFromCardList(NetworkLinkedList<NetworkCard> networkCardList, List<Card> cardList)
     {
         networkCardList.Clear();
-        //int counter = 0;
         foreach (Card card in cardList)
         {
             NetworkCard networkCard = new NetworkCard() { suit = (CardSuit)card.suit, value = card.value };
-            //networkCardList.Set(counter, networkCard);
-            //counter++;
+
             networkCardList.Add(networkCard);
         }
     }
@@ -143,13 +141,11 @@ public class NetworkGameManager : NetworkBehaviour
 
     private static void OnNetworkCardDealerIndChanged(Changed<NetworkGameManager> changed)
     {
-        //changed.Behaviour.GameControl.cardDealerInd = changed.Behaviour.NetworkCardDealerInd;
     }
 
     private static void OnNetworkDesicionIndChanged(Changed<NetworkGameManager> changed)
     {
         changed.Behaviour.GameControl.desicionInd = changed.Behaviour.DesicionInd;
-        //changed.Behaviour.GameControl.ActorDecisiton();
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -162,7 +158,6 @@ public class NetworkGameManager : NetworkBehaviour
     public void Rpc_DecidePlayer()
     {
         GameControl.desicionActors[GameControl.desicionInd].DecidePlayer();
-        // GameControl.orderOfPlayActors[GameControl.desicionInd].DecidePlayer();
 
     }
 
@@ -198,10 +193,17 @@ public class NetworkGameManager : NetworkBehaviour
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
 
+
+
+            FindObjectOfType<TableAnimationControl>().cardCloses.Remove(FindObjectOfType<TableAnimationControl>().cardCloses.Last());
             var throwedCard = FindObjectOfType<TableAnimationControl>().cardCloses.Last();
-            iTween.MoveTo(throwedCard.gameObject, iTween.Hash("position", GameControl.actorControls[GameControl.playingInd].actorTransform.GetChild(0).position, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
-            iTween.RotateTo(throwedCard.gameObject, iTween.Hash("y", UnityEngine.Random.Range(500, 900), "time", .3f));
-            iTween.ScaleTo(throwedCard.gameObject, iTween.Hash("scale", Vector3.one * 1.1f, "time", .3f, "easetype", iTween.EaseType.easeOutBounce, "onComplete", "OpenDrinkButton", "onCompleteTarget", gameObject));
+            if (GameControl.playingActors[GameControl.playingInd] != GameControl.playerControl.actorControl)
+            {
+                iTween.MoveTo(throwedCard.gameObject, iTween.Hash("position", GameControl.playingActors[GameControl.playingInd].actorTransform.GetChild(0).position, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+                iTween.RotateTo(throwedCard.gameObject, iTween.Hash("y", UnityEngine.Random.Range(500, 900), "time", .3f));
+                iTween.ScaleTo(throwedCard.gameObject, iTween.Hash("scale", Vector3.one * 1.1f, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
+
+            }
             StartCoroutine(SetCardInvisible(throwedCard.gameObject));
         }
 
@@ -219,8 +221,6 @@ public class NetworkGameManager : NetworkBehaviour
     {
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            //var throwedCard = GameObject.Find("ThrowedCardsPos").transform.GetChild(GameControl.throwedCards.Count-1).gameObject;
-            //NetworkLastThrowedCard = GameControl.lastThrowedCard;
 
             NetworkLastThrowedCard = GameControl.throwedCardObjs[GameControl.throwedCards.Count];
             NetworkLastThrowedCard.SetActive(true);
@@ -235,8 +235,6 @@ public class NetworkGameManager : NetworkBehaviour
             iTween.RotateTo(throwedCard, iTween.Hash("y", UnityEngine.Random.Range(500, 900), "time", .3f));
             iTween.ScaleTo(throwedCard, iTween.Hash("scale", Vector3.one * 1.1f, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
 
-            GameControl.NextActor();
-            //NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd();
 
         }
 
@@ -265,11 +263,9 @@ public class NetworkGameManager : NetworkBehaviour
     {
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            //NetworkCardListFromCardList(NetworkThrowedCards, GameControl.throwedCards);
             NetworkThrowedCards.Add(networkCard);
             GameControl.throwedCards.Add(NetworkCardToCard(networkCard));
 
-            //CardListFromNetworkCardList(GameControl.throwedCards, NetworkThrowedCards);
         }
 
 
@@ -278,12 +274,11 @@ public class NetworkGameManager : NetworkBehaviour
     private static void OnNetworkPlayingIndChanged(Changed<NetworkGameManager> changed)
     {
         changed.Behaviour.GameControl.playingInd = changed.Behaviour.NetworkPlayingInd;
-        // Debug.Log(changed.Behaviour.NetworkPlayingInd);
 
         NetworkGameManager.Instance?.Rpc_PlayerThrowCardAnimations();
-        // Debug.Log(changed.Behaviour.NetworkPlayingInd);
+        changed.Behaviour.GameControl.NextActor();
 
-        //        Debug.Log("testt");
+
     }
 
 
@@ -332,6 +327,57 @@ public class NetworkGameManager : NetworkBehaviour
             }
         }
 
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_PickedCardFromThrowed()
+    {
+        StartCoroutine(PickCardFromThrowedAnimation());
+    }
+
+    IEnumerator PickCardFromThrowedAnimation()
+    {
+        // GameControl.lastThrowedCard = GameControl.throwedCardObjs[GameControl.throwedCards.Count];
+
+        if (GameControl.playingActors[GameControl.playingInd] != GameControl.playerControl.actorControl)
+        {
+            iTween.MoveTo(GameControl.lastThrowedCard, iTween.Hash("position", GameControl.playingActors[GameControl.playingInd].actorTransform.GetChild(0).position, "time", .2f, "easetype", iTween.EaseType.easeOutQuad));
+            iTween.RotateTo(GameControl.lastThrowedCard, iTween.Hash("y", 0, "time", .2f));
+            iTween.ScaleTo(GameControl.lastThrowedCard, iTween.Hash("scale", Vector3.one * .5f, "time", .2f, "easetype", iTween.EaseType.easeOutQuad));
+            yield return new WaitForSeconds(.2f);
+            GameControl.lastThrowedCard.SetActive(false);
+        }
+        GameControl.lastThrowedCard.SetActive(false);
+
+
+
+
+    }
+
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_RemoveThrowedCards(NetworkCard networkCard)
+    {
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            //GameControl.throwedCards.Remove(GameControl.throwedCards.Last());
+            // GameControl.throwedCards.Remove(NetworkCardToCard(networkCard));
+            NetworkThrowedCards.Remove(networkCard);
+            NetworkGameManager.Instance?.CardListFromNetworkCardList(GameControl.throwedCards, NetworkGameManager.Instance.NetworkThrowedCards);
+
+            // CardListFromNetworkCardList(GameControl.throwedCards, NetworkThrowedCards);
+        }
+
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_UpdateNetworkLastThrowedCard()
+    {
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            NetworkLastThrowedCard = GameControl.throwedCardObjs[GameControl.throwedCards.Count];
+            GameControl.lastThrowedCard = NetworkLastThrowedCard;
+        }
     }
 
 }
