@@ -73,7 +73,7 @@ public class NetworkPlayer : NetworkBehaviour
             Local = this;
 
             PlayerChanged?.Invoke(this);
-            RPC_SetPlayerStats("Player_" + (Players.IndexOf(Local) + 1));
+            RPC_SetPlayerStats(PlayerPrefs.GetString("PlayerName"));
             //ActorControl = FindObjectOfType<GameControl>().actorControls[Players.IndexOf(NetworkPlayer.Local)];
         }
 
