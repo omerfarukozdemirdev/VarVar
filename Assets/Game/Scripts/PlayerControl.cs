@@ -329,6 +329,7 @@ public class PlayerControl : MonoBehaviour
         else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
             NetworkPlayer.Players[gameControl.actorControls.IndexOf(gameControl.playerControl.actorControl)].RPC_RemoveCard(NetworkGameManager.Instance.CardToNetworkCard(card));
+
         }
 
 

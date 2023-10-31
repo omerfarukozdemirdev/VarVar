@@ -73,6 +73,8 @@ public class GameControl : MonoBehaviour
     public GameObject[] actorLocations;
     public List<int> NewPlayerIndexList = new List<int>();
 
+    public List<Card> CompletedHand = new List<Card>();
+
     public bool Host;
 
 
@@ -140,14 +142,6 @@ public class GameControl : MonoBehaviour
 
     void ResetValues()
     {
-        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-        {
-            for (int i = 0; i < playingActors.Count; i++)
-            {
-                // iTween.Stop(playingActors[i].transform.GetChild(0).gameObject);
-                iTween.ScaleTo(playingActors[i].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", 0, "easetype", iTween.EaseType.easeOutQuad));
-            }
-        }
         orderOfPlayActors = new List<ActorControl>();
         desicionActors = new List<ActorControl>();
         playingActors = new List<ActorControl>();
@@ -168,6 +162,23 @@ public class GameControl : MonoBehaviour
         passCount = 0;
         drinkController.drinkButton.SetActive(false);
 
+
+
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            for (int i = 0; i < playingActors.Count; i++)
+            {
+                // iTween.Stop(playingActors[i].transform.GetChild(0).gameObject);
+                //iTween.ScaleTo(playingActors[i].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", 0, "easetype", iTween.EaseType.easeOutQuad));
+            }
+
+            if (Host)
+            {
+                NetworkGameManager.Instance?.Rpc_ChangeDesicionInd(0);
+                NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd(0);
+            }
+
+        }
 
     }
 
@@ -273,8 +284,13 @@ public class GameControl : MonoBehaviour
         tableAnimationControl.StartGame();
 
 
-
-
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+            {
+                NetworkGameManager.Instance.GameControl.actorControls[i].actorName = NetworkPlayer.Players[i].Username.ToString();
+            }
+        }
 
         gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
     }
@@ -746,7 +762,15 @@ public class GameControl : MonoBehaviour
 
         }
 
-        Card card = deck[0];
+        Card card = new Card();
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        {
+            card = deck[0];
+        }
+        else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            card = NetworkGameManager.Instance.NetworkCardToCard(NetworkGameManager.Instance.NetworkDeck[0]);
+        }
 
         SpriteRenderer spriteRenderer = lastThrowedCard.GetComponentInChildren<SpriteRenderer>();
         spriteRenderer.sprite = CardSpriteConverter.GetCardSpriteInd(card, gameConfig.deckStyles[gameConfig.deckStyleInd]);

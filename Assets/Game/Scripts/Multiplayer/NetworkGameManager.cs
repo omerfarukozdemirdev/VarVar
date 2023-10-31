@@ -30,6 +30,11 @@ public class NetworkGameManager : NetworkBehaviour
     [Capacity(150)]
     public NetworkLinkedList<NetworkCard> NetworkThrowedCards => default;
 
+    [UnitySerializeField]
+    [Networked]
+    [Capacity(150)]
+    public NetworkLinkedList<NetworkCard> NetworkCompletedHand => default;
+
     [Networked(OnChanged = nameof(OnNetworkCardDealerIndChanged))] public int NetworkCardDealerInd { get; set; }
 
     [Networked(OnChanged = nameof(OnNetworkDesicionIndChanged))] public int DesicionInd { get; set; }
@@ -264,7 +269,8 @@ public class NetworkGameManager : NetworkBehaviour
 
             SpriteRenderer spriteRenderer = NetworkLastThrowedCard.GetComponentInChildren<SpriteRenderer>();
             spriteRenderer.sprite = CardSpriteConverter.GetCardSpriteInd(NetworkCardToCard(networkCard), GameControl.gameConfig.deckStyles[GameControl.gameConfig.deckStyleInd]);
-            spriteRenderer.sortingOrder = NetworkThrowedCards.Count;
+            // spriteRenderer.sortingOrder = NetworkThrowedCards.Count;
+            spriteRenderer.sortingOrder = GameControl.throwedCards.Count;
             spriteRenderer.size = new Vector2(2.56f, 3.5f);
         }
 
@@ -287,7 +293,11 @@ public class NetworkGameManager : NetworkBehaviour
     private static void OnNetworkPlayingIndChanged(Changed<NetworkGameManager> changed)
     {
         changed.Behaviour.GameControl.playingInd = changed.Behaviour.NetworkPlayingInd;
-        NetworkGameManager.Instance?.Rpc_PlayerThrowCardAnimations();
+        if (changed.Behaviour.GameControl.throwedCards.Count > 0)
+        {
+            NetworkGameManager.Instance?.Rpc_PlayerThrowCardAnimations();
+
+        }
         changed.Behaviour.GameControl.NextActor();
 
 
@@ -426,9 +436,9 @@ public class NetworkGameManager : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void Rpc_PlayingActorStartAnimation()
     {
-        for (int i = 0; i < GameControl.playingActors.Count; i++)
+        for (int i = 0; i < GameControl.actorControls.Count; i++)
         {
-            iTween.Stop(GameControl.playingActors[i].transform.GetChild(0).gameObject);
+            iTween.Stop(GameControl.actorControls[i].transform.GetChild(0).gameObject);
         }
         iTween.ScaleTo(GameControl.playingActors[GameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
 
@@ -441,4 +451,17 @@ public class NetworkGameManager : NetworkBehaviour
     //     iTween.Stop(GameControl.playingActors[GameControl.playingInd].transform.GetChild(0).gameObject);
 
     // }
+
+    // [Rpc(RpcSources.All, RpcTargets.All)]
+    // public void Rpc_SetHandCompletedPanel(NetworkCard card)
+    // {
+
+    // }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_UpdateNetworkCompletedHand()
+    {
+        NetworkCardListFromCardList(NetworkCompletedHand, GameControl.CompletedHand);
+
+    }
 }

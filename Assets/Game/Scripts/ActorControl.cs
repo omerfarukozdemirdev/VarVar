@@ -133,6 +133,11 @@ public class ActorControl : MonoBehaviour
         speechBalloon.transform.localScale = Vector3.one;
         money.transform.localScale = Vector3.one;
 
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", 0f, "easetype", iTween.EaseType.easeOutQuad));
+
+        }
 
     }
 

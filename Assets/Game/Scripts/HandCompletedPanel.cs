@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Fusion;
 
 public class HandCompletedPanel : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class HandCompletedPanel : MonoBehaviour
     [SerializeField] Image actorAvatar;
     [SerializeField] Text actorNameText;
     [SerializeField] Text rewardText;
-    [SerializeField] Image[] cardSprites;
+    public Image[] cardSprites;
 
     [SerializeField] GameObject nextButton;
     [SerializeField] GameObject mainMenuButton;
@@ -39,8 +40,7 @@ public class HandCompletedPanel : MonoBehaviour
         }
 
         actorAvatar.sprite = actorControl.actorAvatar.sprite;
-        // actorNameText.text = actorControl.actorName;
-        actorNameText.text = PlayerPrefs.GetString("PlayerName");
+        actorNameText.text = actorControl.actorName;
         rewardText.text = gameControl.rewardMoney.ToString();
 
         for (int i = 0; i < cardSprites.Length; i++)
@@ -50,10 +50,23 @@ public class HandCompletedPanel : MonoBehaviour
         if (actorControl.player)
         {
             cards = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
+
+            if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+            {
+                gameControl.CompletedHand.Clear();
+                gameControl.CompletedHand = cards;
+                //NetworkGameManager.Instance.Rpc_UpdateNetworkCompletedHand();
+
+            }
         }
         else
         {
             cards = actorControl.cardsInHand;
+
+            // if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+            // {
+            //     NetworkGameManager.Instance.CardListFromNetworkCardList(cards, NetworkGameManager.Instance.NetworkCompletedHand);
+            // }
         }
 
         for (int i = 0; i < cards.Count; i++)
