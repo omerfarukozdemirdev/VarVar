@@ -140,6 +140,14 @@ public class GameControl : MonoBehaviour
 
     void ResetValues()
     {
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            for (int i = 0; i < playingActors.Count; i++)
+            {
+                // iTween.Stop(playingActors[i].transform.GetChild(0).gameObject);
+                iTween.ScaleTo(playingActors[i].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", 0, "easetype", iTween.EaseType.easeOutQuad));
+            }
+        }
         orderOfPlayActors = new List<ActorControl>();
         desicionActors = new List<ActorControl>();
         playingActors = new List<ActorControl>();
@@ -156,10 +164,10 @@ public class GameControl : MonoBehaviour
         cardDealerInd++;
         if (cardDealerInd > actorControls.Count - 1)
             cardDealerInd = 0;
-        NetworkGameManager.Instance?.Rpc_ChangeCardDealerInd(cardDealerInd);
         rewardMoney = 0;
         passCount = 0;
         drinkController.drinkButton.SetActive(false);
+
 
     }
 
@@ -178,11 +186,13 @@ public class GameControl : MonoBehaviour
 
     public void NextTourFriends()
     {
+
         NetworkGameManager.Instance?.Rpc_NextTour();
     }
 
     public void NextTour()
     {
+
         FindObjectOfType<MakeNoise>().PlaySFX(9, 0);
 
         //cardDealerInd++;
@@ -198,6 +208,7 @@ public class GameControl : MonoBehaviour
         actorControls.ForEach(x => x.ResetValues());
 
         gameCounter++;
+        NetworkGameManager.Instance?.Rpc_UpdateGameCounter(gameCounter);
 
         FindObjectOfType<HandCompletedPanel>(true).ClosePanel();
         for (int i = 0; i < throwedCardObjs.Length; i++)
@@ -221,6 +232,13 @@ public class GameControl : MonoBehaviour
         }
         else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
+            NetworkGameManager.Instance?.Rpc_ChangeCardDealerInd(cardDealerInd);
+            for (int i = 0; i < playingActors.Count; i++)
+            {
+                // iTween.Stop(playingActors[i].transform.GetChild(0).gameObject);
+                iTween.ScaleTo(playingActors[i].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", 0, "easetype", iTween.EaseType.easeOutQuad));
+            }
+
             Invoke("FriendsModeStartGame", 1f);
 
         }
@@ -241,7 +259,7 @@ public class GameControl : MonoBehaviour
             CreateDeck();
             ShuffleDeck();
             DealCardsToActors();
-
+            NetworkGameManager.Instance.Rpc_UpdateGameLimit(actorControls.Count);
 
 
         }
@@ -258,7 +276,7 @@ public class GameControl : MonoBehaviour
 
 
 
-        // gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
+        gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
     }
 
     public void SetTable()
@@ -486,14 +504,18 @@ public class GameControl : MonoBehaviour
         //    cardDealerInd = Random.Range(0, actorControls.Count);
 
         if (gameConfig.cardDealerInd != -1)
-            cardDealerInd = gameConfig.cardDealerInd;
-        else
-            cardDealerInd = Random.Range(0, actorControls.Count);
-
-        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            cardDealerInd = 0;
+            cardDealerInd = gameConfig.cardDealerInd;
         }
+        else
+        {
+            cardDealerInd = Random.Range(0, actorControls.Count);
+            if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+            {
+                cardDealerInd = 0;
+            }
+        }
+
     }
 
     void SortOrderOfPlayActors()
@@ -670,13 +692,25 @@ public class GameControl : MonoBehaviour
 
     public void NextActor()
     {
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            for (int i = 0; i < playingActors.Count; i++)
+            {
+                iTween.ScaleTo(playingActors[i].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+            }
+            iTween.ScaleTo(playingActors[playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
+        }
 
         makeNoise.PlaySFX(14, 0);
         // Debug.Log(playingInd);
         if (playingActors[playingInd].player)
         {
             DisableEnableTakeCardBtns(true);
-            iTween.ScaleTo(playingActors[playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+
+            if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+            {
+                iTween.ScaleTo(playingActors[playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+            }
         }
         else
         {
@@ -697,7 +731,6 @@ public class GameControl : MonoBehaviour
             if (playingInd > playingActors.Count - 1)
                 playingInd = 0;
         }
-
 
 
     }

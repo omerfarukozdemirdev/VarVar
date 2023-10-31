@@ -24,6 +24,7 @@ public class HandCompletedPanel : MonoBehaviour
 
     public void OpenPanel(ActorControl actorControl)
     {
+
         gameControl.actorControls.ForEach(x => x.totalBetMoney = x.totalBetMoney + x.moneyIn);
 
         if (gameControl.gameCounter == gameControl.gameLimit)
@@ -38,7 +39,8 @@ public class HandCompletedPanel : MonoBehaviour
         }
 
         actorAvatar.sprite = actorControl.actorAvatar.sprite;
-        actorNameText.text = actorControl.actorName;
+        // actorNameText.text = actorControl.actorName;
+        actorNameText.text = PlayerPrefs.GetString("PlayerName");
         rewardText.text = gameControl.rewardMoney.ToString();
 
         for (int i = 0; i < cardSprites.Length; i++)

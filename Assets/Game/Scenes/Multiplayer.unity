@@ -3656,7 +3656,7 @@ MonoBehaviour:
   values: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d000000
   makeNoise: {fileID: 0}
   gameCounter: 1
-  gameLimit: 7
+  gameLimit: 4
   gameTourText: {fileID: 1589159580}
   coinController: {fileID: 331149539}
   drinkController: {fileID: 1281555981}

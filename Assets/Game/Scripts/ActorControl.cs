@@ -436,8 +436,10 @@ public class ActorControl : MonoBehaviour
         gameControl.ThrowCard(card, this);
 
         yield return new WaitForSeconds(.5f);
-        iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
-
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+        }
         TakeDrink();
     }
 

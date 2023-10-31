@@ -35,6 +35,9 @@ public class NetworkGameManager : NetworkBehaviour
     [Networked(OnChanged = nameof(OnNetworkDesicionIndChanged))] public int DesicionInd { get; set; }
 
     [Networked(OnChanged = nameof(OnNetworkPlayingIndChanged))] public int NetworkPlayingInd { get; set; }
+    [Networked(OnChanged = nameof(OnNetworkGameCounterChanged))] public int NetworkGameCounter { get; set; }
+    [Networked(OnChanged = nameof(OnNetworkGameLimitChanged))] public int NetworkGameLimit { get; set; }
+
 
 
     public bool Host;
@@ -284,7 +287,6 @@ public class NetworkGameManager : NetworkBehaviour
     private static void OnNetworkPlayingIndChanged(Changed<NetworkGameManager> changed)
     {
         changed.Behaviour.GameControl.playingInd = changed.Behaviour.NetworkPlayingInd;
-
         NetworkGameManager.Instance?.Rpc_PlayerThrowCardAnimations();
         changed.Behaviour.GameControl.NextActor();
 
@@ -398,4 +400,45 @@ public class NetworkGameManager : NetworkBehaviour
 
     }
 
+
+    private static void OnNetworkGameCounterChanged(Changed<NetworkGameManager> changed)
+    {
+        changed.Behaviour.GameControl.gameCounter = changed.Behaviour.NetworkGameCounter;
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_UpdateGameCounter(int gameCounter)
+    {
+        NetworkGameCounter = gameCounter;
+    }
+
+    private static void OnNetworkGameLimitChanged(Changed<NetworkGameManager> changed)
+    {
+        changed.Behaviour.GameControl.gameLimit = changed.Behaviour.NetworkGameLimit;
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_UpdateGameLimit(int gameLimit)
+    {
+        NetworkGameLimit = gameLimit;
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_PlayingActorStartAnimation()
+    {
+        for (int i = 0; i < GameControl.playingActors.Count; i++)
+        {
+            iTween.Stop(GameControl.playingActors[i].transform.GetChild(0).gameObject);
+        }
+        iTween.ScaleTo(GameControl.playingActors[GameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
+
+    }
+
+    // [Rpc(RpcSources.All, RpcTargets.All)]
+    // public void Rpc_PlayingActorStopAnimation()
+    // {
+    //     //iTween.ScaleTo(GameControl.playingActors[GameControl.playingInd].actorAvatar.gameObject, iTween.Hash("scale", 1.5f, "time", 1f, "loopType", "pingPong"));
+    //     iTween.Stop(GameControl.playingActors[GameControl.playingInd].transform.GetChild(0).gameObject);
+
+    // }
 }
