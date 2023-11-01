@@ -43,6 +43,8 @@ public class NetworkGameManager : NetworkBehaviour
     [Networked(OnChanged = nameof(OnNetworkGameCounterChanged))] public int NetworkGameCounter { get; set; }
     [Networked(OnChanged = nameof(OnNetworkGameLimitChanged))] public int NetworkGameLimit { get; set; }
     [Networked(OnChanged = nameof(OnNetworkFirstCardChanged))] public NetworkCard NetworkFirstCard { get; set; }
+    [Networked(OnChanged = nameof(OnNetworkDeckCountChanged))] public int NetworkDeckCount { get; set; }
+
 
 
 
@@ -130,6 +132,7 @@ public class NetworkGameManager : NetworkBehaviour
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
             NetworkCardListFromCardList(NetworkDeck, GameControl.deck);
+            NetworkDeckCount = NetworkDeck.Count();
         }
     }
 
@@ -139,6 +142,7 @@ public class NetworkGameManager : NetworkBehaviour
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
             NetworkCardListFromCardList(NetworkDeck, GameControl.deck);
+            NetworkDeckCount = NetworkDeck.Count();
 
             NetworkCardListFromCardList(NetworkPlayer.Players[actor].CardsInHand, GameControl.actorControls[actor].cardsInHand);
             NetworkCardListFromCardList(NetworkPlayer.Players[actor].MissingCards, GameControl.actorControls[actor].missingCards);
@@ -192,9 +196,17 @@ public class NetworkGameManager : NetworkBehaviour
                 CardListFromNetworkCardList(GameControl.deck, NetworkDeck);
             }
         }
-
-
     }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_ResetDeck()
+    {
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            CardListFromNetworkCardList(GameControl.deck, NetworkDeck);
+        }
+    }
+
 
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void Rpc_RemoveCardFromDeck(int i)
@@ -203,6 +215,8 @@ public class NetworkGameManager : NetworkBehaviour
         {
             GameControl.deck.Remove(GameControl.deck[i]);
             NetworkDeck.Remove(NetworkDeck[i]);
+            NetworkDeckCount = NetworkDeck.Count();
+
         }
 
 
@@ -471,5 +485,13 @@ public class NetworkGameManager : NetworkBehaviour
     private static void OnNetworkFirstCardChanged(Changed<NetworkGameManager> changed)
     {
         changed.Behaviour.GameControl.NetworkFirstGroundCard();
+    }
+
+    private static void OnNetworkDeckCountChanged(Changed<NetworkGameManager> changed)
+    {
+        if (changed.Behaviour.NetworkDeckCount == 68)
+        {
+            changed.Behaviour.Rpc_ResetDeck();
+        }
     }
 }

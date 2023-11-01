@@ -176,6 +176,7 @@ public class GameControl : MonoBehaviour
             {
                 NetworkGameManager.Instance?.Rpc_ChangeDesicionInd(0);
                 NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd(0);
+                NetworkGameManager.Instance.NetworkThrowedCards.Clear();
             }
 
         }
