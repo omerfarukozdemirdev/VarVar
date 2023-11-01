@@ -402,7 +402,6 @@ public class GameControl : MonoBehaviour
             deck[randomIndex] = temp;
         }
 
-        NetworkGameManager.Instance?.UpdateNetworkDeck();
     }
 
     Card FindCardInDeck(Card card)
@@ -696,7 +695,16 @@ public class GameControl : MonoBehaviour
 
         makeNoise.PlaySFX(13, 0);
 
-        StartCoroutine(FirstGroundCard());
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        {
+            StartCoroutine(FirstGroundCard());
+        }
+        else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            NetworkGameManager.Instance.NetworkFirstCard = NetworkGameManager.Instance.NetworkDeck[0];
+
+        }
+
 
         yield return new WaitForSeconds(2.5f);
 
@@ -749,6 +757,11 @@ public class GameControl : MonoBehaviour
         }
 
 
+    }
+
+    public void NetworkFirstGroundCard()
+    {
+        StartCoroutine(FirstGroundCard());
     }
 
     IEnumerator FirstGroundCard()

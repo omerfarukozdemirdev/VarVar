@@ -42,6 +42,9 @@ public class NetworkGameManager : NetworkBehaviour
     [Networked(OnChanged = nameof(OnNetworkPlayingIndChanged))] public int NetworkPlayingInd { get; set; }
     [Networked(OnChanged = nameof(OnNetworkGameCounterChanged))] public int NetworkGameCounter { get; set; }
     [Networked(OnChanged = nameof(OnNetworkGameLimitChanged))] public int NetworkGameLimit { get; set; }
+    [Networked(OnChanged = nameof(OnNetworkFirstCardChanged))] public NetworkCard NetworkFirstCard { get; set; }
+
+
 
 
 
@@ -463,5 +466,10 @@ public class NetworkGameManager : NetworkBehaviour
     {
         NetworkCardListFromCardList(NetworkCompletedHand, GameControl.CompletedHand);
 
+    }
+
+    private static void OnNetworkFirstCardChanged(Changed<NetworkGameManager> changed)
+    {
+        changed.Behaviour.GameControl.NetworkFirstGroundCard();
     }
 }
