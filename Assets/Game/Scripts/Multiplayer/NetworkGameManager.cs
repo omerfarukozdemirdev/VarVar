@@ -256,12 +256,17 @@ public class NetworkGameManager : NetworkBehaviour
     {
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
+            var tempPlayingID = GameControl.playingInd - 1;
+            if (tempPlayingID < 0)
+            {
+                tempPlayingID = GameControl.playingActors.Count - 1;
+            }
 
             NetworkLastThrowedCard = GameControl.throwedCardObjs[GameControl.throwedCards.Count];
             NetworkLastThrowedCard.SetActive(true);
 
             var throwedCard = NetworkLastThrowedCard;
-            throwedCard.transform.SetParent(GameControl.actorControls[GameControl.playingInd].actorTransform);
+            throwedCard.transform.SetParent(GameControl.playingActors[tempPlayingID].actorTransform);
             throwedCard.transform.localPosition = new Vector3(0, .1f, 0);
             throwedCard.transform.SetParent(GameControl.tableAnimationControl.throwedCardsPos);
 
