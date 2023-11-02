@@ -1187,7 +1187,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 327959628}
         m_TargetAssemblyTypeName: GameControl, Assembly-CSharp
-        m_MethodName: NewGame
+        m_MethodName: Rpc_NewGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3688,6 +3688,7 @@ MonoBehaviour:
   - {fileID: 880083742}
   - {fileID: 1037312034}
   NewPlayerIndexList: 
+  CompletedHand: []
   Host: 0
 --- !u!4 &327959629
 Transform:

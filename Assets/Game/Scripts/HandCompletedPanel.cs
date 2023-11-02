@@ -82,8 +82,10 @@ public class HandCompletedPanel : MonoBehaviour
             if (!gameControl.Host)
             {
                 nextButton.SetActive(false);
+                mainMenuButton.SetActive(false);
 
             }
+            gameControl.playerWinPanel.SetActive(false);
         }
 
         panelBG.SetActive(true);

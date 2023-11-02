@@ -466,19 +466,6 @@ public class NetworkGameManager : NetworkBehaviour
 
     }
 
-    // [Rpc(RpcSources.All, RpcTargets.All)]
-    // public void Rpc_PlayingActorStopAnimation()
-    // {
-    //     //iTween.ScaleTo(GameControl.playingActors[GameControl.playingInd].actorAvatar.gameObject, iTween.Hash("scale", 1.5f, "time", 1f, "loopType", "pingPong"));
-    //     iTween.Stop(GameControl.playingActors[GameControl.playingInd].transform.GetChild(0).gameObject);
-
-    // }
-
-    // [Rpc(RpcSources.All, RpcTargets.All)]
-    // public void Rpc_SetHandCompletedPanel(NetworkCard card)
-    // {
-
-    // }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void Rpc_UpdateNetworkCompletedHand()
@@ -498,5 +485,13 @@ public class NetworkGameManager : NetworkBehaviour
         {
             changed.Behaviour.Rpc_ResetDeck();
         }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_NewGame()
+    {
+
+        GameControl.FriendsModeNewGame();
+
     }
 }

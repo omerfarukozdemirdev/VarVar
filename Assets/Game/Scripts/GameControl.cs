@@ -66,7 +66,7 @@ public class GameControl : MonoBehaviour
     public DrinkController drinkController;
     public int drinkCounter;
     [SerializeField] GameObject statisticPanel;
-    [SerializeField] GameObject playerWinPanel;
+    public GameObject playerWinPanel;
 
     public Vector3[] actorPositions;
     public Vector3[] actorRotations;
@@ -255,6 +255,18 @@ public class GameControl : MonoBehaviour
 
         }
 
+    }
+
+    public void Rpc_NewGame()
+    {
+        NetworkGameManager.Instance?.Rpc_NewGame();
+    }
+
+    public void FriendsModeNewGame()
+    {
+        gameCounter = 0;
+        NetworkGameManager.Instance.Rpc_UpdateGameCounter(gameCounter);
+        NextTour();
     }
 
     public void FriendsModeStartGame()
