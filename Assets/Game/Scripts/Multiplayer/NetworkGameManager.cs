@@ -382,7 +382,7 @@ public class NetworkGameManager : NetworkBehaviour
     IEnumerator PickCardFromThrowedAnimation()
     {
         // GameControl.lastThrowedCard = GameControl.throwedCardObjs[GameControl.throwedCards.Count];
-
+        Debug.Log("picked card from throwed");
         if (GameControl.playingActors[GameControl.playingInd] != GameControl.playerControl.actorControl)
         {
             iTween.MoveTo(GameControl.lastThrowedCard, iTween.Hash("position", GameControl.playingActors[GameControl.playingInd].actorTransform.GetChild(0).position, "time", .2f, "easetype", iTween.EaseType.easeOutQuad));

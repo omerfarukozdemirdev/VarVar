@@ -731,9 +731,9 @@ public class GameControl : MonoBehaviour
     {
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            for (int i = 0; i < playingActors.Count; i++)
+            for (int i = 0; i < actorControls.Count; i++)
             {
-                iTween.ScaleTo(playingActors[i].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+                iTween.ScaleTo(actorControls[i].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
             }
             iTween.ScaleTo(playingActors[playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
         }
@@ -780,7 +780,7 @@ public class GameControl : MonoBehaviour
     IEnumerator FirstGroundCard()
     {
 
-
+        Debug.Log("First Ground card");
         lastThrowedCard = throwedCardObjs[throwedCards.Count];
         if (Host)
         {
