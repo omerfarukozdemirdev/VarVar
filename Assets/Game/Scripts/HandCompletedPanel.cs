@@ -55,7 +55,6 @@ public class HandCompletedPanel : MonoBehaviour
             {
                 gameControl.CompletedHand.Clear();
                 gameControl.CompletedHand = cards;
-                //NetworkGameManager.Instance.Rpc_UpdateNetworkCompletedHand();
 
             }
         }
@@ -63,16 +62,21 @@ public class HandCompletedPanel : MonoBehaviour
         {
             cards = actorControl.cardsInHand;
 
-            // if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-            // {
-            //     NetworkGameManager.Instance.CardListFromNetworkCardList(cards, NetworkGameManager.Instance.NetworkCompletedHand);
-            // }
         }
 
-        for (int i = 0; i < cards.Count; i++)
+        for (int i = 0; i < 10; i++)
         {
             //cardSprites[i].sprite = gameControl.cardImages.cardImages[CardSpriteConverter.GetCardSpriteInd(cards[i])];
-            cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(cards[i], gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
+            if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+            {
+                cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(cards[i], gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
+
+            }
+            else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+            {
+                cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(NetworkGameManager.Instance.NetworkCardToCard(NetworkGameManager.Instance.NetworkCompletedHand[i]), gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
+
+            }
 
             cardSprites[i].gameObject.SetActive(true);
         }

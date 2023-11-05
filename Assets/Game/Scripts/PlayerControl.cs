@@ -352,6 +352,16 @@ public class PlayerControl : MonoBehaviour
         cardPicked = null;
         ChangeGridSpacing(gridSpacingCollaps, gridPaddingCollaps);
 
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            gameControl.CompletedHand = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
+            NetworkGameManager.Instance.Rpc_ClearCompletedHand();
+            foreach (Card cardOfCompletedHand in gameControl.CompletedHand)
+            {
+                NetworkGameManager.Instance.Rpc_AddCardToCompletedHand(NetworkGameManager.Instance.CardToNetworkCard(cardOfCompletedHand));
+            }
+        }
+
         gameControl.OpenCompleteHandWarningPanel();
     }
 

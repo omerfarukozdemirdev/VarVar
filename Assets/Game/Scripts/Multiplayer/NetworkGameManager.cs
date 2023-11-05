@@ -494,4 +494,20 @@ public class NetworkGameManager : NetworkBehaviour
         GameControl.FriendsModeNewGame();
 
     }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_AddCardToCompletedHand(NetworkCard networkCard)
+    {
+
+        NetworkCompletedHand.Add(networkCard);
+        // NetworkCompletedHandCardsCount = NetworkCompletedHand.Count();
+
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_ClearCompletedHand()
+    {
+        NetworkCompletedHand.Clear();
+    }
+
 }
