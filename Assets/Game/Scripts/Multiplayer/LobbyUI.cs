@@ -16,6 +16,11 @@ public class LobbyUI : MonoBehaviour
     private static bool IsSubscribed;
 
     private bool nextStepIsAllReady;
+    [SerializeField] private int playerCounter;
+    [SerializeField] private Text waitingPlayersMessage;
+    [SerializeField] private Text playerCounterText;
+    [SerializeField] private GameObject loadingPlayersRoot;
+
 
     private void Awake()
     {
@@ -25,7 +30,6 @@ public class LobbyUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     void LateUpdate()
@@ -73,6 +77,14 @@ public class LobbyUI : MonoBehaviour
 
         //UpdateDetails(GameManager.Instance);
         Debug.Log("eklendi");
+
+        playerCounter++;
+        playerCounterText.text = playerCounter + " / 4";
+        if (playerCounter == 4)
+        {
+            readyUp.gameObject.SetActive(true);
+            loadingPlayersRoot.SetActive(false);
+        }
     }
 
     private void ReadyUpListener()
