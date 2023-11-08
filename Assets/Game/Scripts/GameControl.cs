@@ -582,8 +582,18 @@ public class GameControl : MonoBehaviour
     {
         desicionActors = new List<ActorControl>();
 
-        for (int i = 1; i < orderOfPlayActors.Count; i++)
-            desicionActors.Add(orderOfPlayActors[i]);
+
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        {
+            for (int i = 1; i < orderOfPlayActors.Count; i++)
+                desicionActors.Add(orderOfPlayActors[i]);
+        }
+        else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            for (int i = 1; i < orderOfPlayActors.Count - 1; i++)
+                desicionActors.Add(orderOfPlayActors[i]);
+        }
+
 
         desicionInd = 0;
     }

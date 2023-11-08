@@ -123,6 +123,8 @@ public class ActorControl : MonoBehaviour
 
         pass = false;
         betUp = false;
+        NetworkPlayer.Local?.RPC_ChangePassState(false);
+        NetworkPlayer.Local?.RPC_ChangeBetUpState(false);
 
         handCompleteStep = 0;
         handCompleted = false;
