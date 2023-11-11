@@ -334,7 +334,14 @@ public class ActorControl : MonoBehaviour
                     gameControl.makeNoise.PlaySFX(10, 0);
                 }
 
-                gameControl.BetUP(this);
+                if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+                {
+                    gameControl.BetUP(this);
+                }
+                else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+                {
+                    NetworkGameManager.Instance.Rpc_BetUp(gameControl.desicionActors.IndexOf(this));
+                }
             }
             else
             {

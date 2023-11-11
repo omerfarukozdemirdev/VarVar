@@ -510,4 +510,37 @@ public class NetworkGameManager : NetworkBehaviour
         NetworkCompletedHand.Clear();
     }
 
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_BetUp(int i)
+    {
+        GameControl.BetUP(i);
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_BetUpTurn(bool value)
+    {
+        GameControl.betUpTurn = value;
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_UpdateBetUp(bool value)
+    {
+        GameControl.betUp = value;
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_UpdateDesicionActors()
+    {
+        GameControl.UpdateDesicitonActors();
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_UpdateNewDesicitonActors(int i)
+    {
+        if (!GameControl.newDesicitonActors.Contains(GameControl.orderOfPlayActors[i]))
+        {
+            GameControl.newDesicitonActors.Add(GameControl.orderOfPlayActors[i]);
+
+        }
+    }
 }

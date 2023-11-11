@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Fusion;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -35,6 +36,8 @@ public class GameControl : MonoBehaviour
     public List<ActorControl> orderOfPlayActors = new List<ActorControl>();
     public List<ActorControl> desicionActors = new List<ActorControl>();
     public List<ActorControl> playingActors = new List<ActorControl>();
+    public List<ActorControl> newDesicitonActors = new List<ActorControl>();
+
     public List<Card> deck;
     public List<Card> throwedCards = new List<Card>();
     public GameObject[] throwedCardObjs;
@@ -48,9 +51,9 @@ public class GameControl : MonoBehaviour
     public int playingInd;
 
     [HideInInspector] public int passCount;
-    [HideInInspector] public bool betUp;
-    private bool betUpTurn;
-    private ActorControl betUPActor;
+    public bool betUp;
+    public bool betUpTurn;
+    [SerializeField] private ActorControl betUPActor;
 
     public TableAnimationControl tableAnimationControl;
     [HideInInspector] public PlayerControl playerControl;
@@ -152,6 +155,8 @@ public class GameControl : MonoBehaviour
         playingInd = 0;
 
         betUp = false;
+        NetworkGameManager.Instance?.Rpc_UpdateBetUp(false);
+
         betUpTurn = false;
         betUPActor = null;
 
@@ -161,7 +166,7 @@ public class GameControl : MonoBehaviour
         rewardMoney = 0;
         passCount = 0;
         drinkController.drinkButton.SetActive(false);
-
+        newDesicitonActors.Clear();
 
 
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
@@ -590,12 +595,19 @@ public class GameControl : MonoBehaviour
         }
         else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            for (int i = 1; i < orderOfPlayActors.Count - 1; i++)
+            for (int i = 1; i < orderOfPlayActors.Count; i++)
                 desicionActors.Add(orderOfPlayActors[i]);
         }
 
 
         desicionInd = 0;
+    }
+
+
+
+    public void UpdateDesicitonActors()
+    {
+        desicionActors = new List<ActorControl>(newDesicitonActors);
     }
 
     public void ActorDecisiton()
@@ -606,13 +618,23 @@ public class GameControl : MonoBehaviour
 
             if (betUp && !betUpTurn)
             {
-                List<ActorControl> newDesicitonActors = new List<ActorControl>();
+                newDesicitonActors = new List<ActorControl>();
 
                 for (int i = 0; i < orderOfPlayActors.Count - 1; i++)
                     if (!orderOfPlayActors[i].pass && orderOfPlayActors[i].moneyIn < 1000 && betUPActor != orderOfPlayActors[i])
+                    {
                         newDesicitonActors.Add(orderOfPlayActors[i]);
+                        NetworkGameManager.Instance?.Rpc_UpdateNewDesicitonActors(i);
+                    }
 
-                desicionActors = new List<ActorControl>(newDesicitonActors);
+                if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+                {
+                    desicionActors = new List<ActorControl>(newDesicitonActors);
+                }
+                else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+                {
+                    NetworkGameManager.Instance.Rpc_UpdateDesicionActors();
+                }
 
                 if (desicionActors.Count > 0)
                 {
@@ -623,6 +645,7 @@ public class GameControl : MonoBehaviour
 
                     }
                     betUpTurn = true;
+                    NetworkGameManager.Instance?.Rpc_BetUpTurn(true);
                     ActorDecisiton();
                     return;
                 }
@@ -635,13 +658,19 @@ public class GameControl : MonoBehaviour
                         playingInd = i + 1;
                     else
                         playingInd = 0;
+                    NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd(playingInd);
                 }
+
 
             while (orderOfPlayActors[playingInd].pass)
             {
                 playingInd++;
+                NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd(playingInd);
+
                 if (playingInd > orderOfPlayActors.Count - 1)
                     playingInd = 0;
+                NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd(playingInd);
+
             }
 
 
@@ -654,7 +683,6 @@ public class GameControl : MonoBehaviour
                     playingActors.Add(orderOfPlayActors[i]);
             }
             // Debug.Log(playingInd);
-            //NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd(playingInd);
 
             StartCoroutine(StartPlaying());
             return;
@@ -685,6 +713,19 @@ public class GameControl : MonoBehaviour
 
         betUp = true;
         betUPActor = actorControl;
+
+        SetRewardBetUpText();
+    }
+
+    public void BetUP(int i)
+    {
+        if (betUp)
+            return;
+
+        betUp = true;
+        NetworkGameManager.Instance.Rpc_UpdateBetUp(true);
+        Debug.Log(i);
+        betUPActor = desicionActors[i];
 
         SetRewardBetUpText();
     }

@@ -165,9 +165,13 @@ public class NetworkPlayer : NetworkBehaviour
 
     private static void OnNetworkPlayerBetUpChanged(Changed<NetworkPlayer> changed)
     {
-
-        NetworkGameManager.Instance.GameControl.actorControls[NetworkPlayer.Players.IndexOf(NetworkPlayer.Local)].betUp = changed.Behaviour.BetUp;
-
+        for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+        {
+            if (NetworkPlayer.Players[i].BetUp)
+            {
+                NetworkGameManager.Instance.GameControl.actorControls[i].betUp = changed.Behaviour.BetUp;
+            }
+        }
     }
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
