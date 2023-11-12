@@ -432,6 +432,26 @@ public class NetworkGameManager : NetworkBehaviour
 
     }
 
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_ResetAllPlayer()
+    {
+        foreach (NetworkPlayer networkPlayer in NetworkPlayer.Players)
+        {
+            networkPlayer.Pass = false;
+        }
+
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_UpdateAllPlayer()
+    {
+        for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+        {
+            GameControl.actorControls[i].pass = NetworkPlayer.Players[i].Pass;
+        }
+    }
+
+
 
     private static void OnNetworkGameCounterChanged(Changed<NetworkGameManager> changed)
     {
@@ -548,5 +568,11 @@ public class NetworkGameManager : NetworkBehaviour
     public void Rpc_CheckLastPlayer()
     {
         GameControl.CheckLastPlayer();
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_UpdateNetworkPassCounter(int i)
+    {
+        GameControl.networkPassCounter = i;
     }
 }

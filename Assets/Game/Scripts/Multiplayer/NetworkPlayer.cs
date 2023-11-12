@@ -146,13 +146,12 @@ public class NetworkPlayer : NetworkBehaviour
 
     private static void OnNetworkPlayerPassChanged(Changed<NetworkPlayer> changed)
     {
-
-
-        NetworkGameManager.Instance.GameControl.desicionActors[NetworkGameManager.Instance.DesicionInd - 1].pass = changed.Behaviour.Pass;
-        Debug.Log(NetworkGameManager.Instance.DesicionInd - 1);
-        Debug.Log(changed.Behaviour.Pass);
-        Debug.Log(NetworkGameManager.Instance.GameControl.desicionActors[NetworkGameManager.Instance.DesicionInd - 1].pass);
-        Debug.Log(NetworkGameManager.Instance.GameControl.desicionActors[NetworkGameManager.Instance.DesicionInd - 1]);
+        NetworkGameManager.Instance.Rpc_UpdateAllPlayer();
+        // NetworkGameManager.Instance.GameControl.desicionActors[NetworkGameManager.Instance.DesicionInd - 1].pass = changed.Behaviour.Pass;
+        // Debug.Log(NetworkGameManager.Instance.DesicionInd - 1);
+        // Debug.Log(changed.Behaviour.Pass);
+        // Debug.Log(NetworkGameManager.Instance.GameControl.desicionActors[NetworkGameManager.Instance.DesicionInd - 1].pass);
+        // Debug.Log(NetworkGameManager.Instance.GameControl.desicionActors[NetworkGameManager.Instance.DesicionInd - 1]);
 
     }
 

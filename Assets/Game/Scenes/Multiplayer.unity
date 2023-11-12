@@ -3639,6 +3639,7 @@ MonoBehaviour:
   orderOfPlayActors: []
   desicionActors: []
   playingActors: []
+  newDesicitonActors: []
   deck: []
   throwedCards: []
   throwedCardObjs: []
@@ -3651,6 +3652,8 @@ MonoBehaviour:
   playingInd: 0
   passCount: 0
   betUp: 0
+  betUpTurn: 0
+  betUPActor: {fileID: 0}
   tableAnimationControl: {fileID: 0}
   playerControl: {fileID: 0}
   values: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d000000

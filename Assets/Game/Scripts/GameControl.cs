@@ -79,7 +79,7 @@ public class GameControl : MonoBehaviour
     public List<Card> CompletedHand = new List<Card>();
 
     public bool Host;
-
+    public int networkPassCounter;
 
 
     private void Awake()
@@ -167,7 +167,7 @@ public class GameControl : MonoBehaviour
         passCount = 0;
         drinkController.drinkButton.SetActive(false);
         newDesicitonActors.Clear();
-
+        networkPassCounter = 0;
 
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
@@ -203,7 +203,7 @@ public class GameControl : MonoBehaviour
 
     public void NextTourFriends()
     {
-
+        NetworkGameManager.Instance.Rpc_ResetAllPlayer();
         NetworkGameManager.Instance?.Rpc_NextTour();
     }
 
@@ -271,6 +271,8 @@ public class GameControl : MonoBehaviour
     {
         gameCounter = 0;
         NetworkGameManager.Instance.Rpc_UpdateGameCounter(gameCounter);
+        NetworkGameManager.Instance.Rpc_UpdateNetworkPassCounter(0);
+        NetworkGameManager.Instance.Rpc_ResetAllPlayer();
         NextTour();
     }
 
@@ -299,7 +301,11 @@ public class GameControl : MonoBehaviour
         SortOrderOfPlayActors();
         DisableEnableTakeCardBtns(false);
         //playingInd = 0;
-        tableAnimationControl.StartGame();
+
+        if (networkPassCounter != orderOfPlayActors.Count - 1)
+        {
+            tableAnimationControl.StartGame();
+        }
 
 
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
@@ -683,8 +689,10 @@ public class GameControl : MonoBehaviour
                     playingActors.Add(orderOfPlayActors[i]);
             }
             // Debug.Log(playingInd);
-
-            StartCoroutine(StartPlaying());
+            if (networkPassCounter != orderOfPlayActors.Count - 1)
+            {
+                StartCoroutine(StartPlaying());
+            }
             return;
         }
 
@@ -1097,25 +1105,43 @@ public class GameControl : MonoBehaviour
         desicitonPanel.SetActive(false);
     }
 
+    void UpdateLastPlayerHand(ActorControl actorControl)
+    {
+        CompletedHand = new List<Card>(actorControl.cardsInHand);
+        NetworkGameManager.Instance.Rpc_ClearCompletedHand();
+        foreach (Card cardOfCompletedHand in CompletedHand)
+        {
+            NetworkGameManager.Instance.Rpc_AddCardToCompletedHand(NetworkGameManager.Instance.CardToNetworkCard(cardOfCompletedHand));
+        }
+    }
+
     public void CheckLastPlayer()
     {
-        var passCounter = 0;
+        networkPassCounter = 0;
         foreach (NetworkPlayer networkPlayer in NetworkPlayer.Players)
         {
             if (networkPlayer.Pass)
             {
-                passCounter++;
+                networkPassCounter++;
             }
         }
 
-        if (passCounter == orderOfPlayActors.Count - 2)
+        if (networkPassCounter == orderOfPlayActors.Count - 1)
         {
-            desicitonPanel.transform.GetChild(0).GetChild(2).gameObject.SetActive(false);
+            for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+            {
+                if (!NetworkPlayer.Players[i].Pass)
+                {
+                    Debug.Log(i);
+                    UpdateLastPlayerHand(actorControls[i]);
+                    FindObjectOfType<HandCompletedPanel>(true).OpenPanel(actorControls[i]);
+                }
+            }
+
+
+
         }
-        else
-        {
-            desicitonPanel.transform.GetChild(0).GetChild(2).gameObject.SetActive(true);
-        }
+
     }
 
     bool CheckPlayerHandCompleted()
