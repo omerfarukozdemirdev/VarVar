@@ -52,9 +52,15 @@
         "Temp/": true
     },
     "dotnet.defaultSolution": "VarVar.sln",
-    "javascript.suggest.completeFunctionCalls": false,
-    "typescript.suggest.completeFunctionCalls": false,
+    "javascript.suggest.completeFunctionCalls": true,
+    "typescript.suggest.completeFunctionCalls": true,
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
-    "editor.formatOnType": true
+    "editor.formatOnType": true,
+    "editor.autoClosingBrackets": "always",
+    "editor.autoSurround": "brackets",
+    "editor.language.brackets": [],
+    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": true,
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": true,
+    "editor.snippetSuggestions": "top"
 }

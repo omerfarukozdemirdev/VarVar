@@ -543,4 +543,10 @@ public class NetworkGameManager : NetworkBehaviour
 
         }
     }
+
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_CheckLastPlayer()
+    {
+        GameControl.CheckLastPlayer();
+    }
 }

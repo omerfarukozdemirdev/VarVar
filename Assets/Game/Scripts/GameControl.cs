@@ -50,7 +50,7 @@ public class GameControl : MonoBehaviour
     public int desicionInd;
     public int playingInd;
 
-    [HideInInspector] public int passCount;
+    public int passCount;
     public bool betUp;
     public bool betUpTurn;
     [SerializeField] private ActorControl betUPActor;
@@ -1090,9 +1090,32 @@ public class GameControl : MonoBehaviour
 
             NetworkGameManager.Instance.Rpc_ChangeDesicionInd(desicionInd);
 
+            NetworkGameManager.Instance?.Rpc_CheckLastPlayer();
+
         }
 
         desicitonPanel.SetActive(false);
+    }
+
+    public void CheckLastPlayer()
+    {
+        var passCounter = 0;
+        foreach (NetworkPlayer networkPlayer in NetworkPlayer.Players)
+        {
+            if (networkPlayer.Pass)
+            {
+                passCounter++;
+            }
+        }
+
+        if (passCounter == orderOfPlayActors.Count - 2)
+        {
+            desicitonPanel.transform.GetChild(0).GetChild(2).gameObject.SetActive(false);
+        }
+        else
+        {
+            desicitonPanel.transform.GetChild(0).GetChild(2).gameObject.SetActive(true);
+        }
     }
 
     bool CheckPlayerHandCompleted()
