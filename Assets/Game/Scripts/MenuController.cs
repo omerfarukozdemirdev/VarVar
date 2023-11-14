@@ -11,13 +11,21 @@ public class MenuController : MonoBehaviour
     [SerializeField] private MeshRenderer[] cardBacks;
     [SerializeField] private SpriteRenderer desk;
     [SerializeField] private SpriteRenderer background;
+    [SerializeField] private InputField firstPlayerName;
+    [SerializeField] private GameObject firstPlayerNameCanvas;
 
     private void Awake()
     {
         string pName = "Player";
 
         if (PlayerPrefs.HasKey("PlayerName"))
+        {
             pName = PlayerPrefs.GetString("PlayerName");
+        }
+        else
+        {
+            firstPlayerNameCanvas.SetActive(true);
+        }
 
         playerName.text = pName;
 
@@ -60,6 +68,14 @@ public class MenuController : MonoBehaviour
     public void SetPlayerName()
     {
         PlayerPrefs.SetString("PlayerName", playerName.text);
+    }
+
+    public void SetFirstPlayerName()
+    {
+        PlayerPrefs.SetString("PlayerName", firstPlayerName.text);
+        firstPlayerNameCanvas.SetActive(false);
+        playerName.text = PlayerPrefs.GetString("PlayerName");
+
     }
 
     public void SetAvatar()
