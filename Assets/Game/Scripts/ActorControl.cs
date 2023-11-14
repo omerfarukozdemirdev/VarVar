@@ -324,7 +324,15 @@ public class ActorControl : MonoBehaviour
 
                 if (gameControl.betUp)
                 {
-                    speechBalloon.transform.GetChild(0).gameObject.SetActive(true);
+                    if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+                    {
+                        speechBalloon.transform.GetChild(0).gameObject.SetActive(true);
+                    }
+                    else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+                    {
+                        speechBalloon.transform.GetChild(2).gameObject.SetActive(true);
+                    }
+
                     gameControl.makeNoise.PlaySFX(9, 0);
                 }
 

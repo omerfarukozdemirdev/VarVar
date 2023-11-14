@@ -13,7 +13,7 @@ public class HandCompletedPanel : MonoBehaviour
 
     [SerializeField] GameObject nextButton;
     [SerializeField] GameObject mainMenuButton;
-
+    [SerializeField] private Text completeHeaderText;
 
     private GameControl gameControl;
 
@@ -25,6 +25,15 @@ public class HandCompletedPanel : MonoBehaviour
 
     public void OpenPanel(ActorControl actorControl)
     {
+        if (gameControl.networkPassCounter == gameControl.orderOfPlayActors.Count - 1)
+        {
+            completeHeaderText.text = "Herkes Pass Dedi";
+        }
+        else
+        {
+            completeHeaderText.text = "Hand Completed";
+
+        }
 
         gameControl.actorControls.ForEach(x => x.totalBetMoney = x.totalBetMoney + x.moneyIn);
 
