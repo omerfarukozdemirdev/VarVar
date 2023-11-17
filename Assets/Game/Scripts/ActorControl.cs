@@ -43,6 +43,7 @@ public class ActorControl : MonoBehaviour
 
     public Gender gender;
 
+    [SerializeField] private NetworkPlayer networkPlayer;
 
     private void Awake()
     {
@@ -480,7 +481,11 @@ public class ActorControl : MonoBehaviour
         }
     }
 
+    public void SetNetworkPlayer(NetworkPlayer networkPlayer)
+    {
+        this.networkPlayer = networkPlayer;
 
+    }
 }
 
 public enum Gender

@@ -7,6 +7,8 @@ using System.Linq;
 
 public class NetworkPlayer : NetworkBehaviour
 {
+    NetworkGameManager networkGameManager;
+    [SerializeField] private ActorControl actorControl;
     public static readonly List<NetworkPlayer> Players = new List<NetworkPlayer>();
 
     public static Action<NetworkPlayer> PlayerJoined;
@@ -67,6 +69,9 @@ public class NetworkPlayer : NetworkBehaviour
         Players.Add(this);
 
         PlayerJoined?.Invoke(this);
+        networkGameManager = NetworkGameManager.Instance;
+        networkGameManager.NetworkPlayerList.Add(this);
+        SetPlayer();
 
         if (Object.HasInputAuthority)
         {
@@ -79,7 +84,7 @@ public class NetworkPlayer : NetworkBehaviour
 
         if (IsLeader)
         {
-            FindObjectOfType<NetworkGameManager>().Host = true;
+            networkGameManager.Host = true;
             FindObjectOfType<GameControl>().Host = true;
 
         }
@@ -126,13 +131,13 @@ public class NetworkPlayer : NetworkBehaviour
             {
                 if (NetworkPlayer.Players[i].HasInputAuthority)
                 {
-                    NetworkGameManager.Instance.GameControl.playerControl.actorControl = NetworkGameManager.Instance.GameControl.actorControls[i];
-                    NetworkGameManager.Instance.GameControl.playerControl.actorControl.player = true;
+                    changed.Behaviour.networkGameManager.GameControl.playerControl.actorControl = changed.Behaviour.networkGameManager.GameControl.actorControls[i];
+                    changed.Behaviour.networkGameManager.GameControl.playerControl.actorControl.player = true;
                 }
                 //Debug.Log(NetworkPlayer.Players[i].CardsInHand.Count);
-                NetworkGameManager.Instance.CardListFromNetworkCardList(NetworkGameManager.Instance.GameControl.actorControls[i].cardsInHand, NetworkPlayer.Players[i].CardsInHand);
-                NetworkGameManager.Instance.CardListFromNetworkCardList(NetworkGameManager.Instance.GameControl.actorControls[i].missingCards, NetworkPlayer.Players[i].MissingCards);
-                NetworkGameManager.Instance.CardListFromNetworkCardList(NetworkGameManager.Instance.GameControl.actorControls[i].remainingCards, NetworkPlayer.Players[i].RemainingCards);
+                changed.Behaviour.networkGameManager.CardListFromNetworkCardList(changed.Behaviour.networkGameManager.GameControl.actorControls[i].cardsInHand, NetworkPlayer.Players[i].CardsInHand);
+                changed.Behaviour.networkGameManager.CardListFromNetworkCardList(changed.Behaviour.networkGameManager.GameControl.actorControls[i].missingCards, NetworkPlayer.Players[i].MissingCards);
+                changed.Behaviour.networkGameManager.CardListFromNetworkCardList(changed.Behaviour.networkGameManager.GameControl.actorControls[i].remainingCards, NetworkPlayer.Players[i].RemainingCards);
 
             }
         }
@@ -146,13 +151,7 @@ public class NetworkPlayer : NetworkBehaviour
 
     private static void OnNetworkPlayerPassChanged(Changed<NetworkPlayer> changed)
     {
-        NetworkGameManager.Instance.Rpc_UpdateAllPlayer();
-        // NetworkGameManager.Instance.GameControl.desicionActors[NetworkGameManager.Instance.DesicionInd - 1].pass = changed.Behaviour.Pass;
-        // Debug.Log(NetworkGameManager.Instance.DesicionInd - 1);
-        // Debug.Log(changed.Behaviour.Pass);
-        // Debug.Log(NetworkGameManager.Instance.GameControl.desicionActors[NetworkGameManager.Instance.DesicionInd - 1].pass);
-        // Debug.Log(NetworkGameManager.Instance.GameControl.desicionActors[NetworkGameManager.Instance.DesicionInd - 1]);
-
+        changed.Behaviour.networkGameManager.Rpc_UpdateAllPlayer();
     }
 
 
@@ -168,7 +167,7 @@ public class NetworkPlayer : NetworkBehaviour
         {
             if (NetworkPlayer.Players[i].BetUp)
             {
-                NetworkGameManager.Instance.GameControl.actorControls[i].betUp = changed.Behaviour.BetUp;
+                changed.Behaviour.networkGameManager.GameControl.actorControls[i].betUp = changed.Behaviour.BetUp;
             }
         }
     }
@@ -189,6 +188,12 @@ public class NetworkPlayer : NetworkBehaviour
     public void RPC_RemoveCard(NetworkCard networkCard)
     {
         CardsInHand.Remove(networkCard);
+    }
+
+    void SetPlayer()
+    {
+        actorControl = networkGameManager.GameControl.actorControls[networkGameManager.NetworkPlayerList.IndexOf(this)];
+        actorControl.SetNetworkPlayer(this);
     }
 
 }

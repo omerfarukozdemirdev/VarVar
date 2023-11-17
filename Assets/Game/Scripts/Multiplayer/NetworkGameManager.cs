@@ -46,7 +46,10 @@ public class NetworkGameManager : NetworkBehaviour
     [Networked(OnChanged = nameof(OnNetworkDeckCountChanged))] public int NetworkDeckCount { get; set; }
 
 
-
+    [UnitySerializeField]
+    [Networked]
+    [Capacity(10)]
+    public NetworkLinkedList<NetworkPlayer> NetworkPlayerList => default;
 
 
 
