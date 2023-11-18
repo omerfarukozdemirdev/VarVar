@@ -78,13 +78,45 @@ public class ActorControl : MonoBehaviour
 
         if (player == networkPlayer)
         {
-            StartCoroutine(ShowDisconnectedBalloonCoroutine(player));
+            if (player.IsLeader)
+            {
+                ShowClosedRoomMenuPanel(0);
+
+            }
+            else
+            {
+                if (gameControl.actorControls.Count > 2)
+                {
+                    StartCoroutine(ShowDisconnectedBalloonCoroutine());
+                    DisableDisconnectedPlayer();
+                }
+                else
+                {
+                    ShowClosedRoomMenuPanel(1);
+
+                }
+
+            }
 
         }
 
     }
 
-    IEnumerator ShowDisconnectedBalloonCoroutine(NetworkPlayer player)
+    void ShowClosedRoomMenuPanel(int i)
+    {
+        gameControl.ClosedRoomMenuPanel.SetActive(true);
+        var message = gameControl.ClosedRoomMenuPanel.GetComponentInChildren<Text>();
+        if (i == 0)
+        {
+            message.text = "HOST DISCONNECT OLDUĞU İÇİN ODA KAPANMIŞTIR. LÜTFEN ANA MENÜYE DÖNÜN.";
+        }
+        else if (i == 1)
+        {
+            message.text = "ODADA TEK OYUNCU KALDIĞI İÇİN ODA KAPANMIŞTIR. LÜTFEN ANA MENÜYE DÖNÜN.";
+        }
+    }
+
+    IEnumerator ShowDisconnectedBalloonCoroutine()
     {
         // var leftedSpeechBalloon = player.ActorControl.speechBalloon;
         speechBalloon.transform.localScale = Vector3.one;
@@ -105,6 +137,14 @@ public class ActorControl : MonoBehaviour
         GetComponent<CanvasGroup>().alpha = .1f;
         iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * .9f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
 
+    }
+
+    void DisableDisconnectedPlayer()
+    {
+        gameControl.actorControls.Remove(this);
+        gameControl.orderOfPlayActors.Remove(this);
+        gameControl.desicionActors.Remove(this);
+        gameControl.playingActors.Remove(this);
     }
 
     private void Start()

@@ -70,7 +70,7 @@ public class GameControl : MonoBehaviour
     public int drinkCounter;
     [SerializeField] GameObject statisticPanel;
     public GameObject playerWinPanel;
-
+    public GameObject ClosedRoomMenuPanel;
     public Vector3[] actorPositions;
     public Vector3[] actorRotations;
     public GameObject[] actorLocations;
