@@ -62,6 +62,51 @@ public class ActorControl : MonoBehaviour
         totalBetMoney = 0;
     }
 
+    private void OnEnable()
+    {
+        NetworkPlayer.PlayerLeft += LeftOnlinePlayer;
+    }
+
+    private void OnDisable()
+    {
+        NetworkPlayer.PlayerLeft -= LeftOnlinePlayer;
+    }
+
+    private void LeftOnlinePlayer(NetworkPlayer player)
+    {
+        gameControl.makeNoise.PlaySFX(8, 0);
+
+        if (player == networkPlayer)
+        {
+            StartCoroutine(ShowDisconnectedBalloonCoroutine(player));
+
+        }
+
+    }
+
+    IEnumerator ShowDisconnectedBalloonCoroutine(NetworkPlayer player)
+    {
+        // var leftedSpeechBalloon = player.ActorControl.speechBalloon;
+        speechBalloon.transform.localScale = Vector3.one;
+        speechBalloon.SetActive(true);
+        iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+        foreach (Transform child in speechBalloon.transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+
+        yield return new WaitForSeconds(.5f);
+
+        speechBalloon.transform.GetChild(3).gameObject.SetActive(true);
+        iTween.ScaleFrom(speechBalloon, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
+
+        yield return new WaitForSeconds(.5f);
+
+        GetComponent<CanvasGroup>().alpha = .1f;
+        iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * .9f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+
+    }
+
     private void Start()
     {
         if (!player)

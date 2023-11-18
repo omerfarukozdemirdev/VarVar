@@ -9,6 +9,14 @@ public class NetworkPlayer : NetworkBehaviour
 {
     NetworkGameManager networkGameManager;
     [SerializeField] private ActorControl actorControl;
+    public ActorControl ActorControl
+    {
+        get => actorControl;
+        set
+        {
+            actorControl = value;
+        }
+    }
     public static readonly List<NetworkPlayer> Players = new List<NetworkPlayer>();
 
     public static Action<NetworkPlayer> PlayerJoined;

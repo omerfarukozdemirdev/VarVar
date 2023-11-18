@@ -16,7 +16,7 @@ public enum ConnectionStatus
 public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
 	[SerializeField] private NetworkGameManager _networkGameManagerPrefab;
-	[SerializeField] private NetworkPlayer  _networkPlayerPrefab;
+	[SerializeField] private NetworkPlayer _networkPlayerPrefab;
 	//[SerializeField] private DisconnectUI _disconnectUI;
 
 	public static ConnectionStatus ConnectionStatus = ConnectionStatus.Disconnected;
@@ -35,11 +35,11 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 		DontDestroyOnLoad(gameObject);
 		JoinOrCreateLobby();
 
-    }
+	}
 
 	public void SetCreateLobby() => _gameMode = GameMode.Host;
 	public void SetJoinLobby() => _gameMode = GameMode.Client;
-	
+
 	public void JoinOrCreateLobby()
 	{
 		SetConnectionStatus(ConnectionStatus.Connecting);
@@ -71,8 +71,8 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 		Debug.Log($"Setting connection status to {status}");
 
 		ConnectionStatus = status;
-		
-		if (!Application.isPlaying) 
+
+		if (!Application.isPlaying)
 			return;
 
 		if (status == ConnectionStatus.Disconnected || status == ConnectionStatus.Failed)
@@ -81,7 +81,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 			//UIScreen.BackToInitial();
 		}
 	}
-	
+
 	public void LeaveSession()
 	{
 		if (_runner != null)
@@ -89,7 +89,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 		else
 			SetConnectionStatus(ConnectionStatus.Disconnected);
 	}
-	
+
 	public void OnConnectedToServer(NetworkRunner runner)
 	{
 		Debug.Log("Connected to server");
@@ -103,7 +103,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 	}
 	public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
 	{
-		if (runner.CurrentScene>0)
+		if (runner.CurrentScene > 0)
 		{
 			Debug.LogWarning($"Refused connection requested by {request.RemoteAddress}");
 			request.Refuse();
@@ -135,7 +135,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 	{
 		Debug.Log($"{player.PlayerId} disconnected.");
 
-		//NetworkPlayer.RemovePlayer(runner, player);
+		NetworkPlayer.RemovePlayer(runner, player);
 
 		SetConnectionStatus(ConnectionStatus);
 	}
@@ -149,9 +149,9 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
 		//NetworkPlayer.Players.Clear();
 
-		if(_runner)
+		if (_runner)
 			Destroy(_runner.gameObject);
-		
+
 		// Reset the object pools
 		//_pool.ClearPools();
 		//_pool = null;
@@ -208,7 +208,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 		}
 	}
 
-	private static (string,string) ConnectFailedReasonToHuman(NetConnectFailedReason reason)
+	private static (string, string) ConnectFailedReasonToHuman(NetConnectFailedReason reason)
 	{
 		switch (reason)
 		{

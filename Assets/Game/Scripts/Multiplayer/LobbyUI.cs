@@ -76,7 +76,7 @@ public class LobbyUI : MonoBehaviour
         ListItems.Add(player, obj);
 
         //UpdateDetails(GameManager.Instance);
-        Debug.Log("eklendi");
+        Debug.Log(player + "lobby ui a eklendi");
 
         playerCounter++;
         playerCounterText.text = playerCounter + " / 4";
