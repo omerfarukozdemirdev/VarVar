@@ -387,7 +387,7 @@ public class GameControl : MonoBehaviour
         gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
     }
 
-    void DisableEnableTakeCardBtns(bool tf)
+    public void DisableEnableTakeCardBtns(bool tf)
     {
         throwedCardBtn.SetActive(tf);
         deckCardBtn.SetActive(tf);

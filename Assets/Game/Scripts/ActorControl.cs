@@ -89,6 +89,16 @@ public class ActorControl : MonoBehaviour
                 {
                     StartCoroutine(ShowDisconnectedBalloonCoroutine());
                     DisableDisconnectedPlayer();
+                    if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
+                    {
+                        Debug.Log("girdi");
+                        ActivateNewPlayer();
+                    }
+                    else
+                    {
+                        iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
+
+                    }
                 }
                 else
                 {
@@ -100,8 +110,10 @@ public class ActorControl : MonoBehaviour
 
         }
 
+
     }
 
+    #region Disconnect methods
     void ShowClosedRoomMenuPanel(int i)
     {
         gameControl.ClosedRoomMenuPanel.SetActive(true);
@@ -118,7 +130,7 @@ public class ActorControl : MonoBehaviour
 
     IEnumerator ShowDisconnectedBalloonCoroutine()
     {
-        // var leftedSpeechBalloon = player.ActorControl.speechBalloon;
+        iTween.Stop(speechBalloon);
         speechBalloon.transform.localScale = Vector3.one;
         speechBalloon.SetActive(true);
         iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
@@ -146,6 +158,14 @@ public class ActorControl : MonoBehaviour
         gameControl.desicionActors.Remove(this);
         gameControl.playingActors.Remove(this);
     }
+
+    void ActivateNewPlayer()
+    {
+        iTween.ScaleTo(gameControl.playerControl.actorControl.transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
+        gameControl.DisableEnableTakeCardBtns(true);
+    }
+    #endregion
+
 
     private void Start()
     {
