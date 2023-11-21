@@ -149,6 +149,8 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
 		//NetworkPlayer.Players.Clear();
 
+		NetworkGameManager.Instance.GameControl.playerControl.actorControl.ShowHostDisconnetMessagePanel();
+
 		if (_runner)
 			Destroy(_runner.gameObject);
 

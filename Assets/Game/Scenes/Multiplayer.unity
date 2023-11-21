@@ -5246,8 +5246,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "HOST DISCONNECT OLDU\u011EU \u0130\xC7\u0130N ODA KAPANMI\u015ETIR. L\xDCTFEN
-    ANA MEN\xDCYE D\xD6N\xDCN."
+  m_Text: MESSAGE
 --- !u!222 &404528411
 CanvasRenderer:
   m_ObjectHideFlags: 0

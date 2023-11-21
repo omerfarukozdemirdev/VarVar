@@ -52,6 +52,8 @@ public class NetworkPlayer : NetworkBehaviour
 
     [SerializeField][Networked] public int HandCompleteStep { get; set; }
     [Networked] public NetworkBool HandCompleted { get; set; }
+    [Networked(OnChanged = nameof(OnNetworkPlayerHostChanged))] public NetworkBool Host { get; set; }
+
 
     [Networked(OnChanged = nameof(OnNetworkPlayerPassChanged))] public NetworkBool Pass { get; set; }
     [Networked(OnChanged = nameof(OnNetworkPlayerBetUpChanged))] public NetworkBool BetUp { get; set; }
@@ -94,7 +96,8 @@ public class NetworkPlayer : NetworkBehaviour
         {
             networkGameManager.Host = true;
             FindObjectOfType<GameControl>().Host = true;
-
+            RPC_SetHostState(true);
+            actorControl.Host = true;
         }
 
     }
@@ -110,6 +113,17 @@ public class NetworkPlayer : NetworkBehaviour
     private void RPC_SetPlayerStats(NetworkString<_32> username)
     {
         Username = username;
+    }
+
+    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.StateAuthority, InvokeResim = true)]
+    private void RPC_SetHostState(NetworkBool networkBool)
+    {
+        Host = networkBool;
+    }
+
+    private static void OnNetworkPlayerHostChanged(Changed<NetworkPlayer> changed)
+    {
+        changed.Behaviour.networkGameManager.Rpc_UpdateAllPlayerHost();
     }
 
     public static void RemovePlayer(NetworkRunner runner, PlayerRef p)
@@ -159,7 +173,7 @@ public class NetworkPlayer : NetworkBehaviour
 
     private static void OnNetworkPlayerPassChanged(Changed<NetworkPlayer> changed)
     {
-        changed.Behaviour.networkGameManager.Rpc_UpdateAllPlayer();
+        changed.Behaviour.networkGameManager.Rpc_UpdateAllPlayerPass();
     }
 
 

@@ -45,6 +45,15 @@ public class ActorControl : MonoBehaviour
 
     [SerializeField] private NetworkPlayer networkPlayer;
 
+
+    [SerializeField] private bool host;
+    public bool Host
+    {
+        get { return host; }
+        set { host = value; }
+    }
+
+
     private void Awake()
     {
         gameControl = FindObjectOfType<GameControl>();
@@ -78,54 +87,34 @@ public class ActorControl : MonoBehaviour
 
         if (player == networkPlayer)
         {
-            if (player.IsLeader)
+            if (gameControl.actorControls.Count > 2)
             {
-                ShowClosedRoomMenuPanel(0);
-
-            }
-            else
-            {
-                if (gameControl.actorControls.Count > 2)
+                StartCoroutine(ShowDisconnectedBalloonCoroutine());
+                DisableDisconnectedPlayer();
+                if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
                 {
-                    StartCoroutine(ShowDisconnectedBalloonCoroutine());
-                    DisableDisconnectedPlayer();
-                    if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
-                    {
-                        Debug.Log("girdi");
-                        ActivateNewPlayer();
-                    }
-                    else
-                    {
-                        iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
-
-                    }
+                    ActivateNewPlayer();
                 }
                 else
                 {
-                    ShowClosedRoomMenuPanel(1);
+                    iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
 
                 }
+            }
+            else
+            {
+                ShowOnePlayerLeftDisconnetMessagePanel();
 
             }
-
         }
-
-
     }
 
     #region Disconnect methods
-    void ShowClosedRoomMenuPanel(int i)
+    void ShowOnePlayerLeftDisconnetMessagePanel()
     {
         gameControl.ClosedRoomMenuPanel.SetActive(true);
         var message = gameControl.ClosedRoomMenuPanel.GetComponentInChildren<Text>();
-        if (i == 0)
-        {
-            message.text = "HOST DISCONNECT OLDUĞU İÇİN ODA KAPANMIŞTIR. LÜTFEN ANA MENÜYE DÖNÜN.";
-        }
-        else if (i == 1)
-        {
-            message.text = "ODADA TEK OYUNCU KALDIĞI İÇİN ODA KAPANMIŞTIR. LÜTFEN ANA MENÜYE DÖNÜN.";
-        }
+        message.text = "ODADA TEK OYUNCU KALDIĞI İÇİN ODA KAPANMIŞTIR. LÜTFEN ANA MENÜYE DÖNÜN.";
     }
 
     IEnumerator ShowDisconnectedBalloonCoroutine()
@@ -163,6 +152,13 @@ public class ActorControl : MonoBehaviour
     {
         iTween.ScaleTo(gameControl.playerControl.actorControl.transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
         gameControl.DisableEnableTakeCardBtns(true);
+    }
+
+    public void ShowHostDisconnetMessagePanel()
+    {
+        gameControl.ClosedRoomMenuPanel.SetActive(true);
+        var message = gameControl.ClosedRoomMenuPanel.GetComponentInChildren<Text>();
+        message.text = "HOST DISCONNECT OLDUĞU İÇİN ODA KAPANMIŞTIR. LÜTFEN ANA MENÜYE DÖNÜN.";
     }
     #endregion
 

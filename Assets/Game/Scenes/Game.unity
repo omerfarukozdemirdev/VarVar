@@ -3520,6 +3520,7 @@ MonoBehaviour:
   orderOfPlayActors: []
   desicionActors: []
   playingActors: []
+  newDesicitonActors: []
   deck: []
   throwedCards: []
   throwedCardObjs: []
@@ -3532,6 +3533,8 @@ MonoBehaviour:
   playingInd: 0
   passCount: 0
   betUp: 0
+  betUpTurn: 0
+  betUPActor: {fileID: 0}
   tableAnimationControl: {fileID: 0}
   playerControl: {fileID: 0}
   values: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d000000
@@ -3544,11 +3547,14 @@ MonoBehaviour:
   drinkCounter: 0
   statisticPanel: {fileID: 410013130}
   playerWinPanel: {fileID: 1646510340}
+  ClosedRoomMenuPanel: {fileID: 0}
   actorPositions: []
   actorRotations: []
   actorLocations: []
   NewPlayerIndexList: 
+  CompletedHand: []
   Host: 0
+  networkPassCounter: 0
 --- !u!4 &327959629
 Transform:
   m_ObjectHideFlags: 0
@@ -4007,6 +4013,8 @@ MonoBehaviour:
   totalCoins: 0
   drink: {fileID: 780466043}
   gender: 0
+  networkPlayer: {fileID: 0}
+  host: 0
 --- !u!1 &361737335
 GameObject:
   m_ObjectHideFlags: 0
@@ -11327,6 +11335,8 @@ MonoBehaviour:
   totalCoins: 0
   drink: {fileID: 2105290608}
   gender: 0
+  networkPlayer: {fileID: 0}
+  host: 0
 --- !u!1 &880083742
 GameObject:
   m_ObjectHideFlags: 0
@@ -15368,6 +15378,8 @@ MonoBehaviour:
   totalCoins: 0
   drink: {fileID: 1940846698}
   gender: 0
+  networkPlayer: {fileID: 0}
+  host: 0
 --- !u!1001 &1020003988
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16552,6 +16564,7 @@ MonoBehaviour:
   - {fileID: 152885779}
   nextButton: {fileID: 1742232645}
   mainMenuButton: {fileID: 1799552074}
+  completeHeaderText: {fileID: 1673025436}
 --- !u!1 &1080815591
 GameObject:
   m_ObjectHideFlags: 0
@@ -19455,6 +19468,8 @@ MonoBehaviour:
   totalCoins: 0
   drink: {fileID: 403356192}
   gender: 0
+  networkPlayer: {fileID: 0}
+  host: 0
 --- !u!1 &1310331525
 GameObject:
   m_ObjectHideFlags: 0
@@ -22603,6 +22618,8 @@ MonoBehaviour:
   totalCoins: 0
   drink: {fileID: 1561460552}
   gender: 0
+  networkPlayer: {fileID: 0}
+  host: 0
 --- !u!1 &1517690225
 GameObject:
   m_ObjectHideFlags: 0
@@ -22836,6 +22853,8 @@ MonoBehaviour:
   totalCoins: 0
   drink: {fileID: 1740073541}
   gender: 0
+  networkPlayer: {fileID: 0}
+  host: 0
 --- !u!1 &1519101251
 GameObject:
   m_ObjectHideFlags: 0
@@ -31683,6 +31702,8 @@ MonoBehaviour:
   totalCoins: 0
   drink: {fileID: 1547996777}
   gender: 0
+  networkPlayer: {fileID: 0}
+  host: 0
 --- !u!1 &2098541286
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Fusion;
 using UnityEngine;
+using UnityEngine.UI;
 
 [System.Serializable]
 public struct NetworkCard : INetworkStruct
@@ -446,15 +447,24 @@ public class NetworkGameManager : NetworkBehaviour
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
-    public void Rpc_UpdateAllPlayer()
+    public void Rpc_UpdateAllPlayerPass()
     {
         for (int i = 0; i < NetworkPlayer.Players.Count; i++)
         {
             GameControl.actorControls[i].pass = NetworkPlayer.Players[i].Pass;
+
         }
     }
 
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_UpdateAllPlayerHost()
+    {
+        for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+        {
+            GameControl.actorControls[i].Host = NetworkPlayer.Players[i].Host;
 
+        }
+    }
 
     private static void OnNetworkGameCounterChanged(Changed<NetworkGameManager> changed)
     {
@@ -578,4 +588,6 @@ public class NetworkGameManager : NetworkBehaviour
     {
         GameControl.networkPassCounter = i;
     }
+
+
 }
