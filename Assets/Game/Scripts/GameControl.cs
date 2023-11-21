@@ -1106,7 +1106,7 @@ public class GameControl : MonoBehaviour
         desicitonPanel.SetActive(false);
     }
 
-    void UpdateLastPlayerHand(ActorControl actorControl)
+    public void UpdateLastPlayerHand(ActorControl actorControl)
     {
         CompletedHand = new List<Card>(actorControl.cardsInHand);
         NetworkGameManager.Instance.Rpc_ClearCompletedHand();

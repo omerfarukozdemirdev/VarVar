@@ -87,6 +87,7 @@ public class ActorControl : MonoBehaviour
 
         LeftPlayer(player);
         CheckLeftDisconnectMessage(player);
+        CheckLastPlayerDisconnectMessage(player);
         // if (player == networkPlayer)
         // {
         //     if (gameControl.actorControls.Count > 2 && !player.ActorControl.Host)
@@ -144,6 +145,34 @@ public class ActorControl : MonoBehaviour
                 }
             }
 
+        }
+    }
+
+    void CheckLastPlayerDisconnectMessage(NetworkPlayer player)
+    {
+        if (gameControl.actorControls.Count > 1)
+        {
+            var passCounter = 0;
+            for (int i = 0; i < gameControl.actorControls.Count; i++)
+            {
+                if (gameControl.actorControls[i].pass)
+                {
+                    passCounter++;
+                }
+            }
+
+            if (passCounter == gameControl.actorControls.Count - 1)
+            {
+                for (int i = 0; i < gameControl.actorControls.Count; i++)
+                {
+                    if (!gameControl.actorControls[i].pass)
+                    {
+                        gameControl.UpdateLastPlayerHand(gameControl.actorControls[i]);
+                        FindObjectOfType<HandCompletedPanel>(true).OpenPanel(gameControl.actorControls[i]);
+
+                    }
+                }
+            }
         }
     }
 
