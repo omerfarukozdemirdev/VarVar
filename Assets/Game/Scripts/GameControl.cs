@@ -784,7 +784,10 @@ public class GameControl : MonoBehaviour
         NextActor();
         //NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd();
 
-        drinkController.drinkButton.SetActive(true);
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        {
+            drinkController.drinkButton.SetActive(true);
+        }
     }
 
     public void NextActor()

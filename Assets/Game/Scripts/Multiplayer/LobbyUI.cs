@@ -90,9 +90,9 @@ public class LobbyUI : MonoBehaviour
     private void ReadyUpListener()
     {
         var local = NetworkPlayer.Local;
-        if (local && local.Object && local.Object.IsValid)
+        if (local && local.Object && local.Object.IsValid && !local.IsReady)
         {
-            local.RPC_ChangeReadyState(!local.IsReady);
+            local.RPC_ChangeReadyState(true);
         }
     }
 
