@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Fusion;
+using Fusion.Photon.Realtime;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -1234,7 +1235,16 @@ public class GameControl : MonoBehaviour
     public void NewGame()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(3);
+    }
 
+    public void MenuFriendMode()
+    {
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            GameObject.FindObjectOfType<NetworkSpawner>().LeaveSession();
+        }
+
+        Menu();
     }
 
 
