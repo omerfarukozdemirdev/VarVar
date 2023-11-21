@@ -85,31 +85,68 @@ public class ActorControl : MonoBehaviour
     {
         gameControl.makeNoise.PlaySFX(8, 0);
 
-        if (player == networkPlayer)
-        {
-            if (gameControl.actorControls.Count > 2)
-            {
-                StartCoroutine(ShowDisconnectedBalloonCoroutine());
-                DisableDisconnectedPlayer();
-                if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
-                {
-                    ActivateNewPlayer();
-                }
-                else
-                {
-                    iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
+        LeftPlayer(player);
+        CheckLeftDisconnectMessage(player);
+        // if (player == networkPlayer)
+        // {
+        //     if (gameControl.actorControls.Count > 2 && !player.ActorControl.Host)
+        //     {
+        //         StartCoroutine(ShowDisconnectedBalloonCoroutine());
+        //         DisableDisconnectedPlayer();
+        //         if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
+        //         {
+        //             ActivateNewPlayer();
+        //         }
+        //         else
+        //         {
+        //             iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
 
-                }
-            }
-            else
-            {
-                ShowOnePlayerLeftDisconnetMessagePanel();
+        //         }
+        //     }
+        //     else
+        //     {
+        //         ShowOnePlayerLeftDisconnetMessagePanel();
 
-            }
-        }
+        //     }
+        // }
     }
 
     #region Disconnect methods
+    void LeftPlayer(NetworkPlayer player)
+    {
+        if (player == networkPlayer)
+        {
+
+            StartCoroutine(ShowDisconnectedBalloonCoroutine());
+            DisableDisconnectedPlayer();
+            if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
+            {
+                ActivateNewPlayer();
+            }
+            else
+            {
+                iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
+
+            }
+
+        }
+    }
+
+    void CheckLeftDisconnectMessage(NetworkPlayer player)
+    {
+        if (gameControl.actorControls.Count == 1)
+        {
+            for (int i = 0; i < gameControl.actorControls.Count; i++)
+            {
+                if (gameControl.actorControls[i].Host)
+                {
+                    ShowOnePlayerLeftDisconnetMessagePanel();
+                }
+            }
+
+        }
+    }
+
     void ShowOnePlayerLeftDisconnetMessagePanel()
     {
         gameControl.ClosedRoomMenuPanel.SetActive(true);

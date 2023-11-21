@@ -82,6 +82,7 @@ public class GameControl : MonoBehaviour
     public int networkPassCounter;
 
 
+
     private void Awake()
     {
         tableAnimationControl = FindObjectOfType<TableAnimationControl>();
