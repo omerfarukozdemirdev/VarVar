@@ -50,7 +50,7 @@ public class LobbyUI : MonoBehaviour
         if (IsSubscribed) return;
 
         NetworkPlayer.PlayerJoined += AddPlayer;
-        //RoomPlayer.PlayerLeft += RemovePlayer;
+        NetworkPlayer.PlayerLeft += RemovePlayer;
 
         NetworkPlayer.PlayerChanged += EnsureAllPlayersReady;
 
@@ -59,12 +59,18 @@ public class LobbyUI : MonoBehaviour
         IsSubscribed = true;
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        NetworkPlayer.PlayerJoined -= AddPlayer;
-        NetworkPlayer.PlayerChanged -= EnsureAllPlayersReady;
+        if (!IsSubscribed) return;
 
+        NetworkPlayer.PlayerJoined -= AddPlayer;
+        NetworkPlayer.PlayerLeft -= RemovePlayer;
+
+        readyUp.onClick.RemoveListener(ReadyUpListener);
+
+        IsSubscribed = false;
     }
+
 
     private void AddPlayer(NetworkPlayer player)
     {
@@ -91,6 +97,19 @@ public class LobbyUI : MonoBehaviour
         {
             readyUp.gameObject.SetActive(true);
             loadingPlayersRoot.SetActive(false);
+        }
+    }
+
+    private void RemovePlayer(NetworkPlayer player)
+    {
+        if (!ListItems.ContainsKey(player))
+            return;
+
+        var obj = ListItems[player];
+        if (obj != null)
+        {
+            Destroy(obj.gameObject);
+            ListItems.Remove(player);
         }
     }
 

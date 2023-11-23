@@ -96,7 +96,7 @@ public class NetworkPlayer : NetworkBehaviour
         {
             networkGameManager.Host = true;
             FindObjectOfType<GameControl>().Host = true;
-            // RPC_SetHostState(true);
+            RPC_SetHostState(true);
             actorControl.Host = true;
         }
 
@@ -128,7 +128,9 @@ public class NetworkPlayer : NetworkBehaviour
 
     public static void RemovePlayer(NetworkRunner runner, PlayerRef p)
     {
-        var networkPlayer = Players.FirstOrDefault(x => x.Object.InputAuthority == p);
+        // var networkPlayer = Players.FirstOrDefault(x => x.Object.InputAuthority == p);
+        var networkPlayer = NetworkGameManager.Instance.NetworkPlayerList.FirstOrDefault(x => x.Object.InputAuthority == p);
+
         if (networkPlayer != null)
         {
             Players.Remove(networkPlayer);
