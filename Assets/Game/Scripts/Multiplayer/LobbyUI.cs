@@ -13,9 +13,9 @@ public class LobbyUI : MonoBehaviour
     public Button readyUp;
 
     private static readonly Dictionary<NetworkPlayer, LobbyItemUI> ListItems = new Dictionary<NetworkPlayer, LobbyItemUI>();
-    private static bool IsSubscribed;
+    [SerializeField] private bool IsSubscribed;
 
-    private bool nextStepIsAllReady;
+    public bool nextStepIsAllReady;
     [SerializeField] private int playerCounter;
     [SerializeField] private Text waitingPlayersMessage;
     [SerializeField] private Text playerCounterText;
@@ -34,15 +34,15 @@ public class LobbyUI : MonoBehaviour
 
     void LateUpdate()
     {
-        if (IsAllReady() && !nextStepIsAllReady)
-        {
-            NetworkUIManager.Instance.CloseLobbyPanel();
-            //NetworkUIManager.Instance.SetTable();
-            //Invoke("StartGame", 1f);
-            FindObjectOfType<GameControl>().Invoke("FriendsModeStartGame", 1f);
-            //FindObjectOfType<GameControl>().FriendsModeStartGame();
-            nextStepIsAllReady = true;
-        }
+        // if (IsAllReady() && !nextStepIsAllReady)
+        // {
+        //     NetworkUIManager.Instance.CloseLobbyPanel();
+        //     //NetworkUIManager.Instance.SetTable();
+        //     //Invoke("StartGame", 1f);
+        //     FindObjectOfType<GameControl>().Invoke("FriendsModeStartGame", 1f);
+        //     //FindObjectOfType<GameControl>().FriendsModeStartGame();
+        //     nextStepIsAllReady = true;
+        // }
     }
 
     public void Setup()
@@ -57,6 +57,13 @@ public class LobbyUI : MonoBehaviour
         readyUp.onClick.AddListener(ReadyUpListener);
 
         IsSubscribed = true;
+    }
+
+    private void OnDisable()
+    {
+        NetworkPlayer.PlayerJoined -= AddPlayer;
+        NetworkPlayer.PlayerChanged -= EnsureAllPlayersReady;
+
     }
 
     private void AddPlayer(NetworkPlayer player)
@@ -106,10 +113,12 @@ public class LobbyUI : MonoBehaviour
             //int scene = ResourceManager.Instance.tracks[GameManager.Instance.TrackId].buildIndex;
             //LevelManager.LoadTrack(scene);
             Debug.Log("Oyuncular hazır");
+            NetworkGameManager.Instance.Rpc_CheckLobbyStart();
+
         }
     }
 
-    private static bool IsAllReady() => NetworkPlayer.Players.Count > 0 && NetworkPlayer.Players.All(player => player.IsReady);
+    public bool IsAllReady() => NetworkPlayer.Players.Count > 0 && NetworkPlayer.Players.All(player => player.IsReady);
 
 
 }

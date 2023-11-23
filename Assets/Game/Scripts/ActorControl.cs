@@ -212,6 +212,7 @@ public class ActorControl : MonoBehaviour
         gameControl.orderOfPlayActors.Remove(this);
         gameControl.desicionActors.Remove(this);
         gameControl.playingActors.Remove(this);
+        NetworkGameManager.Instance.Rpc_RemoveNetworkPlayer(networkPlayer);
     }
 
     void ActivateNewPlayer()

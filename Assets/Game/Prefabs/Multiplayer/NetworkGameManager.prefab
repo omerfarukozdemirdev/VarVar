@@ -46,7 +46,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  networkUIManager: {fileID: 0}
+  NetworkUIManager: {fileID: 6499552255622183561}
+  GameControl: {fileID: 0}
+  _NetworkDeck: []
+  _NetworkThrowedCards: []
+  _NetworkCompletedHand: []
+  _NetworkCardDealerInd: 0
+  _DesicionInd: 0
+  _NetworkPlayingInd: 0
+  _NetworkGameCounter: 0
+  _NetworkGameLimit: 0
+  _NetworkFirstCard:
+    suit: 0
+    value: 0
+  _NetworkDeckCount: 0
+  _NetworkPlayerList: []
+  Host: 0
+  NetworkLastThrowedCard: {fileID: 0}
 --- !u!114 &-1408423903978298876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,4 +101,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  NetworkGameManager: {fileID: 0}
   LobbyUI: {fileID: 0}
+  NewPlayerIndexList: 

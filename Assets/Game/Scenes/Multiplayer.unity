@@ -17644,6 +17644,7 @@ MonoBehaviour:
   textPrefab: {fileID: 3517794001279820860, guid: 42f7cb97e3a2c4837a77344c2a655f63, type: 3}
   parent: {fileID: 692111123}
   readyUp: {fileID: 134183644}
+  nextStepIsAllReady: 0
   playerCounter: 0
   waitingPlayersMessage: {fileID: 1809464709}
   playerCounterText: {fileID: 639849714}
@@ -25657,7 +25658,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 327959628}
         m_TargetAssemblyTypeName: GameControl, Assembly-CSharp
-        m_MethodName: BackMainMenu
+        m_MethodName: MenuFriendMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -32,7 +32,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 		QualitySettings.vSyncCount = 1;
 
 
-		DontDestroyOnLoad(gameObject);
+		// DontDestroyOnLoad(gameObject);
 		JoinOrCreateLobby();
 
 	}
@@ -147,7 +147,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 		(string status, string message) = ShutdownReasonToHuman(shutdownReason);
 		//_disconnectUI.ShowMessage( status, message);
 
-		//NetworkPlayer.Players.Clear();
+		NetworkPlayer.Players.Clear();
 
 		NetworkGameManager.Instance.GameControl.playerControl.actorControl.ShowHostDisconnetMessagePanel();
 

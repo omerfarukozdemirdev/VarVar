@@ -66,7 +66,7 @@ public class NetworkGameManager : NetworkBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+        // DontDestroyOnLoad(gameObject);
 
 
 
@@ -76,7 +76,7 @@ public class NetworkGameManager : NetworkBehaviour
     {
         base.Spawned();
 
-        NetworkUIManager = NetworkUIManager.Instance;
+        //NetworkUIManager = NetworkUIManager.Instance;
         GameControl = FindObjectOfType<GameControl>();
 
         NetworkUIManager.Setup();
@@ -589,5 +589,21 @@ public class NetworkGameManager : NetworkBehaviour
         GameControl.networkPassCounter = i;
     }
 
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_RemoveNetworkPlayer(NetworkPlayer networkPlayer)
+    {
+        NetworkPlayerList.Remove(networkPlayer);
+    }
 
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void Rpc_CheckLobbyStart()
+    {
+        var lobbyUI = GameObject.FindObjectOfType<LobbyUI>();
+        if (lobbyUI.IsAllReady() && !lobbyUI.nextStepIsAllReady)
+        {
+            NetworkUIManager.Instance.CloseLobbyPanel();
+            FindObjectOfType<GameControl>().Invoke("FriendsModeStartGame", 1f);
+            lobbyUI.nextStepIsAllReady = true;
+        }
+    }
 }

@@ -96,7 +96,7 @@ public class NetworkPlayer : NetworkBehaviour
         {
             networkGameManager.Host = true;
             FindObjectOfType<GameControl>().Host = true;
-            RPC_SetHostState(true);
+            // RPC_SetHostState(true);
             actorControl.Host = true;
         }
 
