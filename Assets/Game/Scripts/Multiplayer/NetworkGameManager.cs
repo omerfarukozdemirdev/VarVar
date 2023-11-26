@@ -447,8 +447,9 @@ public class NetworkGameManager : NetworkBehaviour
         foreach (NetworkPlayer networkPlayer in NetworkPlayer.Players)
         {
             networkPlayer.Pass = false;
-        }
 
+        }
+        GameControl.lastThrowedCard = null;
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]

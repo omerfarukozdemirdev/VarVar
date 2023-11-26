@@ -56,13 +56,5 @@ public class CardClose : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void OnDisable()
-    {
-        iTween.Stop(this.gameObject);
-    }
 
-    private void OnEnable()
-    {
-        iTween.Stop(this.gameObject);
-    }
 }

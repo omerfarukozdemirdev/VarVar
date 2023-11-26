@@ -234,6 +234,9 @@ public class GameControl : MonoBehaviour
         {
             throwedCardObjs[i].transform.SetParent(null);
             throwedCardObjs[i].SetActive(false);
+            throwedCardObjs[i].transform.position = Vector3.zero;
+            throwedCardObjs[i].transform.rotation = Quaternion.Euler(Vector3.zero);
+            throwedCardObjs[i].transform.localScale = Vector3.one;
         }
         ResetValues();
 
@@ -933,7 +936,6 @@ public class GameControl : MonoBehaviour
         iTween.ScaleTo(lastThrowedCard, iTween.Hash("scale", Vector3.one * .5f, "time", .2f, "easetype", iTween.EaseType.easeOutQuad));
 
         yield return new WaitForSeconds(.2f);
-        iTween.Stop(lastThrowedCard);
         lastThrowedCard.SetActive(false);
     }
 
