@@ -933,7 +933,7 @@ public class GameControl : MonoBehaviour
         iTween.ScaleTo(lastThrowedCard, iTween.Hash("scale", Vector3.one * .5f, "time", .2f, "easetype", iTween.EaseType.easeOutQuad));
 
         yield return new WaitForSeconds(.2f);
-
+        iTween.Stop(lastThrowedCard);
         lastThrowedCard.SetActive(false);
     }
 

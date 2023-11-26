@@ -324,7 +324,12 @@ public class NetworkGameManager : NetworkBehaviour
             NetworkGameManager.Instance?.Rpc_PlayerThrowCardAnimations();
 
         }
-        changed.Behaviour.GameControl.NextActor();
+
+        if (changed.Behaviour.GameControl.playingActors.Count>0)
+        {
+            changed.Behaviour.GameControl.NextActor();
+
+        }
 
 
     }
