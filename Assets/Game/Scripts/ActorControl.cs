@@ -99,13 +99,22 @@ public class ActorControl : MonoBehaviour
             {
                 StartCoroutine(ShowDisconnectedBalloonCoroutine());
                 DisableDisconnectedPlayer();
-                if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
+                if (gameControl.desicionInd < gameControl.desicionActors.Count)
                 {
-                    ActivateNewPlayer();
+                    gameControl.ActorDecisiton();
+
                 }
                 else
                 {
-                    iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
+                    if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
+                    {
+                        ActivateNewPlayer();
+                    }
+                    else
+                    {
+                        iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
+                    }
+
                 }
             }
             else
