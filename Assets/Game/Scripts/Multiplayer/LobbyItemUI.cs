@@ -1,8 +1,8 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LobbyItemUI : MonoBehaviour {
+public class LobbyItemUI : MonoBehaviour
+{
 
     public Text username;
     public Image ready;
@@ -10,15 +10,17 @@ public class LobbyItemUI : MonoBehaviour {
 
     private NetworkPlayer _player;
 
-    public void SetPlayer(NetworkPlayer player) {
+    public void SetPlayer(NetworkPlayer player)
+    {
         _player = player;
     }
 
-    private void Update() {
+    private void Update()
+    {
         if (_player.Object != null && _player.Object.IsValid)
         {
             username.text = _player.Username.Value;
-            ready.gameObject.SetActive(_player.IsReady);
+            //ready.gameObject.SetActive(_player.IsReady);
         }
     }
 }

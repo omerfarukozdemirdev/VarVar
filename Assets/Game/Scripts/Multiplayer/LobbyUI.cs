@@ -1,8 +1,4 @@
-﻿using Fusion;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Resources;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -89,15 +85,15 @@ public class LobbyUI : MonoBehaviour
         ListItems.Add(player, obj);
 
         //UpdateDetails(GameManager.Instance);
-        Debug.Log(player + "lobby ui a eklendi");
+        Debug.Log(player.name + "lobby ui a eklendi");
 
         playerCounter++;
         playerCounterText.text = playerCounter + " / 4";
-        if (playerCounter == 4)
-        {
-            readyUp.gameObject.SetActive(true);
-            loadingPlayersRoot.SetActive(false);
-        }
+        //if (playerCounter == 4)
+        //{
+        //    readyUp.gameObject.SetActive(true);
+        //    loadingPlayersRoot.SetActive(false);
+        //}
     }
 
     private void RemovePlayer(NetworkPlayer player)
@@ -137,7 +133,7 @@ public class LobbyUI : MonoBehaviour
         }
     }
 
-    public bool IsAllReady() => NetworkPlayer.Players.Count > 0 && NetworkPlayer.Players.All(player => player.IsReady);
+    public bool IsAllReady() => NetworkPlayer.Players.Count == 4;
 
 
 }

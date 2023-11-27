@@ -1,10 +1,8 @@
-using System;
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Fusion;
 using UnityEngine;
-using UnityEngine.UI;
 
 [System.Serializable]
 public struct NetworkCard : INetworkStruct
@@ -325,7 +323,7 @@ public class NetworkGameManager : NetworkBehaviour
 
         }
 
-        if (changed.Behaviour.GameControl.playingActors.Count>0)
+        if (changed.Behaviour.GameControl.playingActors.Count > 0)
         {
             changed.Behaviour.GameControl.NextActor();
 
@@ -604,12 +602,12 @@ public class NetworkGameManager : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void Rpc_CheckLobbyStart()
     {
-        var lobbyUI = GameObject.FindObjectOfType<LobbyUI>();
-        if (lobbyUI.IsAllReady() && !lobbyUI.nextStepIsAllReady)
+        //var lobbyUI = GameObject.FindObjectOfType<LobbyUI>();
+        if (GameControl.LobbyPanel.GetComponent<LobbyUI>().IsAllReady())
         {
             NetworkUIManager.Instance.CloseLobbyPanel();
             FindObjectOfType<GameControl>().Invoke("FriendsModeStartGame", 1f);
-            lobbyUI.nextStepIsAllReady = true;
+
         }
     }
 }

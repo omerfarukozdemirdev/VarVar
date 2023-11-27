@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -88,28 +87,7 @@ public class ActorControl : MonoBehaviour
         LeftPlayer(player);
         CheckLeftDisconnectMessage(player);
         CheckLastPlayerDisconnectMessage(player);
-        // if (player == networkPlayer)
-        // {
-        //     if (gameControl.actorControls.Count > 2 && !player.ActorControl.Host)
-        //     {
-        //         StartCoroutine(ShowDisconnectedBalloonCoroutine());
-        //         DisableDisconnectedPlayer();
-        //         if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
-        //         {
-        //             ActivateNewPlayer();
-        //         }
-        //         else
-        //         {
-        //             iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
 
-        //         }
-        //     }
-        //     else
-        //     {
-        //         ShowOnePlayerLeftDisconnetMessagePanel();
-
-        //     }
-        // }
     }
 
     #region Disconnect methods
@@ -117,20 +95,26 @@ public class ActorControl : MonoBehaviour
     {
         if (player == networkPlayer)
         {
-
-            StartCoroutine(ShowDisconnectedBalloonCoroutine());
-            DisableDisconnectedPlayer();
-            if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
+            if (!gameControl.LobbyPanel.activeSelf)
             {
-                ActivateNewPlayer();
+                StartCoroutine(ShowDisconnectedBalloonCoroutine());
+                DisableDisconnectedPlayer();
+                if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
+                {
+                    ActivateNewPlayer();
+                }
+                else
+                {
+                    iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
+                }
             }
             else
             {
-                iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
-
+                DisableDisconnectedPlayerInLobby();
             }
 
         }
+
     }
 
     void CheckLeftDisconnectMessage(NetworkPlayer player)
@@ -212,6 +196,12 @@ public class ActorControl : MonoBehaviour
         gameControl.orderOfPlayActors.Remove(this);
         gameControl.desicionActors.Remove(this);
         gameControl.playingActors.Remove(this);
+        NetworkGameManager.Instance.Rpc_RemoveNetworkPlayer(networkPlayer);
+    }
+
+    void DisableDisconnectedPlayerInLobby()
+    {
+        gameControl.actorControls.Remove(this);
         NetworkGameManager.Instance.Rpc_RemoveNetworkPlayer(networkPlayer);
     }
 

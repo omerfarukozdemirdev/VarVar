@@ -81,7 +81,7 @@ public class GameControl : MonoBehaviour
 
     public bool Host;
     public int networkPassCounter;
-
+    public GameObject LobbyPanel;
 
 
     private void Awake()

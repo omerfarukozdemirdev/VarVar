@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Fusion;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour
 {
@@ -92,7 +91,7 @@ public class NetworkPlayer : NetworkBehaviour
             //ActorControl = FindObjectOfType<GameControl>().actorControls[Players.IndexOf(NetworkPlayer.Local)];
         }
 
-        if (IsLeader)
+        if (Object.HasStateAuthority && Players.Count == 1)
         {
             networkGameManager.Host = true;
             FindObjectOfType<GameControl>().Host = true;
