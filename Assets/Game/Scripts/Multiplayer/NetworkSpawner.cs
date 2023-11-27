@@ -1,228 +1,229 @@
-using System;
-using System.Collections.Generic;
 using Fusion;
 using Fusion.Sockets;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public enum ConnectionStatus
 {
-	Disconnected,
-	Connecting,
-	Failed,
-	Connected
+    Disconnected,
+    Connecting,
+    Failed,
+    Connected
 }
 
 public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
-	[SerializeField] private NetworkGameManager _networkGameManagerPrefab;
-	[SerializeField] private NetworkPlayer _networkPlayerPrefab;
-	//[SerializeField] private DisconnectUI _disconnectUI;
+    [SerializeField] private NetworkGameManager _networkGameManagerPrefab;
+    [SerializeField] private NetworkPlayer _networkPlayerPrefab;
+    //[SerializeField] private DisconnectUI _disconnectUI;
 
-	public static ConnectionStatus ConnectionStatus = ConnectionStatus.Disconnected;
+    public static ConnectionStatus ConnectionStatus = ConnectionStatus.Disconnected;
 
-	private GameMode _gameMode;
-	private NetworkRunner _runner;
-	//private FusionObjectPoolRoot _pool;
+    private GameMode _gameMode;
+    private NetworkRunner _runner;
+    //private FusionObjectPoolRoot _pool;
 
-	private void Start()
-	{
-		Application.runInBackground = true;
-		Application.targetFrameRate = Screen.currentResolution.refreshRate;
-		QualitySettings.vSyncCount = 1;
+    private void Start()
+    {
+        Application.runInBackground = true;
+        Application.targetFrameRate = Screen.currentResolution.refreshRate;
+        QualitySettings.vSyncCount = 1;
 
 
-		// DontDestroyOnLoad(gameObject);
-		JoinOrCreateLobby();
+        // DontDestroyOnLoad(gameObject);
+        JoinOrCreateLobby();
 
-	}
+    }
 
-	public void SetCreateLobby() => _gameMode = GameMode.Host;
-	public void SetJoinLobby() => _gameMode = GameMode.Client;
+    public void SetCreateLobby() => _gameMode = GameMode.Host;
+    public void SetJoinLobby() => _gameMode = GameMode.Client;
 
-	public void JoinOrCreateLobby()
-	{
-		SetConnectionStatus(ConnectionStatus.Connecting);
+    public void JoinOrCreateLobby()
+    {
+        SetConnectionStatus(ConnectionStatus.Connecting);
 
-		if (_runner != null)
-			LeaveSession();
+        if (_runner != null)
+            LeaveSession();
 
-		GameObject go = new GameObject("Session");
-		DontDestroyOnLoad(go);
+        GameObject go = new GameObject("Session");
+        DontDestroyOnLoad(go);
 
-		_runner = go.AddComponent<NetworkRunner>();
-		_runner.ProvideInput = _gameMode != GameMode.Server;
-		_runner.AddCallbacks(this);
+        _runner = go.AddComponent<NetworkRunner>();
+        _runner.ProvideInput = _gameMode != GameMode.Server;
+        _runner.AddCallbacks(this);
 
-		//_pool = go.AddComponent<FusionObjectPoolRoot>();
+        //_pool = go.AddComponent<FusionObjectPoolRoot>();
 
-		Debug.Log($"Created gameobject {go.name} - starting game");
-		_runner.StartGame(new StartGameArgs
-		{
-			GameMode = GameMode.AutoHostOrClient,
-			SessionName = "TestRoom",
-			SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
-			//DisableClientSessionCreation = true
-		});
-	}
+        Debug.Log($"Created gameobject {go.name} - starting game");
+        _runner.StartGame(new StartGameArgs
+        {
+            GameMode = GameMode.AutoHostOrClient,
+            //SessionName = "TestRoom",
+            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
+            //DisableClientSessionCreation = true
+            PlayerCount = 4,
+        });
 
-	private void SetConnectionStatus(ConnectionStatus status)
-	{
-		Debug.Log($"Setting connection status to {status}");
+    }
 
-		ConnectionStatus = status;
+    private void SetConnectionStatus(ConnectionStatus status)
+    {
+        Debug.Log($"Setting connection status to {status}");
 
-		if (!Application.isPlaying)
-			return;
+        ConnectionStatus = status;
 
-		if (status == ConnectionStatus.Disconnected || status == ConnectionStatus.Failed)
-		{
-			//SceneManager.LoadScene(LevelManager.LOBBY_SCENE);
-			//UIScreen.BackToInitial();
-		}
-	}
+        if (!Application.isPlaying)
+            return;
 
-	public void LeaveSession()
-	{
-		if (_runner != null)
-			_runner.Shutdown();
-		else
-			SetConnectionStatus(ConnectionStatus.Disconnected);
-	}
+        if (status == ConnectionStatus.Disconnected || status == ConnectionStatus.Failed)
+        {
+            //SceneManager.LoadScene(LevelManager.LOBBY_SCENE);
+            //UIScreen.BackToInitial();
+        }
+    }
 
-	public void OnConnectedToServer(NetworkRunner runner)
-	{
-		Debug.Log("Connected to server");
-		SetConnectionStatus(ConnectionStatus.Connected);
-	}
-	public void OnDisconnectedFromServer(NetworkRunner runner)
-	{
-		Debug.Log("Disconnected from server");
-		LeaveSession();
-		SetConnectionStatus(ConnectionStatus.Disconnected);
-	}
-	public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
-	{
-		if (runner.CurrentScene > 0)
-		{
-			Debug.LogWarning($"Refused connection requested by {request.RemoteAddress}");
-			request.Refuse();
-		}
-		else
-			request.Accept();
-	}
-	public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
-	{
-		Debug.Log($"Connect failed {reason}");
-		LeaveSession();
-		SetConnectionStatus(ConnectionStatus.Failed);
-		(string status, string message) = ConnectFailedReasonToHuman(reason);
-		//_disconnectUI.ShowMessage(status,message);
-	}
-	public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
-	{
-		Debug.Log($"Player {player} Joined!");
-		if (runner.IsServer)
-		{
-			runner.Spawn(_networkGameManagerPrefab, Vector3.zero, Quaternion.identity);
-			var networkPlayer = runner.Spawn(_networkPlayerPrefab, Vector3.zero, Quaternion.identity, player);
-			//roomPlayer.GameState = RoomPlayer.EGameState.Lobby;
-		}
-		SetConnectionStatus(ConnectionStatus.Connected);
-	}
+    public void LeaveSession()
+    {
+        if (_runner != null)
+            _runner.Shutdown();
+        else
+            SetConnectionStatus(ConnectionStatus.Disconnected);
+    }
 
-	public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
-	{
-		Debug.Log($"{player.PlayerId} disconnected.");
+    public void OnConnectedToServer(NetworkRunner runner)
+    {
+        Debug.Log("Connected to server");
+        SetConnectionStatus(ConnectionStatus.Connected);
+    }
+    public void OnDisconnectedFromServer(NetworkRunner runner)
+    {
+        Debug.Log("Disconnected from server");
+        LeaveSession();
+        SetConnectionStatus(ConnectionStatus.Disconnected);
+    }
+    public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)
+    {
+        if (runner.CurrentScene > 0)
+        {
+            Debug.LogWarning($"Refused connection requested by {request.RemoteAddress}");
+            request.Refuse();
+        }
+        else
+            request.Accept();
+    }
+    public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
+    {
+        Debug.Log($"Connect failed {reason}");
+        LeaveSession();
+        SetConnectionStatus(ConnectionStatus.Failed);
+        (string status, string message) = ConnectFailedReasonToHuman(reason);
+        //_disconnectUI.ShowMessage(status,message);
+    }
+    public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
+    {
+        Debug.Log($"Player {player} Joined!");
+        if (runner.IsServer)
+        {
+            runner.Spawn(_networkGameManagerPrefab, Vector3.zero, Quaternion.identity);
+            var networkPlayer = runner.Spawn(_networkPlayerPrefab, Vector3.zero, Quaternion.identity, player);
+            //roomPlayer.GameState = RoomPlayer.EGameState.Lobby;
+        }
+        SetConnectionStatus(ConnectionStatus.Connected);
+    }
 
-		NetworkPlayer.RemovePlayer(runner, player);
+    public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
+    {
+        Debug.Log($"{player.PlayerId} disconnected.");
 
-		SetConnectionStatus(ConnectionStatus);
-	}
-	public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
-	{
-		Debug.Log($"OnShutdown {shutdownReason}");
-		SetConnectionStatus(ConnectionStatus.Disconnected);
+        NetworkPlayer.RemovePlayer(runner, player);
 
-		(string status, string message) = ShutdownReasonToHuman(shutdownReason);
-		//_disconnectUI.ShowMessage( status, message);
+        SetConnectionStatus(ConnectionStatus);
+    }
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+    {
+        Debug.Log($"OnShutdown {shutdownReason}");
+        SetConnectionStatus(ConnectionStatus.Disconnected);
 
-		NetworkPlayer.Players.Clear();
+        (string status, string message) = ShutdownReasonToHuman(shutdownReason);
+        //_disconnectUI.ShowMessage( status, message);
 
-		NetworkGameManager.Instance.GameControl.playerControl.actorControl.ShowHostDisconnetMessagePanel();
+        NetworkPlayer.Players.Clear();
 
-		if (_runner)
-			Destroy(_runner.gameObject);
+        NetworkGameManager.Instance.GameControl.playerControl.actorControl.ShowHostDisconnetMessagePanel();
 
-		// Reset the object pools
-		//_pool.ClearPools();
-		//_pool = null;
+        if (_runner)
+            Destroy(_runner.gameObject);
 
-		_runner = null;
-	}
-	public void OnInput(NetworkRunner runner, NetworkInput input) { }
-	public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
-	public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
-	public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
-	public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
-	public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
-	public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
-	public void OnSceneLoadDone(NetworkRunner runner) { }
-	public void OnSceneLoadStart(NetworkRunner runner) { }
+        // Reset the object pools
+        //_pool.ClearPools();
+        //_pool = null;
 
-	private static (string, string) ShutdownReasonToHuman(ShutdownReason reason)
-	{
-		switch (reason)
-		{
-			case ShutdownReason.Ok:
-				return (null, null);
-			case ShutdownReason.Error:
-				return ("Error", "Shutdown was caused by some internal error");
-			case ShutdownReason.IncompatibleConfiguration:
-				return ("Incompatible Config", "Mismatching type between client Server Mode and Shared Mode");
-			case ShutdownReason.ServerInRoom:
-				return ("Room name in use", "There's a room with that name! Please try a different name or wait a while.");
-			case ShutdownReason.DisconnectedByPluginLogic:
-				return ("Disconnected By Plugin Logic", "You were kicked, the room may have been closed");
-			case ShutdownReason.GameClosed:
-				return ("Game Closed", "The session cannot be joined, the game is closed");
-			case ShutdownReason.GameNotFound:
-				return ("Game Not Found", "This room does not exist");
-			case ShutdownReason.MaxCcuReached:
-				return ("Max Players", "The Max CCU has been reached, please try again later");
-			case ShutdownReason.InvalidRegion:
-				return ("Invalid Region", "The currently selected region is invalid");
-			case ShutdownReason.GameIdAlreadyExists:
-				return ("ID already exists", "A room with this name has already been created");
-			case ShutdownReason.GameIsFull:
-				return ("Game is full", "This lobby is full!");
-			case ShutdownReason.InvalidAuthentication:
-				return ("Invalid Authentication", "The Authentication values are invalid");
-			case ShutdownReason.CustomAuthenticationFailed:
-				return ("Authentication Failed", "Custom authentication has failed");
-			case ShutdownReason.AuthenticationTicketExpired:
-				return ("Authentication Expired", "The authentication ticket has expired");
-			case ShutdownReason.PhotonCloudTimeout:
-				return ("Cloud Timeout", "Connection with the Photon Cloud has timed out");
-			default:
-				Debug.LogWarning($"Unknown ShutdownReason {reason}");
-				return ("Unknown Shutdown Reason", $"{(int)reason}");
-		}
-	}
+        _runner = null;
+    }
+    public void OnInput(NetworkRunner runner, NetworkInput input) { }
+    public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
+    public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
+    public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
+    public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
+    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+    public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ArraySegment<byte> data) { }
+    public void OnSceneLoadDone(NetworkRunner runner) { }
+    public void OnSceneLoadStart(NetworkRunner runner) { }
 
-	private static (string, string) ConnectFailedReasonToHuman(NetConnectFailedReason reason)
-	{
-		switch (reason)
-		{
-			case NetConnectFailedReason.Timeout:
-				return ("Timed Out", "");
-			case NetConnectFailedReason.ServerRefused:
-				return ("Connection Refused", "The lobby may be currently in-game");
-			case NetConnectFailedReason.ServerFull:
-				return ("Server Full", "");
-			default:
-				Debug.LogWarning($"Unknown NetConnectFailedReason {reason}");
-				return ("Unknown Connection Failure", $"{(int)reason}");
-		}
-	}
+    private static (string, string) ShutdownReasonToHuman(ShutdownReason reason)
+    {
+        switch (reason)
+        {
+            case ShutdownReason.Ok:
+                return (null, null);
+            case ShutdownReason.Error:
+                return ("Error", "Shutdown was caused by some internal error");
+            case ShutdownReason.IncompatibleConfiguration:
+                return ("Incompatible Config", "Mismatching type between client Server Mode and Shared Mode");
+            case ShutdownReason.ServerInRoom:
+                return ("Room name in use", "There's a room with that name! Please try a different name or wait a while.");
+            case ShutdownReason.DisconnectedByPluginLogic:
+                return ("Disconnected By Plugin Logic", "You were kicked, the room may have been closed");
+            case ShutdownReason.GameClosed:
+                return ("Game Closed", "The session cannot be joined, the game is closed");
+            case ShutdownReason.GameNotFound:
+                return ("Game Not Found", "This room does not exist");
+            case ShutdownReason.MaxCcuReached:
+                return ("Max Players", "The Max CCU has been reached, please try again later");
+            case ShutdownReason.InvalidRegion:
+                return ("Invalid Region", "The currently selected region is invalid");
+            case ShutdownReason.GameIdAlreadyExists:
+                return ("ID already exists", "A room with this name has already been created");
+            case ShutdownReason.GameIsFull:
+                return ("Game is full", "This lobby is full!");
+            case ShutdownReason.InvalidAuthentication:
+                return ("Invalid Authentication", "The Authentication values are invalid");
+            case ShutdownReason.CustomAuthenticationFailed:
+                return ("Authentication Failed", "Custom authentication has failed");
+            case ShutdownReason.AuthenticationTicketExpired:
+                return ("Authentication Expired", "The authentication ticket has expired");
+            case ShutdownReason.PhotonCloudTimeout:
+                return ("Cloud Timeout", "Connection with the Photon Cloud has timed out");
+            default:
+                Debug.LogWarning($"Unknown ShutdownReason {reason}");
+                return ("Unknown Shutdown Reason", $"{(int)reason}");
+        }
+    }
+
+    private static (string, string) ConnectFailedReasonToHuman(NetConnectFailedReason reason)
+    {
+        switch (reason)
+        {
+            case NetConnectFailedReason.Timeout:
+                return ("Timed Out", "");
+            case NetConnectFailedReason.ServerRefused:
+                return ("Connection Refused", "The lobby may be currently in-game");
+            case NetConnectFailedReason.ServerFull:
+                return ("Server Full", "");
+            default:
+                Debug.LogWarning($"Unknown NetConnectFailedReason {reason}");
+                return ("Unknown Connection Failure", $"{(int)reason}");
+        }
+    }
 }

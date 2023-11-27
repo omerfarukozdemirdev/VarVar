@@ -607,7 +607,8 @@ public class NetworkGameManager : NetworkBehaviour
         {
             NetworkUIManager.Instance.CloseLobbyPanel();
             FindObjectOfType<GameControl>().Invoke("FriendsModeStartGame", 1f);
-
+            Runner.SessionInfo.IsOpen = false;
+            Runner.SessionInfo.IsVisible = false;
         }
     }
 }

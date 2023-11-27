@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Fusion;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,8 @@ public class LobbyUI : MonoBehaviour
     [SerializeField] private Text waitingPlayersMessage;
     [SerializeField] private Text playerCounterText;
     [SerializeField] private GameObject loadingPlayersRoot;
+    [SerializeField] private Text roomName;
+    [SerializeField] private Text roomNameInGame;
 
 
     private void Awake()
@@ -53,6 +56,8 @@ public class LobbyUI : MonoBehaviour
         readyUp.onClick.AddListener(ReadyUpListener);
 
         IsSubscribed = true;
+
+
     }
 
     private void OnDestroy()
@@ -89,6 +94,9 @@ public class LobbyUI : MonoBehaviour
 
         playerCounter++;
         playerCounterText.text = playerCounter + " / 4";
+        roomName.text = "Room ID : " + GameObject.FindObjectOfType<NetworkRunner>().SessionInfo.Name;
+        roomNameInGame.text = "Room ID : " + GameObject.FindObjectOfType<NetworkRunner>().SessionInfo.Name;
+
         //if (playerCounter == 4)
         //{
         //    readyUp.gameObject.SetActive(true);
