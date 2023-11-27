@@ -106,13 +106,17 @@ public class ActorControl : MonoBehaviour
                 }
                 else
                 {
-                    if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
+                    if (gameControl.playingActors.Count > 1)
                     {
-                        ActivateNewPlayer();
-                    }
-                    else
-                    {
-                        iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
+                        if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
+                        {
+                            ActivateNewPlayer();
+                        }
+                        else
+                        {
+                            iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
+                        }
+
                     }
 
                 }
