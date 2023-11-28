@@ -176,7 +176,9 @@ public class GameControl : MonoBehaviour
 
             if (Host)
             {
-                NetworkGameManager.Instance?.Rpc_ChangeDesicionInd(0);
+                NetworkPlayer.Local.RPC_ChangeDesicionInd(0);
+                //NetworkGameManager.Instance?.RPC_ChangeDesicionIndAll();
+
                 NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd(0);
                 NetworkGameManager.Instance.NetworkThrowedCards.Clear();
             }
@@ -200,8 +202,8 @@ public class GameControl : MonoBehaviour
 
     public void NextTourFriends()
     {
-        NetworkGameManager.Instance.Rpc_ResetAllPlayer();
-        NetworkGameManager.Instance?.Rpc_NextTour();
+        NetworkGameManager.Instance.RPC_ResetAllPlayer();
+        NetworkGameManager.Instance.RPC_NextTour();
     }
 
     public void NextTour()
@@ -222,6 +224,7 @@ public class GameControl : MonoBehaviour
         actorControls.ForEach(x => x.ResetValues());
 
         gameCounter++;
+
         NetworkGameManager.Instance?.Rpc_UpdateGameCounter(gameCounter);
 
         FindObjectOfType<HandCompletedPanel>(true).ClosePanel();
@@ -249,7 +252,9 @@ public class GameControl : MonoBehaviour
         }
         else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            NetworkGameManager.Instance?.Rpc_ChangeCardDealerInd(cardDealerInd);
+            NetworkGameManager.Instance.NetworkCardDealerInd = cardDealerInd;
+
+            NetworkGameManager.Instance?.RPC_ChangeCardDealerInd();
             for (int i = 0; i < playingActors.Count; i++)
             {
                 // iTween.Stop(playingActors[i].transform.GetChild(0).gameObject);
@@ -272,7 +277,7 @@ public class GameControl : MonoBehaviour
         gameCounter = 0;
         NetworkGameManager.Instance.Rpc_UpdateGameCounter(gameCounter);
         NetworkGameManager.Instance.Rpc_UpdateNetworkPassCounter(0);
-        NetworkGameManager.Instance.Rpc_ResetAllPlayer();
+        NetworkGameManager.Instance.RPC_ResetAllPlayer();
         NextTour();
     }
 
@@ -291,12 +296,12 @@ public class GameControl : MonoBehaviour
             ShuffleDeck();
             DealCardsToActors();
             NetworkGameManager.Instance.Rpc_UpdateGameLimit(actorControls.Count);
+            NetworkGameManager.Instance.Rpc_UpdateDeck();
 
 
         }
 
 
-        NetworkGameManager.Instance.Rpc_UpdateDeck();
         ChooseRandomCardDealer();
         SortOrderOfPlayActors();
         DisableEnableTakeCardBtns(false);
@@ -308,13 +313,11 @@ public class GameControl : MonoBehaviour
         }
 
 
-        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        for (int i = 0; i < NetworkPlayer.Players.Count; i++)
         {
-            for (int i = 0; i < NetworkPlayer.Players.Count; i++)
-            {
-                NetworkGameManager.Instance.GameControl.actorControls[i].actorName = NetworkPlayer.Players[i].Username.ToString();
-            }
+            NetworkGameManager.Instance.GameControl.actorControls[i].actorName = NetworkPlayer.Players[i].Username.ToString();
         }
+
 
         gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
     }
@@ -344,20 +347,8 @@ public class GameControl : MonoBehaviour
 
 
 
-            // for (int i = NetworkPlayer.Players.IndexOf(NetworkPlayer.Local); i < NetworkPlayer.Players.Count; i++)
-            // {
-            //     NewPlayerIndexList.Add(i);
-            // }
-
-            // for (int i = 0; i < NetworkPlayer.Players.IndexOf(NetworkPlayer.Local); i++)
-            // {
-            //     NewPlayerIndexList.Add(i);
-
-            // }
-
             for (int i = 0; i < NetworkPlayer.Players.Count; i++)
             {
-                //NetworkGameManager.GameControl.actorControls[i].SetNameText( NetworkPlayer.Players[NewPlayerIndexList[i]].Username.ToString());
                 actorLocations[i].transform.position = actorPositions[NewPlayerIndexList[i]];
                 actorLocations[i].transform.rotation = Quaternion.Euler(actorRotations[NewPlayerIndexList[i]]);
                 actorControls[i].SetNameText(NetworkPlayer.Players[i].Username.ToString());
@@ -647,8 +638,9 @@ public class GameControl : MonoBehaviour
                     desicionInd = 0;
                     if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
                     {
-                        NetworkGameManager.Instance.Rpc_ChangeDesicionInd(desicionInd);
 
+                        NetworkPlayer.Local.RPC_ChangeDesicionInd(desicionInd);
+                        //NetworkGameManager.Instance?.RPC_ChangeDesicionIndAll();
                     }
                     betUpTurn = true;
                     NetworkGameManager.Instance?.Rpc_BetUpTurn(true);
@@ -1097,8 +1089,9 @@ public class GameControl : MonoBehaviour
             NetworkGameManager.Instance.Rpc_DecidePlayer();
 
             desicionInd++;
-
-            NetworkGameManager.Instance.Rpc_ChangeDesicionInd(desicionInd);
+            //Debug.Log(NetworkPlayer.Local.HasInputAuthority);
+            NetworkPlayer.Local.RPC_ChangeDesicionInd(desicionInd);
+            //NetworkGameManager.Instance?.RPC_ChangeDesicionIndAll();
 
             NetworkGameManager.Instance?.Rpc_CheckLastPlayer();
 

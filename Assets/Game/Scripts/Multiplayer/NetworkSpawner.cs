@@ -128,6 +128,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
             runner.Spawn(_networkGameManagerPrefab, Vector3.zero, Quaternion.identity);
             var networkPlayer = runner.Spawn(_networkPlayerPrefab, Vector3.zero, Quaternion.identity, player);
             //roomPlayer.GameState = RoomPlayer.EGameState.Lobby;
+            runner.SetPlayerObject(player, networkPlayer.Object);
         }
         SetConnectionStatus(ConnectionStatus.Connected);
     }

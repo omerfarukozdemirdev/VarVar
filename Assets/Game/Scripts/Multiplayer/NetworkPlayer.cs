@@ -221,4 +221,19 @@ public class NetworkPlayer : NetworkBehaviour
         actorControl.SetNetworkPlayer(this);
     }
 
+    //inputauthority stateauhrotiye yeni desicionInd gönderiyor. Ve RPC_ChangeDesicionIndAll fonksiyonunu çaðýrýyor.
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_ChangeDesicionInd(int desicionInd)
+    {
+        networkGameManager.GameControl.desicionInd = desicionInd;
+        RPC_ChangeDesicionIndAll(networkGameManager.GameControl.desicionInd);
+    }
+
+    //stateauhroity desicionInd i networkgamemanager da güncelliyor. ve daha sonra tüm oyuncularýn desicionInd ni networkgamemanagerInd ile deðiþtiriyor.
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_ChangeDesicionIndAll(int desicionInd)
+    {
+        networkGameManager.DesicionInd = desicionInd;
+        networkGameManager.GameControl.desicionInd = networkGameManager.DesicionInd;
+    }
 }

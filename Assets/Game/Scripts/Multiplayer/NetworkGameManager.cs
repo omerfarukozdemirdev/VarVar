@@ -34,9 +34,11 @@ public class NetworkGameManager : NetworkBehaviour
     [Capacity(150)]
     public NetworkLinkedList<NetworkCard> NetworkCompletedHand => default;
 
-    [Networked(OnChanged = nameof(OnNetworkCardDealerIndChanged))] public int NetworkCardDealerInd { get; set; }
+    //[Networked(OnChanged = nameof(OnNetworkCardDealerIndChanged))] 
+    [Networked] public int NetworkCardDealerInd { get; set; }
 
-    [Networked(OnChanged = nameof(OnNetworkDesicionIndChanged))] public int DesicionInd { get; set; }
+    //[Networked(OnChanged = nameof(OnNetworkDesicionIndChanged))] 
+    [Networked] public int DesicionInd { get; set; }
 
     [Networked(OnChanged = nameof(OnNetworkPlayingIndChanged))] public int NetworkPlayingInd { get; set; }
     [Networked(OnChanged = nameof(OnNetworkGameCounterChanged))] public int NetworkGameCounter { get; set; }
@@ -156,30 +158,33 @@ public class NetworkGameManager : NetworkBehaviour
         }
     }
 
-    private static void OnNetworkCardDealerIndChanged(Changed<NetworkGameManager> changed)
+    //private static void OnNetworkCardDealerIndChanged(Changed<NetworkGameManager> changed)
+    //{
+    //    changed.Behaviour.GameControl.cardDealerInd = changed.Behaviour.NetworkCardDealerInd;
+    //}
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_ChangeCardDealerInd()
     {
-        changed.Behaviour.GameControl.cardDealerInd = changed.Behaviour.NetworkCardDealerInd;
+        GameControl.cardDealerInd = NetworkCardDealerInd;
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void Rpc_ChangeCardDealerInd(int cardDealerInd)
-    {
-        if (GameControl.Host)
-        {
-            NetworkCardDealerInd = cardDealerInd;
-        }
-    }
+    //private static void OnNetworkDesicionIndChanged(Changed<NetworkGameManager> changed)
+    //{
+    //    changed.Behaviour.GameControl.desicionInd = changed.Behaviour.DesicionInd;
+    //}
 
-    private static void OnNetworkDesicionIndChanged(Changed<NetworkGameManager> changed)
-    {
-        changed.Behaviour.GameControl.desicionInd = changed.Behaviour.DesicionInd;
-    }
+    //[Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    //public void RPC_ChangeDesicionInd(int desicionInd)
+    //{
+    //    GameControl.desicionInd = desicionInd;
+    //}
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void Rpc_ChangeDesicionInd(int desicitionInd)
-    {
-        DesicionInd = desicitionInd;
-    }
+    //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    //public void RPC_ChangeDesicionIndAll()
+    //{
+    //    GameControl.desicionInd = DesicionInd;
+    //}
 
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void Rpc_DecidePlayer()
@@ -188,7 +193,7 @@ public class NetworkGameManager : NetworkBehaviour
 
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void Rpc_UpdateDeck()
     {
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
@@ -431,16 +436,16 @@ public class NetworkGameManager : NetworkBehaviour
         }
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void Rpc_NextTour()
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_NextTour()
     {
 
         GameControl.NextTour();
 
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void Rpc_ResetAllPlayer()
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_ResetAllPlayer()
     {
         foreach (NetworkPlayer networkPlayer in NetworkPlayer.Players)
         {
@@ -486,7 +491,7 @@ public class NetworkGameManager : NetworkBehaviour
         changed.Behaviour.GameControl.gameLimit = changed.Behaviour.NetworkGameLimit;
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void Rpc_UpdateGameLimit(int gameLimit)
     {
         NetworkGameLimit = gameLimit;
