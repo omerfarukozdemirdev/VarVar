@@ -596,7 +596,9 @@ public class NetworkGameManager : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void Rpc_RemoveNetworkPlayer(NetworkPlayer networkPlayer)
     {
-        NetworkPlayerList.Remove(networkPlayer);
+
+        //NetworkPlayerList.Remove(networkPlayer);
+
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]

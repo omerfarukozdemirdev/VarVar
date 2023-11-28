@@ -95,10 +95,11 @@ public class ActorControl : MonoBehaviour
     {
         if (player == networkPlayer)
         {
+
             if (!gameControl.LobbyPanel.activeSelf)
             {
+                DisableDisconnectedPlayer(player);
                 StartCoroutine(ShowDisconnectedBalloonCoroutine());
-                DisableDisconnectedPlayer();
                 if (gameControl.desicionInd < gameControl.desicionActors.Count)
                 {
                     gameControl.ActorDecisiton();
@@ -123,7 +124,7 @@ public class ActorControl : MonoBehaviour
             }
             else
             {
-                DisableDisconnectedPlayerInLobby();
+                DisableDisconnectedPlayerInLobby(player);
             }
 
         }
@@ -203,19 +204,20 @@ public class ActorControl : MonoBehaviour
 
     }
 
-    void DisableDisconnectedPlayer()
+    void DisableDisconnectedPlayer(NetworkPlayer player)
     {
         gameControl.actorControls.Remove(this);
         gameControl.orderOfPlayActors.Remove(this);
         gameControl.desicionActors.Remove(this);
         gameControl.playingActors.Remove(this);
-        NetworkGameManager.Instance.Rpc_RemoveNetworkPlayer(networkPlayer);
+
     }
 
-    void DisableDisconnectedPlayerInLobby()
+    void DisableDisconnectedPlayerInLobby(NetworkPlayer player)
     {
         gameControl.actorControls.Remove(this);
-        NetworkGameManager.Instance.Rpc_RemoveNetworkPlayer(networkPlayer);
+
+
     }
 
     void ActivateNewPlayer()

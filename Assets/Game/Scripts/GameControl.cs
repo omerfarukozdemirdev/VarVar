@@ -1,11 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Fusion;
-using Fusion.Photon.Realtime;
-using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameControl : MonoBehaviour
@@ -1243,7 +1238,12 @@ public class GameControl : MonoBehaviour
     {
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            GameObject.FindObjectOfType<NetworkSpawner>().LeaveSession();
+            NetworkSpawner networkSpawner = GameObject.FindObjectOfType<NetworkSpawner>();
+            if (networkSpawner != null)
+            {
+                networkSpawner.LeaveSession();
+            }
+
         }
 
         Menu();

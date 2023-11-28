@@ -190,11 +190,18 @@ public class TableAnimationControl : MonoBehaviour
         yield return new WaitForSecondsRealtime(.75f);
 
         gameControl.makeNoise.PlaySFX(7, 0);
-        gameControl.StartBets();
+        if (gameControl.actorControls.Count > 1)
+        {
+            gameControl.StartBets();
+
+        }
 
         yield return new WaitForSecondsRealtime(1f);
 
-        gameControl.ActorDecisiton();
+        if (gameControl.actorControls.Count > 1)
+        {
+            gameControl.ActorDecisiton();
+        }
     }
 
     public void CreateDeckFromThrowedCards(int deckCount)
