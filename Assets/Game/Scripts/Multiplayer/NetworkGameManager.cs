@@ -479,15 +479,15 @@ public class NetworkGameManager : NetworkBehaviour
     //    }
     //}
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void Rpc_UpdateAllPlayerHost()
-    {
-        for (int i = 0; i < NetworkPlayer.Players.Count; i++)
-        {
-            GameControl.actorControls[i].Host = NetworkPlayer.Players[i].Host;
+    //[Rpc(RpcSources.All, RpcTargets.All)]
+    //public void Rpc_UpdateAllPlayerHost()
+    //{
+    //    for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+    //    {
+    //        GameControl.actorControls[i].Host = NetworkPlayer.Players[i].Host;
 
-        }
-    }
+    //    }
+    //}
 
     //private static void OnNetworkGameCounterChanged(Changed<NetworkGameManager> changed)
     //{

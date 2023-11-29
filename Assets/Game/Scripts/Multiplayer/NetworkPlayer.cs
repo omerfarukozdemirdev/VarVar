@@ -51,12 +51,16 @@ public class NetworkPlayer : NetworkBehaviour
 
     [SerializeField][Networked] public int HandCompleteStep { get; set; }
     [Networked] public NetworkBool HandCompleted { get; set; }
-    [Networked(OnChanged = nameof(OnNetworkPlayerHostChanged))] public NetworkBool Host { get; set; }
+
+    //[Networked(OnChanged = nameof(OnNetworkPlayerHostChanged))]
+    [Networked] public NetworkBool Host { get; set; }
 
 
     //[Networked(OnChanged = nameof(OnNetworkPlayerPassChanged))]
     [Networked] public NetworkBool Pass { get; set; }
-    [Networked(OnChanged = nameof(OnNetworkPlayerBetUpChanged))] public NetworkBool BetUp { get; set; }
+
+    //[Networked(OnChanged = nameof(OnNetworkPlayerBetUpChanged))]
+    [Networked] public NetworkBool BetUp { get; set; }
 
     // Start is called before the first frame update
     void Start()
@@ -96,7 +100,8 @@ public class NetworkPlayer : NetworkBehaviour
         {
             networkGameManager.Host = true;
             FindObjectOfType<GameControl>().Host = true;
-            RPC_SetHostState(true);
+            Host = true;
+            //RPC_SetHostState(true);
             actorControl.Host = true;
         }
 
@@ -115,16 +120,26 @@ public class NetworkPlayer : NetworkBehaviour
         Username = username;
     }
 
-    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.StateAuthority, InvokeResim = true)]
-    private void RPC_SetHostState(NetworkBool networkBool)
+    //[Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.StateAuthority, InvokeResim = true)]
+    //private void RPC_SetHostState(NetworkBool networkBool)
+    //{
+    //    Host = networkBool;
+    //}
+
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
+    public void RPC_UpdateAllPlayerHost()
     {
-        Host = networkBool;
+        for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+        {
+            networkGameManager.GameControl.actorControls[i].Host = NetworkPlayer.Players[i].Host;
+
+        }
     }
 
-    private static void OnNetworkPlayerHostChanged(Changed<NetworkPlayer> changed)
-    {
-        changed.Behaviour.networkGameManager.Rpc_UpdateAllPlayerHost();
-    }
+    //private static void OnNetworkPlayerHostChanged(Changed<NetworkPlayer> changed)
+    //{
+    //    changed.Behaviour.networkGameManager.Rpc_UpdateAllPlayerHost();
+    //}
 
     public static void RemovePlayer(NetworkRunner runner, PlayerRef p)
     {
@@ -173,17 +188,11 @@ public class NetworkPlayer : NetworkBehaviour
     public void RPC_ChangePassState(NetworkBool state)
     {
         Pass = state;
-        Rpc_UpdateAllPlayerPass();
+        UpdateAllPlayerPass();
 
     }
 
-    //private static void OnNetworkPlayerPassChanged(Changed<NetworkPlayer> changed)
-    //{
-    //    changed.Behaviour.networkGameManager.Rpc_UpdateAllPlayerPass();
-    //}
-
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
-    public void Rpc_UpdateAllPlayerPass()
+    private void UpdateAllPlayerPass()
     {
         for (int i = 0; i < NetworkPlayer.Players.Count; i++)
         {
@@ -192,22 +201,49 @@ public class NetworkPlayer : NetworkBehaviour
         }
     }
 
-    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    //private static void OnNetworkPlayerPassChanged(Changed<NetworkPlayer> changed)
+    //{
+    //    changed.Behaviour.networkGameManager.Rpc_UpdateAllPlayerPass();
+    //}
+
+    //[Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    //public void Rpc_UpdateAllPlayerPass()
+    //{
+    //    for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+    //    {
+    //        NetworkGameManager.Instance.GameControl.actorControls[i].pass = NetworkPlayer.Players[i].Pass;
+
+    //    }
+    //}
+
+    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
     public void RPC_ChangeBetUpState(NetworkBool state)
     {
         BetUp = state;
+        UpdateAllPlayerBetUp();
     }
 
-    private static void OnNetworkPlayerBetUpChanged(Changed<NetworkPlayer> changed)
+    private void UpdateAllPlayerBetUp()
     {
         for (int i = 0; i < NetworkPlayer.Players.Count; i++)
         {
             if (NetworkPlayer.Players[i].BetUp)
             {
-                changed.Behaviour.networkGameManager.GameControl.actorControls[i].betUp = changed.Behaviour.BetUp;
+                networkGameManager.GameControl.actorControls[i].betUp = BetUp;
             }
         }
     }
+
+    //private static void OnNetworkPlayerBetUpChanged(Changed<NetworkPlayer> changed)
+    //{
+    //    for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+    //    {
+    //        if (NetworkPlayer.Players[i].BetUp)
+    //        {
+    //            changed.Behaviour.networkGameManager.GameControl.actorControls[i].betUp = changed.Behaviour.BetUp;
+    //        }
+    //    }
+    //}
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     public void RPC_SetHandCompleted(NetworkBool state)

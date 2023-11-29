@@ -300,6 +300,7 @@ public class GameControl : MonoBehaviour
             NetworkGameManager.Instance.NetworkGameLimit = gameLimit;
             NetworkGameManager.Instance.RPC_UpdateGameLimit();
             NetworkGameManager.Instance.Rpc_UpdateDeck();
+            NetworkPlayer.Local.RPC_UpdateAllPlayerHost();
 
 
         }
