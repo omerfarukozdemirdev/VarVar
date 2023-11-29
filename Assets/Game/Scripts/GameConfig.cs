@@ -18,11 +18,11 @@ public class GameConfig : ScriptableObject
     public Material[] cardBacks;
     public Sprite[] cardBackSprites;
 
-    public int backgroundInd;
-    public Sprite[] backGrounds;
+    //public int backgroundInd;
+    //public Sprite[] backGrounds;
 
-    public int tableInd;
-    public Sprite[] tables;
+    //public int tableInd;
+    //public Sprite[] tables;
 
     public ShopMenuCoins[] shopMenuCoins;
 

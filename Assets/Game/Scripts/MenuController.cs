@@ -1,22 +1,25 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class MenuController : MonoBehaviour
 {
     public GameConfig gameConfig;
 
-    [SerializeField] private InputField playerName;
+    //[SerializeField] private InputField playerName;
+    [SerializeField] private TMP_InputField playerNameTmp;
     [SerializeField] private Image Avatar;
     [SerializeField] private SpriteRenderer[] cards;
     [SerializeField] private MeshRenderer[] cardBacks;
-    [SerializeField] private SpriteRenderer desk;
-    [SerializeField] private SpriteRenderer background;
-    [SerializeField] private InputField firstPlayerName;
+    //[SerializeField] private SpriteRenderer desk;
+    //[SerializeField] private SpriteRenderer background;
+    //[SerializeField] private InputField firstPlayerName;
+    [SerializeField] private TMP_InputField firstPlayerNameTmp;
     [SerializeField] private GameObject firstPlayerNameCanvas;
 
     private void Awake()
     {
-        string pName = "Player";
+        string pName = "Guest";
 
         if (PlayerPrefs.HasKey("PlayerName"))
         {
@@ -27,22 +30,22 @@ public class MenuController : MonoBehaviour
             firstPlayerNameCanvas.SetActive(true);
         }
 
-        playerName.text = pName;
+        playerNameTmp.text = pName;
 
         gameConfig.avatarInd = 0;//PlayerPrefs.GetInt("Avatar");
         SetAvatar();
 
-        gameConfig.deckStyleInd = 0;//PlayerPrefs.GetInt("DeckStyle");
-        SetDeckStyle();
+        //gameConfig.deckStyleInd = 0;//PlayerPrefs.GetInt("DeckStyle");
+        //SetDeckStyle();
 
-        gameConfig.cardBackInd = 0;// PlayerPrefs.GetInt("DeckBack");
-        SetDeckBack();
+        //gameConfig.cardBackInd = 0;// PlayerPrefs.GetInt("DeckBack");
+        //SetDeckBack();
 
-        gameConfig.tableInd = 0;// PlayerPrefs.GetInt("Desk");
-        SetDesk();
+        //gameConfig.tableInd = 0;// PlayerPrefs.GetInt("Desk");
+        //SetDesk();
 
-        gameConfig.backgroundInd = 0;// PlayerPrefs.GetInt("BG");
-        SetBG();
+        //gameConfig.backgroundInd = 0;// PlayerPrefs.GetInt("BG");
+        //SetBG();
 
         FindObjectOfType<MakeNoise>().PlaySFX(29, 0);
     }
@@ -67,15 +70,14 @@ public class MenuController : MonoBehaviour
 
     public void SetPlayerName()
     {
-        PlayerPrefs.SetString("PlayerName", playerName.text);
+        PlayerPrefs.SetString("PlayerName", playerNameTmp.text);
     }
 
     public void SetFirstPlayerName()
     {
-        PlayerPrefs.SetString("PlayerName", firstPlayerName.text);
+        PlayerPrefs.SetString("PlayerName", firstPlayerNameTmp.text);
         firstPlayerNameCanvas.SetActive(false);
-        playerName.text = PlayerPrefs.GetString("PlayerName");
-
+        playerNameTmp.text = PlayerPrefs.GetString("PlayerName");
     }
 
     public void SetAvatar()
@@ -83,50 +85,50 @@ public class MenuController : MonoBehaviour
         Avatar.sprite = gameConfig.avatars[gameConfig.avatarInd];
     }
 
-    public void SetDeckStyle()
-    {
-        for (int i = 0; i < cards.Length; i++)
-        {
-            Card card = new Card();
-            card.value = i + 1;
+    //public void SetDeckStyle()
+    //{
+    //    for (int i = 0; i < cards.Length; i++)
+    //    {
+    //        Card card = new Card();
+    //        card.value = i + 1;
 
-            switch (i % 4)
-            {
-                case 0:
-                    card.suit = CardSuit.Spades;
-                    break;
-                case 1:
-                    card.suit = CardSuit.Diamonds;
-                    break;
-                case 2:
-                    card.suit = CardSuit.Hearts;
-                    break;
-                case 3:
-                    card.suit = CardSuit.Clubs;
-                    break;
-            }
+    //        switch (i % 4)
+    //        {
+    //            case 0:
+    //                card.suit = CardSuit.Spades;
+    //                break;
+    //            case 1:
+    //                card.suit = CardSuit.Diamonds;
+    //                break;
+    //            case 2:
+    //                card.suit = CardSuit.Hearts;
+    //                break;
+    //            case 3:
+    //                card.suit = CardSuit.Clubs;
+    //                break;
+    //        }
 
-            if (i == cards.Length - 1)
-                card.suit = CardSuit.Joker;
+    //        if (i == cards.Length - 1)
+    //            card.suit = CardSuit.Joker;
 
-            cards[i].sprite = CardSpriteConverter.GetCardSpriteInd(card, gameConfig.deckStyles[gameConfig.deckStyleInd]);
-            cards[i].size = new Vector2(1.52f, 2.17f);
-        }
-    }
+    //        cards[i].sprite = CardSpriteConverter.GetCardSpriteInd(card, gameConfig.deckStyles[gameConfig.deckStyleInd]);
+    //        cards[i].size = new Vector2(1.52f, 2.17f);
+    //    }
+    //}
 
-    public void SetDeckBack()
-    {
-        for (int i = 0; i < cardBacks.Length; i++)
-            cardBacks[i].sharedMaterial = gameConfig.cardBacks[gameConfig.cardBackInd];
-    }
+    //public void SetDeckBack()
+    //{
+    //    for (int i = 0; i < cardBacks.Length; i++)
+    //        cardBacks[i].sharedMaterial = gameConfig.cardBacks[gameConfig.cardBackInd];
+    //}
 
-    public void SetDesk()
-    {
-        desk.sprite = gameConfig.tables[gameConfig.tableInd];
-    }
+    //public void SetDesk()
+    //{
+    //    desk.sprite = gameConfig.tables[gameConfig.tableInd];
+    //}
 
-    public void SetBG()
-    {
-        background.sprite = gameConfig.backGrounds[gameConfig.backgroundInd];
-    }
+    //public void SetBG()
+    //{
+    //    background.sprite = gameConfig.backGrounds[gameConfig.backgroundInd];
+    //}
 }

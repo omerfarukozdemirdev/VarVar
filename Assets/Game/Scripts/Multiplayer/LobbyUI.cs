@@ -7,18 +7,17 @@ public class LobbyUI : MonoBehaviour
 {
     public GameObject textPrefab;
     public Transform parent;
-    public Button readyUp;
+    //public Button readyUp;
 
     private static readonly Dictionary<NetworkPlayer, LobbyItemUI> ListItems = new Dictionary<NetworkPlayer, LobbyItemUI>();
     [SerializeField] private bool IsSubscribed;
 
     public bool nextStepIsAllReady;
     [SerializeField] private int playerCounter;
-    [SerializeField] private Text waitingPlayersMessage;
+    //[SerializeField] private Text waitingPlayersMessage;
     [SerializeField] private Text playerCounterText;
     [SerializeField] private GameObject loadingPlayersRoot;
     [SerializeField] private Text roomName;
-    [SerializeField] private Text roomNameInGame;
 
 
     private void Awake()
@@ -53,7 +52,7 @@ public class LobbyUI : MonoBehaviour
 
         NetworkPlayer.PlayerChanged += EnsureAllPlayersReady;
 
-        readyUp.onClick.AddListener(ReadyUpListener);
+        //readyUp.onClick.AddListener(ReadyUpListener);
 
         IsSubscribed = true;
 
@@ -67,7 +66,7 @@ public class LobbyUI : MonoBehaviour
         NetworkPlayer.PlayerJoined -= AddPlayer;
         NetworkPlayer.PlayerLeft -= RemovePlayer;
 
-        readyUp.onClick.RemoveListener(ReadyUpListener);
+        //readyUp.onClick.RemoveListener(ReadyUpListener);
 
         IsSubscribed = false;
     }
@@ -95,7 +94,6 @@ public class LobbyUI : MonoBehaviour
         playerCounter++;
         playerCounterText.text = playerCounter + " / 4";
         roomName.text = "Room ID : " + GameObject.FindObjectOfType<NetworkRunner>().SessionInfo.Name;
-        roomNameInGame.text = "Room ID : " + GameObject.FindObjectOfType<NetworkRunner>().SessionInfo.Name;
 
         //if (playerCounter == 4)
         //{

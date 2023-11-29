@@ -1,10 +1,12 @@
 using UnityEngine;
-using UnityEngine.UI;
+//using UnityEngine.UI;
+using TMPro;
 
 public class MoneyController : MonoBehaviour
 {
-    [SerializeField] private Text moneyCountText;
-    //[SerializeField] private GameObject moneyAttraction;
+    //[SerializeField] private Text moneyCountText;
+    [SerializeField] private TextMeshProUGUI moneyCountTmp;
+
     private int moneyCount;
 
     private void Awake()
@@ -19,9 +21,6 @@ public class MoneyController : MonoBehaviour
     {
         moneyCount += count;
         PlayerPrefs.SetInt("MoneyCount", moneyCount);
-
-        //moneyAttraction.SetActive(false);
-        //moneyAttraction.SetActive(true);
     }
 
     public void EarningMoney()
@@ -51,6 +50,6 @@ public class MoneyController : MonoBehaviour
 
     void SetMoneyCountText()
     {
-        moneyCountText.text = moneyCount.ToString();
+        moneyCountTmp.text = moneyCount.ToString();
     }
 }

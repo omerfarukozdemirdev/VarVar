@@ -25,8 +25,8 @@ public class GameControl : MonoBehaviour
     [Space]
     public GameConfig gameConfig;
 
-    [SerializeField] SpriteRenderer background;
-    [SerializeField] SpriteRenderer table;
+    //[SerializeField] SpriteRenderer background;
+    //[SerializeField] SpriteRenderer table;
 
     public List<ActorControl> actorControls = new List<ActorControl>();
     public List<ActorControl> orderOfPlayActors = new List<ActorControl>();
@@ -95,8 +95,8 @@ public class GameControl : MonoBehaviour
             throwedCardObjs[i].SetActive(false);
         }
 
-        background.sprite = gameConfig.backGrounds[gameConfig.backgroundInd];
-        table.sprite = gameConfig.tables[gameConfig.tableInd];
+        //background.sprite = gameConfig.backGrounds[gameConfig.backgroundInd];
+        //table.sprite = gameConfig.tables[gameConfig.tableInd];
 
         actorControls[0].actorAvatar.sprite = gameConfig.avatars[gameConfig.avatarInd];
 
@@ -117,8 +117,6 @@ public class GameControl : MonoBehaviour
 
     private void Start()
     {
-
-
         switch (GameManager.Instance.CurrentGameMode)
         {
             case GameManager.GameMode.Quick:
@@ -129,7 +127,6 @@ public class GameControl : MonoBehaviour
             case GameManager.GameMode.Tournament:
                 break;
         }
-
     }
 
     private void Update()
@@ -225,8 +222,11 @@ public class GameControl : MonoBehaviour
 
         gameCounter++;
 
-        NetworkGameManager.Instance.NetworkGameCounter = gameCounter;
-        NetworkGameManager.Instance?.RPC_UpdateGameCounter();
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        {
+            NetworkGameManager.Instance.NetworkGameCounter = gameCounter;
+            NetworkGameManager.Instance?.RPC_UpdateGameCounter();
+        }
 
         FindObjectOfType<HandCompletedPanel>(true).ClosePanel();
         for (int i = 0; i < throwedCardObjs.Length; i++)
@@ -781,7 +781,7 @@ public class GameControl : MonoBehaviour
 
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
         {
-            drinkController.drinkButton.SetActive(true);
+            //drinkController.drinkButton.SetActive(true);
         }
     }
 
@@ -1155,8 +1155,11 @@ public class GameControl : MonoBehaviour
 
         coinController.EarnCoin(100);
         playerControl.actorControl.totalCoins += 100;
-        //FindObjectOfType<HandCompletedPanel>(true).OpenPanel(playerControl.actorControl);
-        playerWinPanel.SetActive(true);
+
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+            FindObjectOfType<HandCompletedPanel>(true).OpenPanel(playerControl.actorControl);
+
+        //playerWinPanel.SetActive(true);
         FindObjectOfType<MoneyController>().EarnMoney(rewardMoney);
         actorControls[0].winCounter++;
         actorControls[0].totalWinMoney += rewardMoney;
@@ -1240,12 +1243,10 @@ public class GameControl : MonoBehaviour
             {
                 networkSpawner.LeaveSession();
             }
-
         }
 
         Menu();
     }
-
 
     public void OpenStatisticPanel()
     {

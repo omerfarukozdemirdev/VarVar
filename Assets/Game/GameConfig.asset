@@ -131,7 +131,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5a309463e012042658af536b711775ca, type: 3}
   deckStyleInd: 0
   deckStyles:
-  - {fileID: 11400000, guid: cf885e8a848f8409491905d9b4d75de3, type: 2}
+  - {fileID: 11400000, guid: 34f23699e9bba4f7f8b22043832d692a, type: 2}
   cardBackInd: 0
   cardBacks:
   - {fileID: 2100000, guid: ece494c55a6364501a21599b23a6ec3c, type: 2}

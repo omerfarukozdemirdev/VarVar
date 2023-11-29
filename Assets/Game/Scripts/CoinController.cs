@@ -1,9 +1,11 @@
 using UnityEngine;
-using UnityEngine.UI;
+//using UnityEngine.UI;
+using TMPro;
 
 public class CoinController : MonoBehaviour
 {
-    [SerializeField] private Text coinCountText;
+    //[SerializeField] private Text coinCountText;
+    [SerializeField] private TextMeshProUGUI coinCountTmp;
     [SerializeField] private GameObject coinAttraction;
     private int coinCount;
 
@@ -49,6 +51,6 @@ public class CoinController : MonoBehaviour
 
     void SetCoinCountText()
     {
-        coinCountText.text = coinCount.ToString();
+        coinCountTmp.text = coinCount.ToString();
     }
 }
