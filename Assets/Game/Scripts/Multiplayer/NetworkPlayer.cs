@@ -54,7 +54,8 @@ public class NetworkPlayer : NetworkBehaviour
     [Networked(OnChanged = nameof(OnNetworkPlayerHostChanged))] public NetworkBool Host { get; set; }
 
 
-    [Networked(OnChanged = nameof(OnNetworkPlayerPassChanged))] public NetworkBool Pass { get; set; }
+    //[Networked(OnChanged = nameof(OnNetworkPlayerPassChanged))]
+    [Networked] public NetworkBool Pass { get; set; }
     [Networked(OnChanged = nameof(OnNetworkPlayerBetUpChanged))] public NetworkBool BetUp { get; set; }
 
     // Start is called before the first frame update
@@ -168,17 +169,28 @@ public class NetworkPlayer : NetworkBehaviour
         }
     }
 
-    [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
+    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
     public void RPC_ChangePassState(NetworkBool state)
     {
         Pass = state;
+        Rpc_UpdateAllPlayerPass();
+
     }
 
-    private static void OnNetworkPlayerPassChanged(Changed<NetworkPlayer> changed)
+    //private static void OnNetworkPlayerPassChanged(Changed<NetworkPlayer> changed)
+    //{
+    //    changed.Behaviour.networkGameManager.Rpc_UpdateAllPlayerPass();
+    //}
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void Rpc_UpdateAllPlayerPass()
     {
-        changed.Behaviour.networkGameManager.Rpc_UpdateAllPlayerPass();
-    }
+        for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+        {
+            NetworkGameManager.Instance.GameControl.actorControls[i].pass = NetworkPlayer.Players[i].Pass;
 
+        }
+    }
 
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     public void RPC_ChangeBetUpState(NetworkBool state)

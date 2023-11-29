@@ -225,7 +225,8 @@ public class GameControl : MonoBehaviour
 
         gameCounter++;
 
-        NetworkGameManager.Instance?.Rpc_UpdateGameCounter(gameCounter);
+        NetworkGameManager.Instance.NetworkGameCounter = gameCounter;
+        NetworkGameManager.Instance?.RPC_UpdateGameCounter();
 
         FindObjectOfType<HandCompletedPanel>(true).ClosePanel();
         for (int i = 0; i < throwedCardObjs.Length; i++)
@@ -275,7 +276,8 @@ public class GameControl : MonoBehaviour
     public void FriendsModeNewGame()
     {
         gameCounter = 0;
-        NetworkGameManager.Instance.Rpc_UpdateGameCounter(gameCounter);
+        NetworkGameManager.Instance.NetworkGameCounter = gameCounter;
+        NetworkGameManager.Instance?.RPC_UpdateGameCounter();
         NetworkGameManager.Instance.Rpc_UpdateNetworkPassCounter(0);
         NetworkGameManager.Instance.RPC_ResetAllPlayer();
         NextTour();
@@ -295,7 +297,8 @@ public class GameControl : MonoBehaviour
             CreateDeck();
             ShuffleDeck();
             DealCardsToActors();
-            NetworkGameManager.Instance.Rpc_UpdateGameLimit(actorControls.Count);
+            NetworkGameManager.Instance.NetworkGameLimit = gameLimit;
+            NetworkGameManager.Instance.RPC_UpdateGameLimit();
             NetworkGameManager.Instance.Rpc_UpdateDeck();
 
 

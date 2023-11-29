@@ -41,10 +41,14 @@ public class NetworkGameManager : NetworkBehaviour
     [Networked] public int DesicionInd { get; set; }
 
     [Networked(OnChanged = nameof(OnNetworkPlayingIndChanged))] public int NetworkPlayingInd { get; set; }
-    [Networked(OnChanged = nameof(OnNetworkGameCounterChanged))] public int NetworkGameCounter { get; set; }
-    [Networked(OnChanged = nameof(OnNetworkGameLimitChanged))] public int NetworkGameLimit { get; set; }
+
+    //[Networked(OnChanged = nameof(OnNetworkGameCounterChanged))]
+    [Networked] public int NetworkGameCounter { get; set; }
+
+    //[Networked(OnChanged = nameof(OnNetworkGameLimitChanged))]
+    [Networked] public int NetworkGameLimit { get; set; }
     [Networked(OnChanged = nameof(OnNetworkFirstCardChanged))] public NetworkCard NetworkFirstCard { get; set; }
-    [Networked(OnChanged = nameof(OnNetworkDeckCountChanged))] public int NetworkDeckCount { get; set; }
+    //[Networked(OnChanged = nameof(OnNetworkDeckCountChanged))] public int NetworkDeckCount { get; set; }
 
 
     [UnitySerializeField]
@@ -136,7 +140,11 @@ public class NetworkGameManager : NetworkBehaviour
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
             NetworkCardListFromCardList(NetworkDeck, GameControl.deck);
-            NetworkDeckCount = NetworkDeck.Count();
+            //NetworkDeckCount = NetworkDeck.Count();
+            if (NetworkDeck.Count() == 68)
+            {
+                Rpc_ResetDeck();
+            }
         }
     }
 
@@ -146,8 +154,11 @@ public class NetworkGameManager : NetworkBehaviour
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
             NetworkCardListFromCardList(NetworkDeck, GameControl.deck);
-            NetworkDeckCount = NetworkDeck.Count();
-
+            //NetworkDeckCount = NetworkDeck.Count();
+            if (NetworkDeck.Count() == 68)
+            {
+                Rpc_ResetDeck();
+            }
             NetworkCardListFromCardList(NetworkPlayer.Players[actor].CardsInHand, GameControl.actorControls[actor].cardsInHand);
             NetworkCardListFromCardList(NetworkPlayer.Players[actor].MissingCards, GameControl.actorControls[actor].missingCards);
             NetworkCardListFromCardList(NetworkPlayer.Players[actor].RemainingCards, GameControl.actorControls[actor].remainingCards);
@@ -222,8 +233,11 @@ public class NetworkGameManager : NetworkBehaviour
         {
             GameControl.deck.Remove(GameControl.deck[i]);
             NetworkDeck.Remove(NetworkDeck[i]);
-            NetworkDeckCount = NetworkDeck.Count();
-
+            //NetworkDeckCount = NetworkDeck.Count();
+            if (NetworkDeck.Count() == 68)
+            {
+                Rpc_ResetDeck();
+            }
         }
 
 
@@ -455,15 +469,15 @@ public class NetworkGameManager : NetworkBehaviour
         GameControl.lastThrowedCard = null;
     }
 
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void Rpc_UpdateAllPlayerPass()
-    {
-        for (int i = 0; i < NetworkPlayer.Players.Count; i++)
-        {
-            GameControl.actorControls[i].pass = NetworkPlayer.Players[i].Pass;
+    //[Rpc(RpcSources.All, RpcTargets.All)]
+    //public void Rpc_UpdateAllPlayerPass()
+    //{
+    //    for (int i = 0; i < NetworkPlayer.Players.Count; i++)
+    //    {
+    //        GameControl.actorControls[i].pass = NetworkPlayer.Players[i].Pass;
 
-        }
-    }
+    //    }
+    //}
 
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void Rpc_UpdateAllPlayerHost()
@@ -475,26 +489,26 @@ public class NetworkGameManager : NetworkBehaviour
         }
     }
 
-    private static void OnNetworkGameCounterChanged(Changed<NetworkGameManager> changed)
-    {
-        changed.Behaviour.GameControl.gameCounter = changed.Behaviour.NetworkGameCounter;
-    }
-
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void Rpc_UpdateGameCounter(int gameCounter)
-    {
-        NetworkGameCounter = gameCounter;
-    }
-
-    private static void OnNetworkGameLimitChanged(Changed<NetworkGameManager> changed)
-    {
-        changed.Behaviour.GameControl.gameLimit = changed.Behaviour.NetworkGameLimit;
-    }
+    //private static void OnNetworkGameCounterChanged(Changed<NetworkGameManager> changed)
+    //{
+    //    changed.Behaviour.GameControl.gameCounter = changed.Behaviour.NetworkGameCounter;
+    //}
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void Rpc_UpdateGameLimit(int gameLimit)
+    public void RPC_UpdateGameCounter()
     {
-        NetworkGameLimit = gameLimit;
+        GameControl.gameCounter = NetworkGameCounter;
+    }
+
+    //private static void OnNetworkGameLimitChanged(Changed<NetworkGameManager> changed)
+    //{
+    //    changed.Behaviour.GameControl.gameLimit = changed.Behaviour.NetworkGameLimit;
+    //}
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_UpdateGameLimit()
+    {
+        GameControl.gameLimit = NetworkGameLimit;
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
@@ -523,10 +537,10 @@ public class NetworkGameManager : NetworkBehaviour
 
     private static void OnNetworkDeckCountChanged(Changed<NetworkGameManager> changed)
     {
-        if (changed.Behaviour.NetworkDeckCount == 68)
-        {
-            changed.Behaviour.Rpc_ResetDeck();
-        }
+        //if (changed.Behaviour.NetworkDeckCount == 68)
+        //{
+        //    changed.Behaviour.Rpc_ResetDeck();
+        //}
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
