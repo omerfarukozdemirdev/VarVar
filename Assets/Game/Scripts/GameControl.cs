@@ -1315,10 +1315,11 @@ public class GameControl : MonoBehaviour
     public void StartMultiplayerGame()
     {
         gameLimit = networkHandler.maxPlayer;
-        for(int i = gameLimit; i < actorControls.Count; i++)
-        {
-            actorControls.RemoveAt(i);
-        }
+
+        List<ActorControl> AC = new List<ActorControl>();
+        for(int i = 0; i < gameLimit; i++)
+            AC.Add(actorControls[i]);
+        actorControls = AC;
 
         lobbyUIManager.gameObject.SetActive(false);
     }
