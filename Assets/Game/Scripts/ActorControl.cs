@@ -42,16 +42,14 @@ public class ActorControl : MonoBehaviour
 
     public Gender gender;
 
-    [SerializeField] private NetworkPlayer networkPlayer;
+    //[SerializeField] private NetworkPlayer networkPlayer;
 
-
-    [SerializeField] private bool host;
-    public bool Host
-    {
-        get { return host; }
-        set { host = value; }
-    }
-
+    //[SerializeField] private bool host;
+    //public bool Host
+    //{
+    //    get { return host; }
+    //    set { host = value; }
+    //}
 
     private void Awake()
     {
@@ -62,178 +60,170 @@ public class ActorControl : MonoBehaviour
         money.SetActive(false);
         moneyAtractorParticle.SetActive(false);
 
-
-
         winCounter = 0;
         passCounter = 0;
         totalWinMoney = 0;
         totalBetMoney = 0;
     }
 
-    private void OnEnable()
-    {
-        NetworkPlayer.PlayerLeft += LeftOnlinePlayer;
-    }
+    //private void OnEnable()
+    //{
+    //    NetworkPlayer.PlayerLeft += LeftOnlinePlayer;
+    //}
 
-    private void OnDisable()
-    {
-        NetworkPlayer.PlayerLeft -= LeftOnlinePlayer;
-    }
+    //private void OnDisable()
+    //{
+    //    NetworkPlayer.PlayerLeft -= LeftOnlinePlayer;
+    //}
 
-    private void LeftOnlinePlayer(NetworkPlayer player)
-    {
-        gameControl.makeNoise.PlaySFX(8, 0);
+    //private void LeftOnlinePlayer(NetworkPlayer player)
+    //{
+    //    gameControl.makeNoise.PlaySFX(8, 0);
 
-        LeftPlayer(player);
-        CheckLeftDisconnectMessage(player);
-        CheckLastPlayerDisconnectMessage(player);
-
-    }
+    //    LeftPlayer(player);
+    //    CheckLeftDisconnectMessage(player);
+    //    CheckLastPlayerDisconnectMessage(player);
+    //}
 
     #region Disconnect methods
-    void LeftPlayer(NetworkPlayer player)
-    {
-        if (player == networkPlayer)
-        {
+    //void LeftPlayer(NetworkPlayer player)
+    //{
+    //    if (player == networkPlayer)
+    //    {
 
-            if (!gameControl.LobbyPanel.activeSelf)
-            {
-                DisableDisconnectedPlayer(player);
-                StartCoroutine(ShowDisconnectedBalloonCoroutine());
-                if (gameControl.desicionInd < gameControl.desicionActors.Count)
-                {
-                    gameControl.ActorDecisiton();
+    //        if (!gameControl.LobbyPanel.activeSelf)
+    //        {
+    //            DisableDisconnectedPlayer(player);
+    //            StartCoroutine(ShowDisconnectedBalloonCoroutine());
+    //            if (gameControl.desicionInd < gameControl.desicionActors.Count)
+    //            {
+    //                gameControl.ActorDecisiton();
 
-                }
-                else
-                {
-                    if (gameControl.playingActors.Count > 1)
-                    {
-                        if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
-                        {
-                            ActivateNewPlayer();
-                        }
-                        else
-                        {
-                            iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
-                        }
+    //            }
+    //            else
+    //            {
+    //                if (gameControl.playingActors.Count > 1)
+    //                {
+    //                    if (gameControl.playingActors[gameControl.playingInd] == gameControl.playerControl.actorControl)
+    //                    {
+    //                        ActivateNewPlayer();
+    //                    }
+    //                    else
+    //                    {
+    //                        iTween.ScaleTo(gameControl.playingActors[gameControl.playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
+    //                    }
 
-                    }
+    //                }
 
-                }
-            }
-            else
-            {
-                DisableDisconnectedPlayerInLobby(player);
-            }
+    //            }
+    //        }
+    //        else
+    //        {
+    //            DisableDisconnectedPlayerInLobby(player);
+    //        }
 
-        }
+    //    }
 
-    }
+    //}
 
-    void CheckLeftDisconnectMessage(NetworkPlayer player)
-    {
-        if (gameControl.actorControls.Count == 1)
-        {
-            for (int i = 0; i < gameControl.actorControls.Count; i++)
-            {
-                if (gameControl.actorControls[i].Host)
-                {
-                    ShowOnePlayerLeftDisconnetMessagePanel();
-                }
-            }
+    //void CheckLeftDisconnectMessage(NetworkPlayer player)
+    //{
+    //    if (gameControl.actorControls.Count == 1)
+    //    {
+    //        for (int i = 0; i < gameControl.actorControls.Count; i++)
+    //        {
+    //            if (gameControl.actorControls[i].Host)
+    //            {
+    //                ShowOnePlayerLeftDisconnetMessagePanel();
+    //            }
+    //        }
 
-        }
-    }
+    //    }
+    //}
 
-    void CheckLastPlayerDisconnectMessage(NetworkPlayer player)
-    {
-        if (gameControl.actorControls.Count > 1)
-        {
-            var passCounter = 0;
-            for (int i = 0; i < gameControl.actorControls.Count; i++)
-            {
-                if (gameControl.actorControls[i].pass)
-                {
-                    passCounter++;
-                }
-            }
+    //void CheckLastPlayerDisconnectMessage(NetworkPlayer player)
+    //{
+    //    if (gameControl.actorControls.Count > 1)
+    //    {
+    //        var passCounter = 0;
+    //        for (int i = 0; i < gameControl.actorControls.Count; i++)
+    //        {
+    //            if (gameControl.actorControls[i].pass)
+    //            {
+    //                passCounter++;
+    //            }
+    //        }
 
-            if (passCounter == gameControl.actorControls.Count - 1)
-            {
-                for (int i = 0; i < gameControl.actorControls.Count; i++)
-                {
-                    if (!gameControl.actorControls[i].pass)
-                    {
-                        gameControl.UpdateLastPlayerHand(gameControl.actorControls[i]);
-                        FindObjectOfType<HandCompletedPanel>(true).OpenPanel(gameControl.actorControls[i]);
+    //        if (passCounter == gameControl.actorControls.Count - 1)
+    //        {
+    //            for (int i = 0; i < gameControl.actorControls.Count; i++)
+    //            {
+    //                if (!gameControl.actorControls[i].pass)
+    //                {
+    //                    gameControl.UpdateLastPlayerHand(gameControl.actorControls[i]);
+    //                    FindObjectOfType<HandCompletedPanel>(true).OpenPanel(gameControl.actorControls[i]);
 
-                    }
-                }
-            }
-        }
-    }
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
-    void ShowOnePlayerLeftDisconnetMessagePanel()
-    {
-        gameControl.ClosedRoomMenuPanel.SetActive(true);
-        var message = gameControl.ClosedRoomMenuPanel.GetComponentInChildren<Text>();
-        message.text = "ODADA TEK OYUNCU KALDIĞI İÇİN ODA KAPANMIŞTIR. LÜTFEN ANA MENÜYE DÖNÜN.";
-    }
+    //void ShowOnePlayerLeftDisconnetMessagePanel()
+    //{
+    //    gameControl.ClosedRoomMenuPanel.SetActive(true);
+    //    var message = gameControl.ClosedRoomMenuPanel.GetComponentInChildren<Text>();
+    //    message.text = "ODADA TEK OYUNCU KALDIĞI İÇİN ODA KAPANMIŞTIR. LÜTFEN ANA MENÜYE DÖNÜN.";
+    //}
 
-    IEnumerator ShowDisconnectedBalloonCoroutine()
-    {
-        iTween.Stop(speechBalloon);
-        speechBalloon.transform.localScale = Vector3.one;
-        speechBalloon.SetActive(true);
-        iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
-        foreach (Transform child in speechBalloon.transform)
-        {
-            child.gameObject.SetActive(false);
-        }
+    //IEnumerator ShowDisconnectedBalloonCoroutine()
+    //{
+    //    iTween.Stop(speechBalloon);
+    //    speechBalloon.transform.localScale = Vector3.one;
+    //    speechBalloon.SetActive(true);
+    //    iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+    //    foreach (Transform child in speechBalloon.transform)
+    //    {
+    //        child.gameObject.SetActive(false);
+    //    }
 
-        yield return new WaitForSeconds(.5f);
+    //    yield return new WaitForSeconds(.5f);
 
-        speechBalloon.transform.GetChild(3).gameObject.SetActive(true);
-        iTween.ScaleFrom(speechBalloon, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
+    //    speechBalloon.transform.GetChild(3).gameObject.SetActive(true);
+    //    iTween.ScaleFrom(speechBalloon, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
 
-        yield return new WaitForSeconds(.5f);
+    //    yield return new WaitForSeconds(.5f);
 
-        GetComponent<CanvasGroup>().alpha = .1f;
-        iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * .9f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+    //    GetComponent<CanvasGroup>().alpha = .1f;
+    //    iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * .9f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+    //}
 
-    }
+    //void DisableDisconnectedPlayer(NetworkPlayer player)
+    //{
+    //    gameControl.actorControls.Remove(this);
+    //    gameControl.orderOfPlayActors.Remove(this);
+    //    gameControl.desicionActors.Remove(this);
+    //    gameControl.playingActors.Remove(this);
+    //}
 
-    void DisableDisconnectedPlayer(NetworkPlayer player)
-    {
-        gameControl.actorControls.Remove(this);
-        gameControl.orderOfPlayActors.Remove(this);
-        gameControl.desicionActors.Remove(this);
-        gameControl.playingActors.Remove(this);
+    //void DisableDisconnectedPlayerInLobby(NetworkPlayer player)
+    //{
+    //    gameControl.actorControls.Remove(this);
+    //}
 
-    }
+    //void ActivateNewPlayer()
+    //{
+    //    iTween.ScaleTo(gameControl.playerControl.actorControl.transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
+    //    gameControl.DisableEnableTakeCardBtns(true);
+    //}
 
-    void DisableDisconnectedPlayerInLobby(NetworkPlayer player)
-    {
-        gameControl.actorControls.Remove(this);
-
-
-    }
-
-    void ActivateNewPlayer()
-    {
-        iTween.ScaleTo(gameControl.playerControl.actorControl.transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .6f, "easetype", iTween.EaseType.linear, "loopType", iTween.LoopType.pingPong));
-        gameControl.DisableEnableTakeCardBtns(true);
-    }
-
-    public void ShowHostDisconnetMessagePanel()
-    {
-        gameControl.ClosedRoomMenuPanel.SetActive(true);
-        var message = gameControl.ClosedRoomMenuPanel.GetComponentInChildren<Text>();
-        message.text = "HOST DISCONNECT OLDUĞU İÇİN ODA KAPANMIŞTIR. LÜTFEN ANA MENÜYE DÖNÜN.";
-    }
+    //public void ShowHostDisconnetMessagePanel()
+    //{
+    //    gameControl.ClosedRoomMenuPanel.SetActive(true);
+    //    var message = gameControl.ClosedRoomMenuPanel.GetComponentInChildren<Text>();
+    //    message.text = "HOST DISCONNECT OLDUĞU İÇİN ODA KAPANMIŞTIR. LÜTFEN ANA MENÜYE DÖNÜN.";
+    //}
     #endregion
-
 
     private void Start()
     {
@@ -241,9 +231,7 @@ public class ActorControl : MonoBehaviour
         {
             totalCoins = 150;
 
-
             nameGenerator = new NameGenerator();
-
             InitGender();
         }
         else
@@ -255,7 +243,6 @@ public class ActorControl : MonoBehaviour
     void SetRandomGender()
     {
         Gender[] genders = (Gender[])System.Enum.GetValues(typeof(Gender));
-
         Gender randomGender = genders[Random.Range(0, genders.Length)];
 
         gender = randomGender;
@@ -280,9 +267,7 @@ public class ActorControl : MonoBehaviour
         }
 
         actorNameText.text = actorName;
-
     }
-
 
     public void SetNameText(string name)
     {
@@ -301,8 +286,8 @@ public class ActorControl : MonoBehaviour
 
         pass = false;
         betUp = false;
-        NetworkPlayer.Local?.RPC_ChangePassState(false);
-        NetworkPlayer.Local?.RPC_ChangeBetUpState(false);
+        //NetworkPlayer.Local?.RPC_ChangePassState(false);
+        //NetworkPlayer.Local?.RPC_ChangeBetUpState(false);
 
         handCompleteStep = 0;
         handCompleted = false;
@@ -313,12 +298,10 @@ public class ActorControl : MonoBehaviour
         speechBalloon.transform.localScale = Vector3.one;
         money.transform.localScale = Vector3.one;
 
-        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-        {
-            iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", 0f, "easetype", iTween.EaseType.easeOutQuad));
-
-        }
-
+        //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        //{
+        //    iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", 0f, "easetype", iTween.EaseType.easeOutQuad));
+        //}
     }
 
     public void DisableSpeechBaloon()
@@ -502,14 +485,15 @@ public class ActorControl : MonoBehaviour
 
                 if (gameControl.betUp)
                 {
-                    if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
-                    {
-                        speechBalloon.transform.GetChild(0).gameObject.SetActive(true);
-                    }
-                    else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-                    {
-                        speechBalloon.transform.GetChild(2).gameObject.SetActive(true);
-                    }
+                    speechBalloon.transform.GetChild(0).gameObject.SetActive(true);
+                    //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+                    //{
+                    //    speechBalloon.transform.GetChild(0).gameObject.SetActive(true);
+                    //}
+                    //else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+                    //{
+                    //    speechBalloon.transform.GetChild(2).gameObject.SetActive(true);
+                    //}
 
                     gameControl.makeNoise.PlaySFX(9, 0);
                 }
@@ -520,14 +504,15 @@ public class ActorControl : MonoBehaviour
                     gameControl.makeNoise.PlaySFX(10, 0);
                 }
 
-                if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
-                {
-                    gameControl.BetUP(this);
-                }
-                else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-                {
-                    NetworkGameManager.Instance.Rpc_BetUp(gameControl.desicionActors.IndexOf(this));
-                }
+                gameControl.BetUP(this);
+                //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+                //{
+                //    gameControl.BetUP(this);
+                //}
+                //else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+                //{
+                //    NetworkGameManager.Instance.Rpc_BetUp(gameControl.desicionActors.IndexOf(this));
+                //}
             }
             else
             {
@@ -550,7 +535,6 @@ public class ActorControl : MonoBehaviour
 
             iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
         }
-
 
         yield return new WaitForSeconds(.5f);
 
@@ -585,7 +569,6 @@ public class ActorControl : MonoBehaviour
     {
         // oyuncu kart çekiyor
 
-
         iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
 
         yield return new WaitForSeconds(Random.Range(.1f, .6f));
@@ -605,16 +588,13 @@ public class ActorControl : MonoBehaviour
             }
         }
 
-        Debug.Log("kart çekildi. desteden mi: " + pickFromDeck);
-
+        //Debug.Log("kart çekildi. desteden mi: " + pickFromDeck);
         gameControl.PickCard(this, pickFromDeck);
-
-
     }
 
     IEnumerator ThrowCard()
     {
-        Debug.Log("kart atıldı ");
+        //Debug.Log("kart atıldı ");
 
         yield return new WaitForSeconds(Random.Range(.5f, .8f));
 
@@ -659,11 +639,10 @@ public class ActorControl : MonoBehaviour
         }
     }
 
-    public void SetNetworkPlayer(NetworkPlayer networkPlayer)
-    {
-        this.networkPlayer = networkPlayer;
-
-    }
+    //public void SetNetworkPlayer(NetworkPlayer networkPlayer)
+    //{
+    //    this.networkPlayer = networkPlayer;
+    //}
 }
 
 public enum Gender

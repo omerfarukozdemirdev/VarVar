@@ -273,6 +273,65 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 153822342}
   m_CullTransparentMesh: 1
+--- !u!1 &242795777
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 242795779}
+  - component: {fileID: 242795778}
+  - component: {fileID: 242795780}
+  m_Layer: 0
+  m_Name: NetworkHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &242795778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242795777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb30df289104c402a84a52c497f42143, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkRunnerPrefab: {fileID: 6439034249161305335, guid: 742e4605853f64661858c4afb229d9c8, type: 3}
+  networkPlayerPrefab:
+    RawGuidValue: af4caf40d139a42b2b97d8fdd7f4f3db
+--- !u!4 &242795779
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242795777}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &242795780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242795777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99d55f7c673ab420c8eb7c6bd47bde82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &325863289
 GameObject:
   m_ObjectHideFlags: 0
@@ -1503,7 +1562,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f1195fb357654a33afa067b384f9a4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentGameMode: 0
+  gameMode: 0
 --- !u!4 &1438689642
 Transform:
   m_ObjectHideFlags: 0

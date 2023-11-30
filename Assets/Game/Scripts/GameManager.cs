@@ -6,12 +6,12 @@ public class GameManager : MonoBehaviour
 
     public enum GameMode
     {
-        Quick,
-        Friends,
-        Tournament
+        Single,
+        Multiplayer
     }
 
-    public GameMode CurrentGameMode;
+    public GameMode gameMode;
+    //public GameMode CurrentGameMode;
 
     void Awake()
     {
@@ -33,9 +33,9 @@ public class GameManager : MonoBehaviour
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool IsMultiplayer()
     {
-
+        return gameMode == GameMode.Multiplayer;
     }
+
 }

@@ -267,22 +267,17 @@ public class TableAnimationControl : MonoBehaviour
         iTween.RotateTo(throwedCard, iTween.Hash("y", Random.Range(500, 900), "time", .3f));
         iTween.ScaleTo(throwedCard, iTween.Hash("scale", Vector3.one * 1.1f, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
 
-        NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd();
-
+        //NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd();
 
         yield return new WaitForSecondsRealtime(1f);
 
         // NetworkGameManager.Instance?.Rpc_PlayerThrowCardAnimations();
 
-
-        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
-        {
-            gameControl.NextActor();
-
-        }
-
-
-
+        gameControl.NextActor();
+        //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+        //{
+        //    gameControl.NextActor();
+        //}
     }
 
     public void Reset()
@@ -292,7 +287,6 @@ public class TableAnimationControl : MonoBehaviour
         cardCloses.Clear();
         CreateCardCloses(104);
         //StartCoroutine(ArrangeCardsBlocks());
-
     }
 
     public void FirsGroundCard()
@@ -300,6 +294,5 @@ public class TableAnimationControl : MonoBehaviour
         //firstCard.transform.SetParent(throwedCardsPos);
         cardCloses[cardCloses.Count - 1].FirstPick();
         cardCloses.Remove(cardCloses[cardCloses.Count - 1]);
-
     }
 }

@@ -200,8 +200,6 @@ MonoBehaviour:
   rewardMoney: 0
   moneyAtractorParent: {fileID: 1723030696}
   gameConfig: {fileID: 11400000, guid: 382ca20a1ab5b457fbe8144e611db221, type: 2}
-  background: {fileID: 0}
-  table: {fileID: 0}
   actorControls:
   - {fileID: 352636134}
   - {fileID: 2089844918}
@@ -239,16 +237,8 @@ MonoBehaviour:
   drinkController: {fileID: 1281555981}
   drinkCounter: 0
   statisticPanel: {fileID: 410013130}
-  playerWinPanel: {fileID: 1646510340}
-  ClosedRoomMenuPanel: {fileID: 0}
-  actorPositions: []
-  actorRotations: []
-  actorLocations: []
-  NewPlayerIndexList: 
-  CompletedHand: []
-  Host: 0
-  networkPassCounter: 0
-  LobbyPanel: {fileID: 0}
+  LobbyPanel: {fileID: 5374562838557262380}
+  TestMode: 0
 --- !u!4 &327959629
 Transform:
   m_ObjectHideFlags: 0
@@ -785,11 +775,6 @@ MonoBehaviour:
 --- !u!1 &1630746435 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5374562840148161896, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
-  m_PrefabInstance: {fileID: 5374562838557262379}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1646510340 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5374562840132404015, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
   m_PrefabInstance: {fileID: 5374562838557262379}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1693602076 stripped
@@ -1352,5 +1337,18 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 327959628}
+    - target: {fileID: 8309433644802430558, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 327959628}
+    - target: {fileID: 8309433644802430558, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Menu
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+--- !u!1 &5374562838557262380 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8296373849623064240, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+  m_PrefabInstance: {fileID: 5374562838557262379}
+  m_PrefabAsset: {fileID: 0}

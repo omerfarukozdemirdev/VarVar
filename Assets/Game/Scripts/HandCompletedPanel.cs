@@ -24,16 +24,15 @@ public class HandCompletedPanel : MonoBehaviour
 
     public void OpenPanel(ActorControl actorControl)
     {
-
-        if (gameControl.networkPassCounter == gameControl.orderOfPlayActors.Count - 1 && gameControl.actorControls.Count > 2)
-        {
-            completeHeaderText.text = "Herkes Pass Dedi";
-        }
-        else
-        {
-            completeHeaderText.text = "Hand Completed";
-
-        }
+        completeHeaderText.text = "Hand Completed";
+        //if (gameControl.networkPassCounter == gameControl.orderOfPlayActors.Count - 1 && gameControl.actorControls.Count > 2)
+        //{
+        //    completeHeaderText.text = "Herkes Pass Dedi";
+        //}
+        //else
+        //{
+        //    completeHeaderText.text = "Hand Completed";
+        //}
 
         gameControl.actorControls.ForEach(x => x.totalBetMoney = x.totalBetMoney + x.moneyIn);
 
@@ -59,51 +58,47 @@ public class HandCompletedPanel : MonoBehaviour
         if (actorControl.player)
         {
             cards = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
-
-            if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-            {
-                gameControl.CompletedHand.Clear();
-                gameControl.CompletedHand = cards;
-
-            }
+            //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+            //{
+            //    gameControl.CompletedHand.Clear();
+            //    gameControl.CompletedHand = cards;
+            //}
         }
         else
         {
             cards = actorControl.cardsInHand;
-
-            //handcompleted panelindeki 10. kartý silip, actorun elindeki son kartý yani jokeri ekle
-            cards.RemoveAt(cards.Count - 1);
-            cards.Add(actorControl.cardsInHand[actorControl.cardsInHand.Count - 1]);
+            ////handcompleted panelindeki 10. kart? silip, actorun elindeki son kart? yani jokeri ekle
+            //cards.RemoveAt(cards.Count - 1);
+            //cards.Add(actorControl.cardsInHand[actorControl.cardsInHand.Count - 1]);
         }
 
-        for (int i = 0; i < 10; i++)
+        //for (int i = 0; i < 11; i++)
+        for (int i = 0; i < cards.Count; i++)
         {
             //cardSprites[i].sprite = gameControl.cardImages.cardImages[CardSpriteConverter.GetCardSpriteInd(cards[i])];
-            if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
-            {
-                cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(cards[i], gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
+            cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(cards[i], gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
+            //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
+            //{
+            //    cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(cards[i], gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
 
-            }
-            else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-            {
-                cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(NetworkGameManager.Instance.NetworkCardToCard(NetworkGameManager.Instance.NetworkCompletedHand[i]), gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
-
-            }
-
+            //}
+            //else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+            //{
+            //    cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(NetworkGameManager.Instance.NetworkCardToCard(NetworkGameManager.Instance.NetworkCompletedHand[i]), gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
+            //}
             cardSprites[i].gameObject.SetActive(true);
         }
 
-        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-        {
-            if (!gameControl.Host)
-            {
-                nextButton.SetActive(false);
-                mainMenuButton.SetActive(false);
+        //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+        //{
+        //    if (!gameControl.Host)
+        //    {
+        //        nextButton.SetActive(false);
+        //        mainMenuButton.SetActive(false);
 
-            }
-            gameControl.playerWinPanel.SetActive(false);
-        }
-
+        //    }
+        //    gameControl.playerWinPanel.SetActive(false);
+        //}
         panelBG.SetActive(true);
     }
 
