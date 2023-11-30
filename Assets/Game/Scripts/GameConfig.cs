@@ -10,7 +10,6 @@ public class GameConfig : ScriptableObject
     public Sprite[] maleAvatars;
     public Sprite[] femaleAvatars;
 
-
     public int deckStyleInd;
     public DeckStyle[] deckStyles;
 
@@ -24,13 +23,13 @@ public class GameConfig : ScriptableObject
     //public int tableInd;
     //public Sprite[] tables;
 
-    public ShopMenuCoins[] shopMenuCoins;
+    //public ShopMenuCoins[] shopMenuCoins;
 
 }
 
-[System.Serializable]
-public class ShopMenuCoins
-{
-    public int coincount;
-    public float prize;
-}
+//[System.Serializable]
+//public class ShopMenuCoins
+//{
+//    public int coincount;
+//    public float prize;
+//}

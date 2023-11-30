@@ -375,8 +375,6 @@ public class NetworkGameManager : NetworkBehaviour
             NetworkPlayingInd = i;
 
         }
-
-
     }
 
     [Rpc(RpcSources.All, RpcTargets.All)]
