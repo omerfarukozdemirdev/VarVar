@@ -45,6 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
+  _nickName:
+    _length: 0
+    _data:
+      Data: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!114 &6401017521476537407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,7 +63,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObjectInterest: 1
   DefaultInterestGroups: []
-  DestroyWhenStateAuthorityLeaves: 0
+  DestroyWhenStateAuthorityLeaves: 1
   AllowStateAuthorityOverride: 1
   AoiPositionSource: {fileID: 0}
   Flags: 2305
