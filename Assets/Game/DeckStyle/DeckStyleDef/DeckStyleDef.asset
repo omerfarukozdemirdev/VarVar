@@ -69,4 +69,4 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 109de0a715aba4dc696de8a7e1023d4f, type: 3}
   - {fileID: 21300000, guid: 7e85addb29c4b4572947df8558b33bb3, type: 3}
   jocker: {fileID: 21300000, guid: 7b7b4c3d2bd80453cabd528b6919b083, type: 3}
-  deckShow: {fileID: 21300000, guid: 4115ebbc1780f423e8a3e7e05a0e665f, type: 3}
+  deckShow: {fileID: 21300000, guid: d64a5047eaced49b09a4ef747d11d114, type: 3}
