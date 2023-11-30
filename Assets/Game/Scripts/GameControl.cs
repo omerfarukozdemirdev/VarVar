@@ -1311,6 +1311,17 @@ public class GameControl : MonoBehaviour
     {
         return FindObjectsOfType<NetworkPlayer>().Length;
     }
+
+    public void StartMultiplayerGame()
+    {
+        gameLimit = networkHandler.maxPlayer;
+        for(int i = gameLimit; i < actorControls.Count; i++)
+        {
+            actorControls.RemoveAt(i);
+        }
+
+        lobbyUIManager.gameObject.SetActive(false);
+    }
 }
 
 

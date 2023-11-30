@@ -20,7 +20,7 @@ public class NetworkPlayer : NetworkBehaviour
 
         if(gameControl.networkHandler.maxPlayer == gameControl.GetNetworkPlayerCount())
         {
-            gameControl.lobbyUIManager.gameObject.SetActive(false);
+            gameControl.StartMultiplayerGame();
         }
     }
 
