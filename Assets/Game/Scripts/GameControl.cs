@@ -78,6 +78,7 @@ public class GameControl : MonoBehaviour
     public bool TestMode;
 
     public NetworkHandler networkHandler;
+    public NetworkPlayer myNetworkPlayer;
 
     private void Awake()
     {
@@ -1316,10 +1317,33 @@ public class GameControl : MonoBehaviour
     {
         gameLimit = networkHandler.maxPlayer;
 
+        for (int i = 0; i < actorControls.Count; i++)
+            actorControls[i].gameObject.SetActive(false);
+
         List<ActorControl> AC = new List<ActorControl>();
         for(int i = 0; i < gameLimit; i++)
+        {
             AC.Add(actorControls[i]);
+            actorControls[i].gameObject.SetActive(true);
+        }
         actorControls = AC;
+
+        // Oturma düzenini belirle
+        if (networkHandler.isHost)
+        {
+            NetworkPlayer[] networkPlayers = FindObjectsOfType<NetworkPlayer>();
+    
+            for (int i = 0; i < networkPlayers.Length; i++)
+            {
+                if (networkPlayers[i].localPlayer)
+                    myNetworkPlayer.orderedNetworkPlayers.Add(networkPlayers[i]);
+            }
+            for (int i = 0; i < networkPlayers.Length; i++)
+            {
+                if (!networkPlayers[i].localPlayer)
+                    myNetworkPlayer.orderedNetworkPlayers.Add(networkPlayers[i]);
+            }
+        }
 
         lobbyUIManager.gameObject.SetActive(false);
     }
