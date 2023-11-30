@@ -23,6 +23,11 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
         loader ??= gameObject.AddComponent<NetworkSceneManagerDefault>();
     }
 
+    private void OnApplicationQuit()
+    {
+        Disconnect();
+    }
+
     public void StartQuickGame()
     {
         if (!Connect()) return;
