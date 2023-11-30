@@ -1819,7 +1819,7 @@ MonoBehaviour:
   Host: 0
   networkPassCounter: 0
   LobbyPanel: {fileID: 196705435}
-  TestMode: 1
+  TestMode: 0
 --- !u!4 &327959629
 Transform:
   m_ObjectHideFlags: 0

@@ -24,7 +24,6 @@ public class HandCompletedPanel : MonoBehaviour
 
     public void OpenPanel(ActorControl actorControl)
     {
-        Debug.Log("6");
 
         if (gameControl.networkPassCounter == gameControl.orderOfPlayActors.Count - 1 && gameControl.actorControls.Count > 2)
         {

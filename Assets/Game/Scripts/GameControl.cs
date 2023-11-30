@@ -161,7 +161,7 @@ public class GameControl : MonoBehaviour
             cardDealerInd = 0;
         rewardMoney = 0;
         passCount = 0;
-        drinkController.drinkButton.SetActive(false);
+        //drinkController.drinkButton.SetActive(false);
         newDesicitonActors.Clear();
         networkPassCounter = 0;
 
@@ -238,6 +238,7 @@ public class GameControl : MonoBehaviour
             throwedCardObjs[i].transform.position = Vector3.zero;
             throwedCardObjs[i].transform.rotation = Quaternion.Euler(Vector3.zero);
             throwedCardObjs[i].transform.localScale = Vector3.one;
+            iTween.Stop(throwedCardObjs[i]);
         }
         ResetValues();
 
@@ -1196,7 +1197,6 @@ public class GameControl : MonoBehaviour
 
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
-            Debug.Log("1");
             NetworkPlayer.Players[actorControls.IndexOf(playerControl.actorControl)].RPC_SetHandCompleted(true);
             NetworkGameManager.Instance.Rpc_ShowHandCompletedPanel(actorControls.IndexOf(playerControl.actorControl));
         }

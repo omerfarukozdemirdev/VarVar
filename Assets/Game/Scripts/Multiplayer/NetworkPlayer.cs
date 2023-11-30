@@ -248,7 +248,6 @@ public class NetworkPlayer : NetworkBehaviour
     [Rpc(sources: RpcSources.All, targets: RpcTargets.All)]
     public void RPC_SetHandCompleted(NetworkBool state)
     {
-        Debug.Log("2");
 
         HandCompleted = state;
     }
