@@ -237,7 +237,7 @@ MonoBehaviour:
   drinkController: {fileID: 1281555981}
   drinkCounter: 0
   statisticPanel: {fileID: 410013130}
-  LobbyPanel: {fileID: 5374562838557262380}
+  lobbyUIManager: {fileID: 5374562838557262380}
   TestMode: 0
 --- !u!4 &327959629
 Transform:
@@ -1347,8 +1347,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
---- !u!1 &5374562838557262380 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8296373849623064240, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+--- !u!114 &5374562838557262380 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6645184996449302282, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
   m_PrefabInstance: {fileID: 5374562838557262379}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8870330055c43bdafa5fb76dd45f69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

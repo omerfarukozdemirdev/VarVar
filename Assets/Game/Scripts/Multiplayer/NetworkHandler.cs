@@ -11,10 +11,10 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     NetworkRunner networkRunner;
     NetworkSceneManagerBase loader;
-    List<PlayerRef> players = new List<PlayerRef>();
+    //List<PlayerRef> players = new List<PlayerRef>();
 
 
-    public int playerCount = 4;
+    public int maxPlayer = 4;
     //bool connected;
 
     void Awake()
@@ -32,7 +32,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
         {
             GameMode = GameMode.Shared,
             CustomLobbyName = "VarVar",
-            PlayerCount = playerCount,
+            PlayerCount = maxPlayer,
             SceneManager = loader
         });
     }
@@ -51,14 +51,14 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
             GameMode = GameMode.AutoHostOrClient,
             CustomLobbyName = sessionName,
             SessionName = sessionName,
-            PlayerCount = playerCount,
+            PlayerCount = maxPlayer,
             SceneManager = loader
         });
     }
 
     bool Connect()
     {
-        players.Clear();
+        //players.Clear();
 
         if (networkRunner != null) return false;
 
@@ -107,13 +107,13 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log("PlayerJoined");
 
-        if (networkRunner.IsSharedModeMasterClient)
-            players.Add(player);
+        //if (networkRunner.IsSharedModeMasterClient)
+        //    players.Add(player);
 
-        if(players.Count == playerCount)
-        {
+        //if(players.Count == playerCount)
+        //{
 
-        }
+        //}
         //if (players.Count == 2)
         //{
         //    networkRunner.SessionInfo.IsOpen = false;
@@ -137,7 +137,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
         if (networkRunner!= null  && networkRunner.gameObject)
             Destroy(networkRunner.gameObject);
 
-        players.Clear();
+        //players.Clear();
         networkRunner = null;
     }
 

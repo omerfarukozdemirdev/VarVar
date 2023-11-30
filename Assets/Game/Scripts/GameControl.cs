@@ -73,12 +73,11 @@ public class GameControl : MonoBehaviour
 
     //public bool Host;
     //public int networkPassCounter;
-    public GameObject LobbyPanel;
-
+    public LobbyUIManager lobbyUIManager;
 
     public bool TestMode;
 
-    private NetworkHandler networkHandler;
+    public NetworkHandler networkHandler;
 
     private void Awake()
     {
@@ -108,8 +107,7 @@ public class GameControl : MonoBehaviour
         gameCounter = 1;
         gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
 
-
-        LobbyPanel.SetActive(false);
+        lobbyUIManager.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -119,7 +117,7 @@ public class GameControl : MonoBehaviour
             networkHandler = FindObjectOfType<NetworkHandler>();
             networkHandler.StartQuickGame();
 
-            LobbyPanel.SetActive(true);
+            lobbyUIManager.gameObject.SetActive(true);
             return;
         }
 
