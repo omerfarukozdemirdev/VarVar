@@ -13,7 +13,7 @@ public struct NetworkCard : INetworkStruct
 
 public class NetworkGameManager : NetworkBehaviour
 {
-    public static NetworkGameManager Instance { get; private set; }
+    public static NetworkGameManager Instance { get; set; }
 
     public NetworkUIManager NetworkUIManager;
     public GameControl GameControl;

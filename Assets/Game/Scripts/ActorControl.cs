@@ -246,6 +246,10 @@ public class ActorControl : MonoBehaviour
 
             InitGender();
         }
+        else
+        {
+            actorNameText.text = actorName;
+        }
     }
 
     void SetRandomGender()
@@ -634,7 +638,7 @@ public class ActorControl : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         //{
-            iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+        iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
         //}
 
         TakeDrink();

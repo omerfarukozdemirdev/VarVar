@@ -149,6 +149,8 @@ public class GameControl : MonoBehaviour
         playingInd = 0;
 
         betUp = false;
+        rewardBetUpText.text = "1";
+
         NetworkGameManager.Instance?.Rpc_UpdateBetUp(false);
 
         betUpTurn = false;
@@ -861,9 +863,16 @@ public class GameControl : MonoBehaviour
         spriteRenderer.sortingOrder = throwedCards.Count;
         spriteRenderer.size = new Vector2(2.56f, 3.5f);
 
-        tableAnimationControl.FirsGroundCard(lastThrowedCard);
+        tableAnimationControl.FirsGroundCard();
+
         yield return new WaitForSeconds(1f);
+
+        lastThrowedCard.transform.SetParent(tableAnimationControl.throwedCardsPos);
+        lastThrowedCard.transform.localPosition = Vector3.zero;
+        lastThrowedCard.transform.rotation = Quaternion.Euler(0, 180, 0);
         lastThrowedCard.SetActive(true);
+
+
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
         {
             deck.Remove(deck[0]);
@@ -928,6 +937,10 @@ public class GameControl : MonoBehaviour
 
         yield return new WaitForSeconds(.2f);
         lastThrowedCard.SetActive(false);
+        lastThrowedCard.transform.position = Vector3.zero;
+        lastThrowedCard.transform.localScale = Vector3.one;
+        lastThrowedCard.transform.rotation = Quaternion.Euler(Vector3.zero);
+
     }
 
     public void ThrowCard(Card cardType, ActorControl actorControl)

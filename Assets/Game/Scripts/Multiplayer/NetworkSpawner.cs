@@ -137,6 +137,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log($"{player.PlayerId} disconnected.");
 
+
         NetworkPlayer.RemovePlayer(runner, player);
 
         SetConnectionStatus(ConnectionStatus);
@@ -150,12 +151,13 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         //_disconnectUI.ShowMessage( status, message);
 
         NetworkPlayer.Players.Clear();
-
         if (NetworkGameManager.Instance.GameControl.actorControls.Count > 1)
         {
             NetworkGameManager.Instance.GameControl.playerControl.actorControl.ShowHostDisconnetMessagePanel();
 
         }
+
+        NetworkGameManager.Instance = null;
 
         if (_runner)
             Destroy(_runner.gameObject);
