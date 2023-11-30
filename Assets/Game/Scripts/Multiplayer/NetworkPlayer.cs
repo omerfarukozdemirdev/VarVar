@@ -7,6 +7,7 @@ public class NetworkPlayer : NetworkBehaviour
 
     [Networked] public NetworkString<_32> nickName { get; set; }
 
+
     public override void Spawned()
     {
         if (Object.HasInputAuthority)
@@ -15,7 +16,12 @@ public class NetworkPlayer : NetworkBehaviour
         }
 
         gameControl = FindObjectOfType<GameControl>();
-        gameControl.UpdateLobbyPlayerNames(); 
+        gameControl.UpdateLobbyPlayerNames();
+
+        if(gameControl.networkHandler.maxPlayer == gameControl.GetNetworkPlayerCount())
+        {
+            gameControl.lobbyUIManager.gameObject.SetActive(false);
+        }
     }
 
     //[Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.Proxies)]

@@ -1306,6 +1306,11 @@ public class GameControl : MonoBehaviour
         for (int i = 0; i < networkPlayers.Length; i++)
             lobbyUIManager.ActivatePlayerName(i, networkPlayers[i].nickName.ToString());
     }
+
+    public int GetNetworkPlayerCount()
+    {
+        return FindObjectsOfType<NetworkPlayer>().Length;
+    }
 }
 
 

@@ -13,9 +13,8 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     NetworkSceneManagerBase loader;
     //List<PlayerRef> players = new List<PlayerRef>();
 
-
     public bool isHost;
-    public int maxPlayer = 4;
+    public int maxPlayer = 2;
     //bool connected;
 
     void Awake()
@@ -112,7 +111,6 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log("PlayerJoined");
-
         isHost = networkRunner.IsSharedModeMasterClient;
         //if (networkRunner.IsSharedModeMasterClient)
         //    players.Add(player);
