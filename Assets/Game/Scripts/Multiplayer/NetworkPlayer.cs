@@ -15,15 +15,7 @@ public class NetworkPlayer : NetworkBehaviour
         }
 
         gameControl = FindObjectOfType<GameControl>();
-
-        NetworkPlayer[] networkPlayers = FindObjectsOfType<NetworkPlayer>();
-
-        gameControl.lobbyUIManager.SetPlayerCountText(networkPlayers.Length, gameControl.networkHandler.maxPlayer);
-
-        gameControl.lobbyUIManager.ResetPlayerNames();
-        for (int i = 0; i < networkPlayers.Length; i++)
-            gameControl.lobbyUIManager.ActivatePlayerName(i, networkPlayers[i].nickName.ToString());
-   
+        gameControl.UpdateLobbyPlayerNames(); 
     }
 
     //[Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.Proxies)]

@@ -1293,6 +1293,19 @@ public class GameControl : MonoBehaviour
         FindObjectOfType<HandCompletedPanel>(true).OpenPanel(playerControl.actorControl);
         makeNoise.PlaySFX(27, 0);
     }
+
+
+    // Multiplayer
+    public void UpdateLobbyPlayerNames()
+    {
+        NetworkPlayer[] networkPlayers = FindObjectsOfType<NetworkPlayer>();
+
+        lobbyUIManager.SetPlayerCountText(networkPlayers.Length, networkHandler.maxPlayer);
+
+        lobbyUIManager.ResetPlayerNames();
+        for (int i = 0; i < networkPlayers.Length; i++)
+            lobbyUIManager.ActivatePlayerName(i, networkPlayers[i].nickName.ToString());
+    }
 }
 
 

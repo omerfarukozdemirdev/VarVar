@@ -124,7 +124,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        Debug.Log("PlayerLeft");
+        FindObjectOfType<GameControl>().UpdateLobbyPlayerNames();
         //Disconnect();
 
     }
