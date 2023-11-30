@@ -71,6 +71,9 @@ public class HandCompletedPanel : MonoBehaviour
         {
             cards = actorControl.cardsInHand;
 
+            //handcompleted panelindeki 10. kartý silip, actorun elindeki son kartý yani jokeri ekle
+            cards.RemoveAt(cards.Count - 1);
+            cards.Add(actorControl.cardsInHand[actorControl.cardsInHand.Count - 1]);
         }
 
         for (int i = 0; i < 10; i++)
