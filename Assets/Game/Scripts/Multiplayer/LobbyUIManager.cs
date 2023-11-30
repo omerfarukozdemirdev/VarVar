@@ -6,6 +6,11 @@ public class LobbyUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI[] playerNameTexts;
     [SerializeField] private TextMeshProUGUI playerCountText;
 
+    private void Awake()
+    {
+        ResetPlayerNames();
+    }
+
     public void SetPlayerCountText(int value, int maxPlayer)
     {
         playerCountText.text = value + " / " + maxPlayer;
