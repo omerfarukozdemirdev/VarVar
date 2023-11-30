@@ -166,9 +166,13 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
 
         NetworkGameManager.Instance = null;
+        NetworkPlayer.Local = null;
 
         if (_runner)
+        {
             Destroy(_runner.gameObject);
+
+        }
 
         // Reset the object pools
         //_pool.ClearPools();

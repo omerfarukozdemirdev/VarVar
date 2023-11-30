@@ -1,12 +1,12 @@
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class LobbyItemUI : MonoBehaviour
 {
 
-    public Text username;
-    public Image ready;
-    public Image leader;
+    public TextMeshProUGUI username;
+    //public Image ready;
+    //public Image leader;
 
     private NetworkPlayer _player;
 

@@ -6,19 +6,18 @@ using UnityEngine.UI;
 public class LobbyUI : MonoBehaviour
 {
     public GameObject textPrefab;
-    public Transform parent;
+    public Transform[] parent;
     //public Button readyUp;
 
     private static readonly Dictionary<NetworkPlayer, LobbyItemUI> ListItems = new Dictionary<NetworkPlayer, LobbyItemUI>();
     [SerializeField] private bool IsSubscribed;
 
     public bool nextStepIsAllReady;
-    [SerializeField] private int playerCounter;
+    //[SerializeField] private int playerCounter;
     //[SerializeField] private Text waitingPlayersMessage;
     [SerializeField] private Text playerCounterText;
     [SerializeField] private GameObject loadingPlayersRoot;
     [SerializeField] private Text roomName;
-
 
     private void Awake()
     {
@@ -83,16 +82,17 @@ public class LobbyUI : MonoBehaviour
             Debug.Log("var var");
         }
 
-        var obj = Instantiate(textPrefab, parent).GetComponent<LobbyItemUI>();
+        var obj = Instantiate(textPrefab, parent[NetworkPlayer.Players.Count - 1]).GetComponent<LobbyItemUI>();
         obj.SetPlayer(player);
+        obj.transform.eulerAngles = Vector3.zero;
 
         ListItems.Add(player, obj);
 
         //UpdateDetails(GameManager.Instance);
         Debug.Log(player.name + "lobby ui a eklendi");
 
-        playerCounter++;
-        playerCounterText.text = playerCounter + " / 4";
+        //playerCounter++;
+        playerCounterText.text = NetworkPlayer.Players.Count + " / 4";
         roomName.text = "Room ID : " + GameObject.FindObjectOfType<NetworkRunner>().SessionInfo.Name;
 
         //if (playerCounter == 4)
@@ -113,6 +113,8 @@ public class LobbyUI : MonoBehaviour
             Destroy(obj.gameObject);
             ListItems.Remove(player);
         }
+        playerCounterText.text = NetworkPlayer.Players.Count + " / 4";
+
     }
 
     private void ReadyUpListener()
