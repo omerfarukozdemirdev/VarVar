@@ -150,12 +150,20 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         (string status, string message) = ShutdownReasonToHuman(shutdownReason);
         //_disconnectUI.ShowMessage( status, message);
 
+
         NetworkPlayer.Players.Clear();
-        if (NetworkGameManager.Instance.GameControl.actorControls.Count > 1)
+
+        if (NetworkGameManager.Instance != null)
+
         {
-            NetworkGameManager.Instance.GameControl.playerControl.actorControl.ShowHostDisconnetMessagePanel();
+            if (NetworkGameManager.Instance.GameControl.actorControls.Count > 1)
+            {
+                NetworkGameManager.Instance.GameControl.playerControl.actorControl.ShowHostDisconnetMessagePanel();
+
+            }
 
         }
+
 
         NetworkGameManager.Instance = null;
 
