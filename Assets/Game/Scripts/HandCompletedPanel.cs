@@ -1,7 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using Fusion;
 
 public class HandCompletedPanel : MonoBehaviour
 {
@@ -25,6 +24,8 @@ public class HandCompletedPanel : MonoBehaviour
 
     public void OpenPanel(ActorControl actorControl)
     {
+        Debug.Log("6");
+
         if (gameControl.networkPassCounter == gameControl.orderOfPlayActors.Count - 1 && gameControl.actorControls.Count > 2)
         {
             completeHeaderText.text = "Herkes Pass Dedi";

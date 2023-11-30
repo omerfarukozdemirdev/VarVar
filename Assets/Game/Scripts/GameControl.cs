@@ -77,7 +77,7 @@ public class GameControl : MonoBehaviour
     public bool Host;
     public int networkPassCounter;
     public GameObject LobbyPanel;
-
+    public bool TestMode;
 
     private void Awake()
     {
@@ -1057,8 +1057,11 @@ public class GameControl : MonoBehaviour
 
                 playerControl.actorControl.pass = false;
                 playerControl.actorControl.betUp = false;
-                NetworkPlayer.Local?.RPC_ChangePassState(false);
-                NetworkPlayer.Local?.RPC_ChangeBetUpState(false);
+                if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+                {
+                    NetworkPlayer.Local?.RPC_ChangePassState(false);
+                    NetworkPlayer.Local?.RPC_ChangeBetUpState(false);
+                }
 
 
 
@@ -1067,16 +1070,22 @@ public class GameControl : MonoBehaviour
 
                 playerControl.actorControl.pass = true;
                 playerControl.actorControl.betUp = false;
-                NetworkPlayer.Local?.RPC_ChangePassState(true);
-                NetworkPlayer.Local?.RPC_ChangeBetUpState(false);
+                if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+                {
+                    NetworkPlayer.Local?.RPC_ChangePassState(true);
+                    NetworkPlayer.Local?.RPC_ChangeBetUpState(false);
+                }
 
                 break;
             case 2: // BETUP
 
                 playerControl.actorControl.pass = false;
                 playerControl.actorControl.betUp = true;
-                NetworkPlayer.Local?.RPC_ChangePassState(false);
-                NetworkPlayer.Local?.RPC_ChangeBetUpState(true);
+                if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
+                {
+                    NetworkPlayer.Local?.RPC_ChangePassState(false);
+                    NetworkPlayer.Local?.RPC_ChangeBetUpState(true);
+                }
 
                 break;
         }
@@ -1145,7 +1154,15 @@ public class GameControl : MonoBehaviour
 
     bool CheckPlayerHandCompleted()
     {
-        return FindObjectOfType<PlayerHandChecker>().CheckHandCompleted(playerControl.GetUIOrderedCards());
+        if (TestMode)
+        {
+            return true;
+        }
+        else
+        {
+            return FindObjectOfType<PlayerHandChecker>().CheckHandCompleted(playerControl.GetUIOrderedCards());
+        }
+
     }
 
     void PlayerHandCompleted()
@@ -1166,6 +1183,7 @@ public class GameControl : MonoBehaviour
 
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
         {
+            Debug.Log("1");
             NetworkPlayer.Players[actorControls.IndexOf(playerControl.actorControl)].RPC_SetHandCompleted(true);
             NetworkGameManager.Instance.Rpc_ShowHandCompletedPanel(actorControls.IndexOf(playerControl.actorControl));
         }

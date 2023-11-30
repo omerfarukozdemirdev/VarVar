@@ -389,10 +389,16 @@ public class NetworkGameManager : NetworkBehaviour
     [Rpc(RpcSources.All, RpcTargets.All)]
     public void Rpc_ShowHandCompletedPanel(int winID)
     {
+        Debug.Log("3");
+
         foreach (NetworkPlayer networkPlayer in NetworkPlayer.Players)
         {
+            Debug.Log("4");
+
             if (!networkPlayer.HandCompleted)
             {
+                Debug.Log("5");
+
                 FindObjectOfType<HandCompletedPanel>(true).OpenPanel(GameControl.actorControls[winID]);
             }
         }
