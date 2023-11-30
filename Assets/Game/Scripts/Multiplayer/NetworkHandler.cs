@@ -124,7 +124,9 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        Disconnect();
+        Debug.Log("PlayerLeft");
+        //Disconnect();
+
     }
     public void OnSceneLoadDone(NetworkRunner runner)
     {
