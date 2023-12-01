@@ -30,8 +30,7 @@ public class NetworkGlobals : NetworkBehaviour
         // Oturma düzenini belirle
         if (gameControl.networkHandler.isHost)
         {
-
-            gameControl.gameLimit = gameControl.networkHandler.maxPlayer;
+            gameControl.SetMultiplayerActors();
 
 
             // Aktorlerin oturma düzeni
@@ -88,18 +87,17 @@ public class NetworkGlobals : NetworkBehaviour
             //
 
             //
-            RPC_StartMultiplayerGame();
+            RPC_PrepeareStartGame();
             //
 
         }
     }
 
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
-    public void RPC_StartMultiplayerGame()
+    public void RPC_PrepeareStartGame()
     {
-        gameControl.StartMultiplayerGame();
-
+        gameControl.PrepeareStartGame();
+        gameControl.lobbyUIManager.gameObject.SetActive(false);
     }
-
 
 }

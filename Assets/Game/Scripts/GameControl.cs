@@ -395,7 +395,7 @@ public class GameControl : MonoBehaviour
         PrepeareStartGame();
     }
 
-    void PrepeareStartGame()
+    public void PrepeareStartGame()
     {
         DisableEnableTakeCardBtns(false);
 
@@ -1318,8 +1318,10 @@ public class GameControl : MonoBehaviour
         return FindObjectsOfType<NetworkPlayer>().Length;
     }
 
-    public void StartMultiplayerGame()
+    public void SetMultiplayerActors()
     {
+        gameLimit = networkHandler.maxPlayer;
+
         for (int i = 0; i < actorControls.Count; i++)
             actorControls[i].gameObject.SetActive(false);
 
@@ -1335,11 +1337,8 @@ public class GameControl : MonoBehaviour
         {
             actorControls[i].SetNameText(networkGlobals.orderedNetworkPlayers[i].nickName.ToString());
         }
- 
-        lobbyUIManager.gameObject.SetActive(false);
-
-        PrepeareStartGame();
     }
+
 }
 
 
