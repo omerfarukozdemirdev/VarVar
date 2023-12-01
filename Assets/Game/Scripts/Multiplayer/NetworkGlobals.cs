@@ -18,6 +18,9 @@ public class NetworkGlobals : NetworkBehaviour
     [UnitySerializeField][Networked][Capacity(104)]
     public NetworkLinkedList<NetworkCard> deckCards => default;
 
+    [UnitySerializeField][Networked][Capacity(11)]
+    public NetworkLinkedList<NetworkCard> completedHandCards => default;
+
     [Networked] public int cardDealerInd { get; set; }
 
     private GameControl gameControl;
@@ -69,11 +72,7 @@ public class NetworkGlobals : NetworkBehaviour
                 }
             }
 
-            deckCards.Clear();
-            for (int i = 0; i < gameControl.deck.Count; i++)
-            {
-                deckCards.Add(NetworkCardConverter.CardToNetworkCard(gameControl.deck[i]));
-            }
+            UpdateNetworkDeckCards();
 
             //
 
@@ -92,6 +91,27 @@ public class NetworkGlobals : NetworkBehaviour
         }
     }
 
+    public void UpdateNetworkDeckCards()
+    {
+        deckCards.Clear();
+        for (int i = 0; i < gameControl.deck.Count; i++)
+        {
+            deckCards.Add(NetworkCardConverter.CardToNetworkCard(gameControl.deck[i]));
+        }
+    }
+
+    public void UpdateNetworkCompletedHandCards()
+    {
+        List<Card> cards = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
+
+        completedHandCards.Clear();
+        for (int i = 0; i < cards.Count; i++)
+        {
+            completedHandCards.Add(NetworkCardConverter.CardToNetworkCard(cards[i]));
+        }
+
+        RPC_OpenCompletedHandPanel(gameControl.myNetworkPlayer.playInd);
+    }
 
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
     public void RPC_PrepeareStartGame()
@@ -100,9 +120,8 @@ public class NetworkGlobals : NetworkBehaviour
         {
             gameControl.deck.Clear();
             for (int i = 0; i < deckCards.Count; i++)
-            {
                 gameControl.deck.Add(NetworkCardConverter.NetworkCardToCard(deckCards[i]));
-            }
+
 
             gameControl.cardDealerInd = cardDealerInd;
 
@@ -117,4 +136,22 @@ public class NetworkGlobals : NetworkBehaviour
         gameControl.lobbyUIManager.gameObject.SetActive(false);
     }
 
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
+    public void RPC_DeckFromThrowed()
+    {
+        if (!gameControl.networkHandler.isHost)
+        {
+            gameControl.deck.Clear();
+            for (int i = 0; i < deckCards.Count; i++)
+                gameControl.deck.Add(NetworkCardConverter.NetworkCardToCard(deckCards[i]));
+        }
+
+        gameControl.DeckFromThrowed();
+    }
+
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
+    public void RPC_OpenCompletedHandPanel(int playerInd)
+    {
+        gameControl.OpenHandCompletedPanel(gameControl.actorControls[playerInd]);
+    }
 }

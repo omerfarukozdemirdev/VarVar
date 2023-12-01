@@ -54,4 +54,19 @@ public class NetworkPlayer : NetworkBehaviour
         gameControl.actorControls[ind].DecidePlayer();
         gameControl.desicionInd++;
     }
+
+    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
+    public void RPC_TakeCard(bool _fromDeck, int ind)
+    {
+        if (gameControl.actorControls[ind].player)
+            return;
+
+        gameControl.PickCard(gameControl.actorControls[ind], _fromDeck);
+    }
+
+    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
+    public void RPC_ThrowCard(NetworkCard _card, int ind)
+    {
+        gameControl.ThrowingCard(NetworkCardConverter.NetworkCardToCard(_card), gameControl.actorControls[ind]);
+    }
 }

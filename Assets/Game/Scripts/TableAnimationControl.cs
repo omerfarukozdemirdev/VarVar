@@ -253,6 +253,9 @@ public class TableAnimationControl : MonoBehaviour
             throwedCard.transform.SetParent(actorControl.actorTransform);
             throwedCard.transform.localPosition = new Vector3(0, .1f, 0);
             throwedCard.transform.localScale = Vector3.one * .5f;
+
+            if (GameManager.Instance.IsMultiplayer())
+                actorControl.DefaultAvatar();
         }
 
         throwedCard.transform.SetParent(throwedCardsPos);
@@ -266,17 +269,9 @@ public class TableAnimationControl : MonoBehaviour
         iTween.RotateTo(throwedCard, iTween.Hash("y", Random.Range(500, 900), "time", .3f));
         iTween.ScaleTo(throwedCard, iTween.Hash("scale", Vector3.one * 1.1f, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
 
-        //NetworkGameManager.Instance?.Rpc_UpdateNetworkPlayingInd();
-
         yield return new WaitForSecondsRealtime(1f);
 
-        // NetworkGameManager.Instance?.Rpc_PlayerThrowCardAnimations();
-
         gameControl.NextActor();
-        //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
-        //{
-        //    gameControl.NextActor();
-        //}
     }
 
     public void Reset()

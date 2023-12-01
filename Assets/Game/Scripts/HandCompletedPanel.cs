@@ -54,22 +54,30 @@ public class HandCompletedPanel : MonoBehaviour
         for (int i = 0; i < cardSprites.Length; i++)
             cardSprites[i].gameObject.SetActive(false);
 
-        List<Card> cards;
-        if (actorControl.player)
+        List<Card> cards = new List<Card>();
+
+        if (GameManager.Instance.IsMultiplayer())
         {
-            cards = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
-            //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-            //{
-            //    gameControl.CompletedHand.Clear();
-            //    gameControl.CompletedHand = cards;
-            //}
+            if (gameControl.networkHandler.isHost)
+            {
+                cards = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
+            }
+            else
+            {
+                for (int i = 0; i < gameControl.networkGlobals.completedHandCards.Count; i++)
+                    cards.Add(NetworkCardConverter.NetworkCardToCard(gameControl.networkGlobals.completedHandCards[i]));
+            }
         }
         else
         {
-            cards = actorControl.cardsInHand;
-            ////handcompleted panelindeki 10. kart? silip, actorun elindeki son kart? yani jokeri ekle
-            //cards.RemoveAt(cards.Count - 1);
-            //cards.Add(actorControl.cardsInHand[actorControl.cardsInHand.Count - 1]);
+            if (actorControl.player)
+            {
+                cards = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
+            }
+            else
+            {
+                cards = actorControl.cardsInHand;
+            }
         }
 
         //for (int i = 0; i < 11; i++)
@@ -77,15 +85,6 @@ public class HandCompletedPanel : MonoBehaviour
         {
             //cardSprites[i].sprite = gameControl.cardImages.cardImages[CardSpriteConverter.GetCardSpriteInd(cards[i])];
             cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(cards[i], gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
-            //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
-            //{
-            //    cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(cards[i], gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
-
-            //}
-            //else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-            //{
-            //    cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(NetworkGameManager.Instance.NetworkCardToCard(NetworkGameManager.Instance.NetworkCompletedHand[i]), gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
-            //}
             cardSprites[i].gameObject.SetActive(true);
         }
 
@@ -95,7 +94,6 @@ public class HandCompletedPanel : MonoBehaviour
         //    {
         //        nextButton.SetActive(false);
         //        mainMenuButton.SetActive(false);
-
         //    }
         //    gameControl.playerWinPanel.SetActive(false);
         //}

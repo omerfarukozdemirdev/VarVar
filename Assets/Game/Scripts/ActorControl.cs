@@ -445,7 +445,11 @@ public class ActorControl : MonoBehaviour
 
     public void BlinkAvatar()
     {
-        iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad, "loopType", iTween.LoopType.pingPong));
+        iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad, "loopType", iTween.LoopType.pingPong));
+    }
+    public void DefaultAvatar()
+    {
+        iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
     }
 
     public void DecidePlayer()
