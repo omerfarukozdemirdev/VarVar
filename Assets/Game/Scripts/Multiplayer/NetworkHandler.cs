@@ -74,6 +74,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (networkRunner is null) return;
 
+
         networkRunner.Shutdown();
     }
 

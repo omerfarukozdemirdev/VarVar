@@ -96,7 +96,6 @@ public class HandCompletedPanel : MonoBehaviour
             if (!gameControl.networkHandler.isHost)
             {
                 nextButton.SetActive(false);
-                mainMenuButton.SetActive(false);
             }
         }
 
