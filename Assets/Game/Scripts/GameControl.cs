@@ -713,10 +713,18 @@ public class GameControl : MonoBehaviour
         }
         else
         {
-            if (!desicionActors[desicionInd].pass)
-                desicionActors[desicionInd].DecideBet();
+            if (GameManager.Instance.IsMultiplayer())
+            {
 
-            desicionInd++;
+            }
+            else
+            {
+                if (!desicionActors[desicionInd].pass)
+                    desicionActors[desicionInd].DecideBet();
+
+                desicionInd++;
+            }
+
             //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
             //{
             //    if (!desicionActors[desicionInd].pass)

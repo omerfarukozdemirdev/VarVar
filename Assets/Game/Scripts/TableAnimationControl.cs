@@ -193,7 +193,6 @@ public class TableAnimationControl : MonoBehaviour
         if (gameControl.actorControls.Count > 1)
         {
             gameControl.StartBets();
-
         }
 
         yield return new WaitForSecondsRealtime(1f);
