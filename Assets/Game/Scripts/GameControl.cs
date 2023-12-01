@@ -38,7 +38,7 @@ public class GameControl : MonoBehaviour
     [SerializeField] GameObject deckCardBtn;
 
     public int cardDealerInd;
-    [SerializeField] private int orderOfPlayInd;
+    public int orderOfPlayInd;
     public int desicionInd;
     public int playingInd;
 

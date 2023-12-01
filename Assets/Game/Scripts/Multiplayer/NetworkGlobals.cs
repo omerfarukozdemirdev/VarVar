@@ -88,15 +88,22 @@ public class NetworkGlobals : NetworkBehaviour
             //
             RPC_PrepeareStartGame();
             //
-
         }
     }
+
 
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
     public void RPC_PrepeareStartGame()
     {
-        if(!gameControl.networkHandler.isHost)
+        if (!gameControl.networkHandler.isHost)
+        {
+            gameControl.cardDealerInd = cardDealerInd;
+            gameControl.SortOrderOfPlayActors();
+
+
             gameControl.SetMultiplayerActors();
+        }
+
 
         gameControl.PrepeareStartGame();
         gameControl.lobbyUIManager.gameObject.SetActive(false);
