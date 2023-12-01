@@ -10,6 +10,8 @@ public class LobbyUIManager : MonoBehaviour
 
     private void Awake()
     {
+        playerCountText.text = "Test için düzenlendi. Kaç kişilik oynamak istiyorsanız o butona basın. Tüm arkadaşların aynı butona basmalı";
+
         playersWaitingText.SetActive(false);
         roomMaxPlayerText.text = FindObjectOfType<NetworkHandler>().maxPlayer + " OYUNCU";
 
