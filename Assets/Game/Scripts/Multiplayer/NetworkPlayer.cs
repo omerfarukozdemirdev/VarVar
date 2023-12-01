@@ -51,6 +51,7 @@ public class NetworkPlayer : NetworkBehaviour
         gameControl.actorControls[ind].pass = pass;
         gameControl.actorControls[ind].betUp = betUp;
 
-        gameControl.DecidePlayer();
+        gameControl.actorControls[ind].DecidePlayer();
+        gameControl.desicionInd++;
     }
 }

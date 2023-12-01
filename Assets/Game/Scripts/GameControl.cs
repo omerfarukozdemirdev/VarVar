@@ -1130,7 +1130,8 @@ public class GameControl : MonoBehaviour
         }
         else
         {
-            DecidePlayer();
+            playerControl.actorControl.DecidePlayer();
+            desicionInd++;
         }
 
         //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
@@ -1151,12 +1152,6 @@ public class GameControl : MonoBehaviour
         //}
 
         desicitonPanel.SetActive(false);
-    }
-
-    public void DecidePlayer()
-    {
-        playerControl.actorControl.DecidePlayer();
-        desicionInd++;
     }
 
     //public void UpdateLastPlayerHand(ActorControl actorControl)
