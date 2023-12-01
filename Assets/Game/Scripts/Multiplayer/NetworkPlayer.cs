@@ -69,4 +69,10 @@ public class NetworkPlayer : NetworkBehaviour
     {
         gameControl.ThrowingCard(NetworkCardConverter.NetworkCardToCard(_card), gameControl.actorControls[ind]);
     }
+
+    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
+    public void RPC_OpenCompletedHandPanel(int playerInd)
+    {
+        gameControl.OpenHandCompletedPanel(gameControl.actorControls[playerInd]);
+    }
 }

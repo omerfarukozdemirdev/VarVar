@@ -110,7 +110,7 @@ public class NetworkGlobals : NetworkBehaviour
             completedHandCards.Add(NetworkCardConverter.CardToNetworkCard(cards[i]));
         }
 
-        RPC_OpenCompletedHandPanel(gameControl.myNetworkPlayer.playInd);
+        gameControl.myNetworkPlayer.RPC_OpenCompletedHandPanel(gameControl.myNetworkPlayer.playInd);
     }
 
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
@@ -149,9 +149,5 @@ public class NetworkGlobals : NetworkBehaviour
         gameControl.DeckFromThrowed();
     }
 
-    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
-    public void RPC_OpenCompletedHandPanel(int playerInd)
-    {
-        gameControl.OpenHandCompletedPanel(gameControl.actorControls[playerInd]);
-    }
+
 }
