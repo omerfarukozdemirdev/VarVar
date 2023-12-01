@@ -53,26 +53,27 @@ public class NetworkGlobals : NetworkBehaviour
             deckCards.Clear();
             for (int i = 0; i < gameControl.deck.Count; i++)
             {
-                deckCards.Add(CardToNetworkCard(gameControl.deck[i]));
+                deckCards.Add(NetworkCardConverter.CardToNetworkCard(gameControl.deck[i]));
             }
-                
+
             //------------
 
+            // Oyuncuların kartlarını belirle
+
+            gameControl.DealCardsToActors();
+
+            for(int i = 0; i < orderedNetworkPlayers.Count; i++)
+            {
+                orderedNetworkPlayers[i].playInd = i;
+
+                for (int j = 0; j < gameControl.actorControls[i].cardsInHand.Count; j++)
+                    orderedNetworkPlayers[i].cardsInHand.Add(NetworkCardConverter.CardToNetworkCard(gameControl.actorControls[i].cardsInHand[j]));
+            }
+
+            //
 
             RPC_StartMultiplayerGame();
         }
-    }
-
-    public NetworkCard CardToNetworkCard(Card card)
-    {
-        NetworkCard newNetworkCard = new NetworkCard() { suit = (CardSuit)card.suit, value = card.value };
-        return newNetworkCard;
-    }
-
-    public Card NetworkCardToCard(NetworkCard networkCard)
-    {
-        Card card = new Card() { suit = (CardSuit)networkCard.suit, value = networkCard.value };
-        return card;
     }
 
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]

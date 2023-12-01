@@ -454,7 +454,7 @@ public class GameControl : MonoBehaviour
         return null;
     }
 
-    void DealCardsToActors()
+    public void DealCardsToActors()
     {
         values = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
         for (int i = 1; i < actorControls.Count; i++)
