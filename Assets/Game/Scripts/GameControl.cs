@@ -79,6 +79,7 @@ public class GameControl : MonoBehaviour
 
     public NetworkHandler networkHandler;
     public NetworkPlayer myNetworkPlayer;
+    public NetworkGlobals networkGlobals;
 
     private void Awake()
     {
@@ -1328,23 +1329,12 @@ public class GameControl : MonoBehaviour
         }
         actorControls = AC;
 
-        // Oturma düzenini belirle
-        if (networkHandler.isHost)
-        {
-            NetworkPlayer[] networkPlayers = FindObjectsOfType<NetworkPlayer>();
-    
-            for (int i = 0; i < networkPlayers.Length; i++)
-            {
-                if (networkPlayers[i].localPlayer)
-                    myNetworkPlayer.orderedNetworkPlayers.Add(networkPlayers[i]);
-            }
-            for (int i = 0; i < networkPlayers.Length; i++)
-            {
-                if (!networkPlayers[i].localPlayer)
-                    myNetworkPlayer.orderedNetworkPlayers.Add(networkPlayers[i]);
-            }
-        }
 
+        for (int i = 0; i < actorControls.Count; i++)
+        {
+            actorControls[i].SetNameText(networkGlobals.orderedNetworkPlayers[i].nickName.ToString());
+        }
+ 
         lobbyUIManager.gameObject.SetActive(false);
     }
 }

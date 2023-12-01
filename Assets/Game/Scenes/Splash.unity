@@ -306,6 +306,8 @@ MonoBehaviour:
   networkRunnerPrefab: {fileID: 6439034249161305335, guid: 742e4605853f64661858c4afb229d9c8, type: 3}
   networkPlayerPrefab:
     RawGuidValue: af4caf40d139a42b2b97d8fdd7f4f3db
+  networkGlobalPrefab:
+    RawGuidValue: ecc3fb21770ae4841bd6067f177eee34
   isHost: 0
   maxPlayer: 2
 --- !u!4 &242795779

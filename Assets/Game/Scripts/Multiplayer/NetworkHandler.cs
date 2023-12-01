@@ -8,6 +8,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField] NetworkRunner networkRunnerPrefab;
     [SerializeField] NetworkPrefabRef networkPlayerPrefab;
+    [SerializeField] NetworkPrefabRef networkGlobalPrefab;
 
     NetworkRunner networkRunner;
     NetworkSceneManagerBase loader;
@@ -84,6 +85,11 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     {
         //connected = false;
         Disconnect();
+    }
+
+    public void SpawnNetworkGlobals()
+    {
+        networkRunner.Spawn(networkGlobalPrefab, Vector3.zero, Quaternion.identity);
     }
 
     #region CALLBACKS

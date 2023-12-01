@@ -8,11 +8,6 @@ public class NetworkPlayer : NetworkBehaviour
 
     [Networked] public NetworkString<_32> nickName { get; set; }
 
-    [UnitySerializeField]
-    [Networked]
-    [Capacity(7)]
-    public NetworkLinkedList<NetworkPlayer> orderedNetworkPlayers => default;
-
     public bool localPlayer;
 
     public override void Spawned()
@@ -29,9 +24,9 @@ public class NetworkPlayer : NetworkBehaviour
 
         gameControl.UpdateLobbyPlayerNames();
 
-        if(gameControl.networkHandler.maxPlayer == gameControl.GetNetworkPlayerCount())
+        if(gameControl.networkHandler.maxPlayer == gameControl.GetNetworkPlayerCount() && gameControl.networkHandler.isHost)
         {
-            gameControl.StartMultiplayerGame();
+            gameControl.networkHandler.SpawnNetworkGlobals();
         }
     }
 
