@@ -8,11 +8,15 @@ public class LobbyUIManager : MonoBehaviour
 
     private void Awake()
     {
+        playerCountText.gameObject.SetActive(false);
         ResetPlayerNames();
     }
 
     public void SetPlayerCountText(int value, int maxPlayer)
     {
+        if (!playerCountText.gameObject.activeSelf)
+            playerCountText.gameObject.SetActive(true);
+
         playerCountText.text = value + " / " + maxPlayer;
     }
     public void SetMesssage(string messsage)
