@@ -40,7 +40,9 @@ public class PlayerControl : MonoBehaviour
         throwedCardAreaAnimator = throwedCardArea.GetComponent<Animator>();
         finishCardAreaAnimator = finishCardArea.GetComponent<Animator>();
 
-        actorControl.player = true;
+        if(!GameManager.Instance.IsMultiplayer())
+            actorControl.player = true;
+
         //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
         //{
         //    actorControl.player = true;

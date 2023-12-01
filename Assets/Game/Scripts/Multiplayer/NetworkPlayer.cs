@@ -39,6 +39,7 @@ public class NetworkPlayer : NetworkBehaviour
     {
         playInd = ind;
         gameControl.playerControl.actorControl = gameControl.actorControls[playInd];
+        gameControl.playerControl.actorControl.player = true;
     }
 
     [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.InputAuthority)]

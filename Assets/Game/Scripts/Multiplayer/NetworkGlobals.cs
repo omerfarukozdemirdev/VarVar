@@ -30,9 +30,6 @@ public class NetworkGlobals : NetworkBehaviour
         // Oturma düzenini belirle
         if (gameControl.networkHandler.isHost)
         {
-            gameControl.SetMultiplayerActors();
-
-
             // Aktorlerin oturma düzeni
             NetworkPlayer[] networkPlayers = FindObjectsOfType<NetworkPlayer>();
 
@@ -47,6 +44,8 @@ public class NetworkGlobals : NetworkBehaviour
                     orderedNetworkPlayers.Add(networkPlayers[i]);
             }
             //--------
+
+            gameControl.SetMultiplayerActors();
 
             // Decki ayarla
 
@@ -96,6 +95,9 @@ public class NetworkGlobals : NetworkBehaviour
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
     public void RPC_PrepeareStartGame()
     {
+        if(!gameControl.networkHandler.isHost)
+            gameControl.SetMultiplayerActors();
+
         gameControl.PrepeareStartGame();
         gameControl.lobbyUIManager.gameObject.SetActive(false);
     }
