@@ -35,6 +35,12 @@ public class NetworkPlayer : NetworkBehaviour
     }
 
     [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.InputAuthority)]
+    public void RPC_PlayInd(int ind)
+    {
+        playInd = ind;
+    }
+
+    [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.InputAuthority)]
     public void RPC_CardsInHand(NetworkCard _card)
     {
         gameControl.actorControls[playInd].cardsInHand.Add(NetworkCardConverter.NetworkCardToCard(_card));   

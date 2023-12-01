@@ -18,6 +18,7 @@ public class NetworkGlobals : NetworkBehaviour
     [UnitySerializeField][Networked][Capacity(104)]
     public NetworkLinkedList<NetworkCard> deckCards => default;
 
+    [Networked] public int cardDealerInd { get; set; }
 
     private GameControl gameControl;
 
@@ -64,13 +65,21 @@ public class NetworkGlobals : NetworkBehaviour
 
             for(int i = 1; i < orderedNetworkPlayers.Count; i++)
             {
-                orderedNetworkPlayers[i].playInd = i;
+                orderedNetworkPlayers[i].RPC_PlayInd(i);
 
                 for (int j = 0; j < gameControl.actorControls[i].cardsInHand.Count; j++)
                 {
                     orderedNetworkPlayers[i].RPC_CardsInHand(NetworkCardConverter.CardToNetworkCard(gameControl.actorControls[i].cardsInHand[j]));
                 }
             }
+
+            //
+
+
+            // Dağıtıcıyı belirle
+
+            gameControl.ChooseRandomCardDealer();
+            cardDealerInd = gameControl.cardDealerInd;
 
             //
 
@@ -83,4 +92,6 @@ public class NetworkGlobals : NetworkBehaviour
     {
         gameControl.StartMultiplayerGame();
     }
+
+
 }

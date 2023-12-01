@@ -545,7 +545,7 @@ public class GameControl : MonoBehaviour
         return predefinedCards;
     }
 
-    void ChooseRandomCardDealer()
+    public void ChooseRandomCardDealer()
     {
         //if (PlayerPrefs.HasKey("CD"))
         //    cardDealerInd = PlayerPrefs.GetInt("CD");
