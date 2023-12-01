@@ -108,7 +108,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        FindObjectOfType<GameControl>().lobbyUIManager.SetPlayerCountText(0,maxPlayer);
+        FindObjectOfType<GameControl>().UpdateLobbyPlayerNames();
 
         isHost = networkRunner.IsSharedModeMasterClient;
     }
