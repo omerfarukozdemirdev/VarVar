@@ -491,7 +491,7 @@ public class GameControl : MonoBehaviour
 
             if(playingActors.Count <= 1)
             {
-                OpenHandCompletedPanel(null);
+                FindObjectOfType<HandCompletedPanel>(true).OpenPanel(null);
                 return;
             }
 
