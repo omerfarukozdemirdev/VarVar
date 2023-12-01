@@ -93,8 +93,11 @@ public class HandCompletedPanel : MonoBehaviour
 
         if (GameManager.Instance.IsMultiplayer())
         {
-            nextButton.SetActive(gameControl.networkHandler.isHost);
-            mainMenuButton.SetActive(gameControl.networkHandler.isHost);
+            if (!gameControl.networkHandler.isHost)
+            {
+                nextButton.SetActive(false);
+                mainMenuButton.SetActive(false);
+            }
         }
 
         panelBG.SetActive(true);

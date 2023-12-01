@@ -92,4 +92,10 @@ public class NetworkPlayer : NetworkBehaviour
     {
         gameControl.OpenHandCompletedPanel(gameControl.actorControls[playerInd]);
     }
+
+    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
+    public void RPC_NextTour()
+    {
+        gameControl.networkGlobals.Setup();
+    }
 }

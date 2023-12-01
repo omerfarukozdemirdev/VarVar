@@ -199,7 +199,7 @@ public class GameControl : MonoBehaviour
 
         if (GameManager.Instance.IsMultiplayer())
         {
-            networkGlobals.RPC_NextTour();
+            myNetworkPlayer.RPC_NextTour();
             return;
         }
 
