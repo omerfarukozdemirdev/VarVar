@@ -160,6 +160,17 @@ public class GameControl : MonoBehaviour
         newDesicitonActors.Clear();
     }
 
+    public void NewGame()
+    {
+        if (GameManager.Instance.IsMultiplayer())
+        {
+            Menu();
+            return;
+        }
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene(3);
+    }
+
     public void Menu()
     {
         if (GameManager.Instance.IsMultiplayer())
@@ -168,11 +179,6 @@ public class GameControl : MonoBehaviour
         FindObjectOfType<MakeNoise>().PlaySFX(26, 0);
         gameConfig.cardDealerInd = -1;
         UnityEngine.SceneManagement.SceneManager.LoadScene(2);
-    }
-
-    public void NextTourQuick()
-    {
-        NextTour();
     }
 
     public void NextTour()
@@ -191,6 +197,11 @@ public class GameControl : MonoBehaviour
         tableAnimationControl.Reset();
         playerControl.ResetValues();
 
+        if (GameManager.Instance.IsMultiplayer())
+        {
+            networkGlobals.Setup();
+            return;
+        }
 
         Invoke("StartGame", 1f);
     }
@@ -898,16 +909,6 @@ public class GameControl : MonoBehaviour
         rewardMoneyText.text = "$" + rewardMoney;
         rewardMoneyText.gameObject.SetActive(false);
         rewardMoneyText.gameObject.SetActive(true);
-    }
-
-    public void BackMainMenu()
-    {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
-    }
-
-    public void NewGame()
-    {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(3);
     }
 
     public void OpenStatisticPanel()

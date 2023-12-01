@@ -239,6 +239,9 @@ MonoBehaviour:
   statisticPanel: {fileID: 410013130}
   lobbyUIManager: {fileID: 5374562838557262380}
   TestMode: 0
+  networkHandler: {fileID: 0}
+  myNetworkPlayer: {fileID: 0}
+  networkGlobals: {fileID: 0}
 --- !u!4 &327959629
 Transform:
   m_ObjectHideFlags: 0
@@ -1309,6 +1312,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 327959628}
+    - target: {fileID: 5374562840061468268, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: NextTour
+      objectReference: {fileID: 0}
     - target: {fileID: 5374562840148161902, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1337,6 +1344,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 327959628}
+    - target: {fileID: 5374562840446974556, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Menu
+      objectReference: {fileID: 0}
     - target: {fileID: 8309433644802430558, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

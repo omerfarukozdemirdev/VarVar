@@ -27,7 +27,15 @@ public class NetworkGlobals : NetworkBehaviour
         gameControl = FindObjectOfType<GameControl>();
         gameControl.networkGlobals = this;
 
+        Setup();
+    }
+
+    public void Setup()
+    {
         // Oturma düzenini belirle
+
+        gameControl.myNetworkPlayer.completedHandCards.Clear();
+
         if (gameControl.networkHandler.isHost)
         {
             // Aktorlerin oturma düzeni
@@ -71,9 +79,6 @@ public class NetworkGlobals : NetworkBehaviour
 
             UpdateNetworkDeckCards();
 
-            //
-
-
             // Dağıtıcıyı belirle
 
             gameControl.ChooseRandomCardDealer();
@@ -87,6 +92,7 @@ public class NetworkGlobals : NetworkBehaviour
             //
         }
     }
+
 
     public void UpdateNetworkDeckCards()
     {
