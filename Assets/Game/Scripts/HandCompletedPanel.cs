@@ -91,15 +91,12 @@ public class HandCompletedPanel : MonoBehaviour
             cardSprites[i].gameObject.SetActive(true);
         }
 
-        //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-        //{
-        //    if (!gameControl.Host)
-        //    {
-        //        nextButton.SetActive(false);
-        //        mainMenuButton.SetActive(false);
-        //    }
-        //    gameControl.playerWinPanel.SetActive(false);
-        //}
+        if (GameManager.Instance.IsMultiplayer())
+        {
+            nextButton.SetActive(gameControl.networkHandler.isHost);
+            mainMenuButton.SetActive(gameControl.networkHandler.isHost);
+        }
+
         panelBG.SetActive(true);
     }
 

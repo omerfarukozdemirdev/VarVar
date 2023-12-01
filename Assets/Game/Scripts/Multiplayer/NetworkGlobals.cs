@@ -30,7 +30,7 @@ public class NetworkGlobals : NetworkBehaviour
         Setup();
     }
 
-    public void Setup()
+    void Setup()
     {
         // Oturma düzenini belirle
 
@@ -137,5 +137,11 @@ public class NetworkGlobals : NetworkBehaviour
         }
 
         gameControl.DeckFromThrowed();
+    }
+
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
+    public void RPC_NextTour()
+    {
+        Setup();
     }
 }
