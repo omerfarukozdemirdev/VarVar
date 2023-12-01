@@ -64,7 +64,8 @@ public class NetworkGlobals : NetworkBehaviour
 
             gameControl.DealCardsToActors();
 
-            for(int i = 1; i < orderedNetworkPlayers.Count; i++)
+            gameControl.actorControls[0].player = true;
+            for (int i = 1; i < orderedNetworkPlayers.Count; i++)
             {
                 orderedNetworkPlayers[i].RPC_PlayInd(i);
 
@@ -98,10 +99,11 @@ public class NetworkGlobals : NetworkBehaviour
         if (!gameControl.networkHandler.isHost)
         {
             gameControl.cardDealerInd = cardDealerInd;
-            gameControl.SortOrderOfPlayActors();
-
 
             gameControl.SetMultiplayerActors();
+
+
+            gameControl.SortOrderOfPlayActors();
         }
 
 

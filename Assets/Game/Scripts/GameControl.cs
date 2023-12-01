@@ -715,7 +715,7 @@ public class GameControl : MonoBehaviour
         {
             if (GameManager.Instance.IsMultiplayer())
             {
-
+                desicionActors[desicionInd].BlinkAvatar();
             }
             else
             {

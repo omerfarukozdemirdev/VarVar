@@ -443,6 +443,11 @@ public class ActorControl : MonoBehaviour
         StartCoroutine(Decide());
     }
 
+    public void BlinkAvatar()
+    {
+        iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad, "loopType", iTween.LoopType.pingPong));
+    }
+
     public void DecidePlayer()
     {
         StartCoroutine(Decide());
