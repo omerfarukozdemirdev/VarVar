@@ -34,9 +34,10 @@ public class NetworkPlayer : NetworkBehaviour
         }
     }
 
-    //[Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
-    //public void RPC_SetPlayerStats(List<NetworkPlayer> _nickName)
-    //{
-    //    Debug.Log("RPC_SetPlayerStats");
-    //}
+    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.InputAuthority)]
+    public void RPC_CardsInHand(NetworkCard _cardInHand)
+    {
+        Debug.Log("Cardlar geldi");
+        cardsInHand.Add(_cardInHand);           
+    }
 }

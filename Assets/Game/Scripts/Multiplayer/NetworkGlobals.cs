@@ -62,12 +62,14 @@ public class NetworkGlobals : NetworkBehaviour
 
             gameControl.DealCardsToActors();
 
-            for(int i = 0; i < orderedNetworkPlayers.Count; i++)
+            for(int i = 1; i < orderedNetworkPlayers.Count; i++)
             {
                 orderedNetworkPlayers[i].playInd = i;
 
                 for (int j = 0; j < gameControl.actorControls[i].cardsInHand.Count; j++)
-                    orderedNetworkPlayers[i].cardsInHand.Add(NetworkCardConverter.CardToNetworkCard(gameControl.actorControls[i].cardsInHand[j]));
+                {
+                    orderedNetworkPlayers[i].RPC_CardsInHand(NetworkCardConverter.CardToNetworkCard(gameControl.actorControls[i].cardsInHand[j]));
+                }
             }
 
             //
