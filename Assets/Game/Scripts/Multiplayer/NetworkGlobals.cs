@@ -31,6 +31,9 @@ public class NetworkGlobals : NetworkBehaviour
         if (gameControl.networkHandler.isHost)
         {
 
+            gameControl.gameLimit = gameControl.networkHandler.maxPlayer;
+
+
             // Aktorlerin oturma düzeni
             NetworkPlayer[] networkPlayers = FindObjectsOfType<NetworkPlayer>();
 

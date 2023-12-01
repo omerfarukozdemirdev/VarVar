@@ -1320,8 +1320,6 @@ public class GameControl : MonoBehaviour
 
     public void StartMultiplayerGame()
     {
-        gameLimit = networkHandler.maxPlayer;
-
         for (int i = 0; i < actorControls.Count; i++)
             actorControls[i].gameObject.SetActive(false);
 
