@@ -93,9 +93,6 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     #region CALLBACKS
-
-    public void OnInput(NetworkRunner runner, NetworkInput input){}
-
     public void OnConnectedToServer(NetworkRunner runner)
     {
         Debug.Log("Connected");
@@ -118,43 +115,23 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     {
         Debug.Log("PlayerJoined");
         isHost = networkRunner.IsSharedModeMasterClient;
-        //if (networkRunner.IsSharedModeMasterClient)
-        //    players.Add(player);
-
-        //if(players.Count == playerCount)
-        //{
-
-        //}
-        //if (players.Count == 2)
-        //{
-        //    networkRunner.SessionInfo.IsOpen = false;
-        //    networkRunner.SetActiveScene("LevelNetwork");
-        //}
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         Debug.Log("PlayerLeft");
         FindObjectOfType<GameControl>().UpdateLobbyPlayerNames();
         //Disconnect();
-
     }
-    public void OnSceneLoadDone(NetworkRunner runner)
-    {
-        //if (!networkRunner.IsSharedModeMasterClient) return;
-
-        //networkRunner.Spawn(networkBallPrefab, Vector3.up * 2, Quaternion.identity);
-        //networkRunner.Spawn(networkPowerUps);
-    }
-
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
         if (networkRunner!= null  && networkRunner.gameObject)
             Destroy(networkRunner.gameObject);
 
-        //players.Clear();
         networkRunner = null;
     }
 
+    public void OnInput(NetworkRunner runner, NetworkInput input) { }
+    public void OnSceneLoadDone(NetworkRunner runner) { }
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input) { }
     public void OnSceneLoadStart(NetworkRunner runner) { }
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token) { }

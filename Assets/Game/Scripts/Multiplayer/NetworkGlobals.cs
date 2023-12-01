@@ -40,6 +40,7 @@ public class NetworkGlobals : NetworkBehaviour
         {
             // Aktorlerin oturma düzeni
             NetworkPlayer[] networkPlayers = FindObjectsOfType<NetworkPlayer>();
+            orderedNetworkPlayers.Clear();
 
             for (int i = 0; i < networkPlayers.Length; i++)
             {

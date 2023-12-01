@@ -969,10 +969,10 @@ public class GameControl : MonoBehaviour
 
         for (int i = 0; i < actorControls.Count; i++)
         {
-            actorControls[i].SetNameText(networkGlobals.orderedNetworkPlayers[i].nickName.ToString());
+            actorControls[i].actorName = networkGlobals.orderedNetworkPlayers[i].nickName.ToString();
+            actorControls[i].SetNameText(actorControls[i].actorName);
         }
     }
-
 }
 
 
