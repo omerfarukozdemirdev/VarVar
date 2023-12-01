@@ -30,6 +30,8 @@ public class NetworkPlayer : NetworkBehaviour
 
         if(gameControl.networkHandler.maxPlayer == gameControl.GetNetworkPlayerCount() && gameControl.networkHandler.isHost)
         {
+            Runner.SessionInfo.IsOpen = false;
+            Runner.SessionInfo.IsVisible = false;
             gameControl.networkHandler.SpawnNetworkGlobals();
         }
     }
