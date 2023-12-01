@@ -96,6 +96,7 @@ public class NetworkPlayer : NetworkBehaviour
     [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
     public void RPC_NextTour()
     {
+        gameControl.NextTouring();
         gameControl.networkGlobals.Setup();
     }
 }

@@ -183,6 +183,18 @@ public class GameControl : MonoBehaviour
 
     public void NextTour()
     {
+        if (GameManager.Instance.IsMultiplayer())
+        {
+            myNetworkPlayer.RPC_NextTour();
+            return;
+        }
+
+        NextTouring();
+        Invoke("StartGame", 1f);
+    }
+
+    public void NextTouring()
+    {
         FindObjectOfType<MakeNoise>().PlaySFX(9, 0);
 
         actorControls.ForEach(x => x.ResetValues());
@@ -196,14 +208,6 @@ public class GameControl : MonoBehaviour
 
         tableAnimationControl.Reset();
         playerControl.ResetValues();
-
-        if (GameManager.Instance.IsMultiplayer())
-        {
-            myNetworkPlayer.RPC_NextTour();
-            return;
-        }
-
-        Invoke("StartGame", 1f);
     }
 
     void StartGame()
