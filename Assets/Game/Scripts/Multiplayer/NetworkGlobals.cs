@@ -33,7 +33,7 @@ public class NetworkGlobals : NetworkBehaviour
                     orderedNetworkPlayers.Add(networkPlayers[i]);
             }
 
-            RPC_StartMultiplayerGame();
+            //RPC_StartMultiplayerGame();
         }
     }
 
