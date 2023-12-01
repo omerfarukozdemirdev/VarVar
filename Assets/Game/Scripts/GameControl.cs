@@ -489,6 +489,12 @@ public class GameControl : MonoBehaviour
                     playingActors.Add(orderOfPlayActors[i]);
             }
 
+            if(playingActors.Count <= 1)
+            {
+                OpenHandCompletedPanel(null);
+                return;
+            }
+
             StartCoroutine(StartPlaying());
 
             return;
@@ -604,7 +610,6 @@ public class GameControl : MonoBehaviour
 
     IEnumerator FirstGroundCard()
     {
-        Debug.Log("First Ground card");
         lastThrowedCard = throwedCardObjs[throwedCards.Count];
 
         Card card = new Card();

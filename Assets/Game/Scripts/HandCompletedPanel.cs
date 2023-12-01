@@ -26,15 +26,23 @@ public class HandCompletedPanel : MonoBehaviour
     {
         GameManager.Instance.gameStat = GameManager.GameStat.handCompleted;
 
+        if(actorControl == null)
+        {
+            completeHeaderText.text = "Herkes Pass Dedi";
+
+            actorAvatar.gameObject.SetActive(false);
+            actorNameText.gameObject.SetActive(false);
+            rewardText.gameObject.SetActive(false);
+            for (int i = 0; i < cardSprites.Length; i++)
+                cardSprites[i].gameObject.SetActive(false);
+
+            nextButton.SetActive(false);
+            mainMenuButton.SetActive(true);
+
+            return;
+        }
+ 
         completeHeaderText.text = "Hand Completed";
-        //if (gameControl.networkPassCounter == gameControl.orderOfPlayActors.Count - 1 && gameControl.actorControls.Count > 2)
-        //{
-        //    completeHeaderText.text = "Herkes Pass Dedi";
-        //}
-        //else
-        //{
-        //    completeHeaderText.text = "Hand Completed";
-        //}
 
         gameControl.actorControls.ForEach(x => x.totalBetMoney = x.totalBetMoney + x.moneyIn);
 
