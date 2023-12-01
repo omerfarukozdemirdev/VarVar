@@ -30,7 +30,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (!Connect()) return;
 
-        FindObjectOfType<LobbyUIManager>().SetMesssage("Connecting...");
+        FindObjectOfType<GameControl>().lobbyUIManager.SetMesssage("Connecting...");
 
         networkRunner.ProvideInput = true;
         networkRunner.StartGame(new StartGameArgs
@@ -90,7 +90,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     #region CALLBACKS
     public void OnConnectedToServer(NetworkRunner runner)
     {
-        FindObjectOfType<LobbyUIManager>().SetMesssage("Connected");
+        FindObjectOfType<GameControl>().lobbyUIManager.SetMesssage("Connected");
         networkRunner.Spawn(networkPlayerPrefab, Vector3.zero, Quaternion.identity, runner.LocalPlayer);
     }
 
@@ -102,13 +102,13 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
     {
-        FindObjectOfType<LobbyUIManager>().SetMesssage("Connection Failed");
+        FindObjectOfType<GameControl>().lobbyUIManager.SetMesssage("Connection Failed");
         Disconnect();
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        FindObjectOfType<LobbyUIManager>().SetPlayerCountText(0,maxPlayer);
+        FindObjectOfType<GameControl>().lobbyUIManager.SetPlayerCountText(0,maxPlayer);
         isHost = networkRunner.IsSharedModeMasterClient;
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
