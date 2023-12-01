@@ -8,8 +8,8 @@ public class NetworkPlayer : NetworkBehaviour
 
     [Networked] public NetworkString<_32> nickName { get; set; }
 
-    [UnitySerializeField][Networked][Capacity(11)]
-    public NetworkLinkedList<NetworkCard> cardsInHand => default;
+    //[UnitySerializeField][Networked][Capacity(11)]
+    //public NetworkLinkedList<NetworkCard> cardsInHand => default;
 
     public int playInd; 
     public bool localPlayer;
@@ -34,10 +34,9 @@ public class NetworkPlayer : NetworkBehaviour
         }
     }
 
-    [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.InputAuthority)]
-    public void RPC_CardsInHand(NetworkCard _cardInHand)
+    [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.InputAuthority)]
+    public void RPC_CardsInHand(NetworkCard _card)
     {
-        Debug.Log("Cardlar geldi");
-        cardsInHand.Add(_cardInHand);           
+        gameControl.actorControls[playInd].cardsInHand.Add(NetworkCardConverter.NetworkCardToCard(_card));   
     }
 }
