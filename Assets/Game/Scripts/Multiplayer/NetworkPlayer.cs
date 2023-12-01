@@ -8,10 +8,7 @@ public class NetworkPlayer : NetworkBehaviour
 
     [Networked] public NetworkString<_32> nickName { get; set; }
 
-    //[UnitySerializeField][Networked][Capacity(11)]
-    //public NetworkLinkedList<NetworkCard> cardsInHand => default;
-
-    public int playInd; 
+    private int playInd; 
     public bool localPlayer;
 
     public override void Spawned()
@@ -46,5 +43,14 @@ public class NetworkPlayer : NetworkBehaviour
     public void RPC_CardsInHand(NetworkCard _card)
     {
         gameControl.actorControls[playInd].cardsInHand.Add(NetworkCardConverter.NetworkCardToCard(_card));   
+    }
+
+    [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
+    public void RPC_DecidePlayer(bool pass, bool betUp)
+    {
+        gameControl.actorControls[playInd].pass = pass;
+        gameControl.actorControls[playInd].betUp = betUp;
+
+        gameControl.DecidePlayer();
     }
 }

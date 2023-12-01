@@ -1123,8 +1123,16 @@ public class GameControl : MonoBehaviour
                 break;
         }
 
-        playerControl.actorControl.DecidePlayer();
-        desicionInd++;
+
+        if (GameManager.Instance.IsMultiplayer())
+        {
+            myNetworkPlayer.RPC_DecidePlayer(playerControl.actorControl.pass, playerControl.actorControl.betUp);
+        }
+        else
+        {
+            DecidePlayer();
+        }
+
         //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
         //{
         //    playerControl.actorControl.DecidePlayer();
@@ -1143,6 +1151,12 @@ public class GameControl : MonoBehaviour
         //}
 
         desicitonPanel.SetActive(false);
+    }
+
+    public void DecidePlayer()
+    {
+        playerControl.actorControl.DecidePlayer();
+        desicionInd++;
     }
 
     //public void UpdateLastPlayerHand(ActorControl actorControl)
