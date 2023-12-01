@@ -3,6 +3,7 @@ using TMPro;
 
 public class LobbyUIManager : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI roomMaxPlayerText;
     [SerializeField] private TextMeshProUGUI[] playerNameTexts;
     [SerializeField] private TextMeshProUGUI playerCountText;
     [SerializeField] private GameObject playersWaitingText;
@@ -10,7 +11,16 @@ public class LobbyUIManager : MonoBehaviour
     private void Awake()
     {
         playersWaitingText.SetActive(false);
+        roomMaxPlayerText.text = FindObjectOfType<NetworkHandler>().maxPlayer + " OYUNCU";
+
         ResetPlayerNames();
+    }
+
+    public void SetRoomMaxPlayer(int value)
+    {
+        FindObjectOfType<NetworkHandler>().maxPlayer = value;
+        roomMaxPlayerText.text = value + " OYUNCU";
+        FindObjectOfType<NetworkHandler>().StartQuickGame();
     }
 
     public void SetPlayerCountText(int value, int maxPlayer)

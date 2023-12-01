@@ -111,8 +111,7 @@ public class GameControl : MonoBehaviour
             GameManager.Instance.gameStat = GameManager.GameStat.lobby;
 
             networkHandler = FindObjectOfType<NetworkHandler>();
-            networkHandler.StartQuickGame();
-
+            //networkHandler.StartQuickGame();
 
             lobbyUIManager.gameObject.SetActive(true);
             return;

@@ -39,6 +39,7 @@ public class HandCompletedPanel : MonoBehaviour
             nextButton.SetActive(false);
             mainMenuButton.SetActive(true);
 
+            panelBG.SetActive(true);
             return;
         }
  
