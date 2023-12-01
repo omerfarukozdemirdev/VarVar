@@ -867,7 +867,7 @@ public class GameControl : MonoBehaviour
 
     IEnumerator FirstGroundCard()
     {
-        //Debug.Log("First Ground card");
+        Debug.Log("First Ground card");
         lastThrowedCard = throwedCardObjs[throwedCards.Count];
         //if (Host)
         //{
@@ -890,6 +890,7 @@ public class GameControl : MonoBehaviour
         spriteRenderer.sortingOrder = throwedCards.Count;
         spriteRenderer.size = new Vector2(2.56f, 3.5f);
 
+        Debug.Log("tableAnimationControl.FirsGroundCard()");
         tableAnimationControl.FirsGroundCard();
 
         yield return new WaitForSeconds(1f);
@@ -899,6 +900,7 @@ public class GameControl : MonoBehaviour
         lastThrowedCard.transform.rotation = Quaternion.Euler(0, 180, 0);
         lastThrowedCard.SetActive(true);
 
+        Debug.Log("deck.Remove(deck[0])");
         deck.Remove(deck[0]);
         //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
         //{
@@ -912,7 +914,9 @@ public class GameControl : MonoBehaviour
         //        NetworkGameManager.Instance.Rpc_RemoveCardFromDeck(0);
         //    }
         //}
+
         throwedCards.Add(card);
+        Debug.Log("throwedCards.Add(card);");
         //NetworkGameManager.Instance?.NetworkCardListFromCardList(NetworkGameManager.Instance.NetworkThrowedCards, throwedCards);
     }
 

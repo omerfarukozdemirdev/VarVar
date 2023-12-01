@@ -98,6 +98,12 @@ public class NetworkGlobals : NetworkBehaviour
     {
         if (!gameControl.networkHandler.isHost)
         {
+            gameControl.deck.Clear();
+            for (int i = 0; i < deckCards.Count; i++)
+            {
+                gameControl.deck.Add(NetworkCardConverter.NetworkCardToCard(deckCards[i]));
+            }
+
             gameControl.cardDealerInd = cardDealerInd;
 
             gameControl.SetMultiplayerActors();
