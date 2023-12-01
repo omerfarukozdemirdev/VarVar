@@ -52,12 +52,6 @@ public class NetworkGlobals : NetworkBehaviour
             gameControl.CreateDeck();
             gameControl.ShuffleDeck();
 
-            deckCards.Clear();
-            for (int i = 0; i < gameControl.deck.Count; i++)
-            {
-                deckCards.Add(NetworkCardConverter.CardToNetworkCard(gameControl.deck[i]));
-            }
-
             //------------
 
             // Oyuncuların kartlarını belirle
@@ -73,6 +67,12 @@ public class NetworkGlobals : NetworkBehaviour
                 {
                     orderedNetworkPlayers[i].RPC_CardsInHand(NetworkCardConverter.CardToNetworkCard(gameControl.actorControls[i].cardsInHand[j]));
                 }
+            }
+
+            deckCards.Clear();
+            for (int i = 0; i < gameControl.deck.Count; i++)
+            {
+                deckCards.Add(NetworkCardConverter.CardToNetworkCard(gameControl.deck[i]));
             }
 
             //
