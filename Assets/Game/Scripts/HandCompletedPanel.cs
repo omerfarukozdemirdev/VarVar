@@ -64,8 +64,18 @@ public class HandCompletedPanel : MonoBehaviour
             }
             else
             {
-                for (int i = 0; i < gameControl.networkGlobals.completedHandCards.Count; i++)
-                    cards.Add(NetworkCardConverter.NetworkCardToCard(gameControl.networkGlobals.completedHandCards[i]));
+                NetworkPlayer networkPlayer = new NetworkPlayer();
+                for(int i = 0; i < gameControl.networkGlobals.orderedNetworkPlayers.Count; i++)
+                {
+                    if(gameControl.networkGlobals.orderedNetworkPlayers[i].completedHandCards.Count > 0)
+                    {
+                        networkPlayer = gameControl.networkGlobals.orderedNetworkPlayers[i];
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < networkPlayer.completedHandCards.Count; i++)
+                    cards.Add(NetworkCardConverter.NetworkCardToCard(networkPlayer.completedHandCards[i]));
             }
         }
         else

@@ -8,6 +8,9 @@ public class NetworkPlayer : NetworkBehaviour
 
     [Networked] public NetworkString<_32> nickName { get; set; }
 
+    [UnitySerializeField][Networked][Capacity(11)]
+    public NetworkLinkedList<NetworkCard> completedHandCards => default;
+
     public int playInd;
     public bool localPlayer;
 
@@ -69,6 +72,20 @@ public class NetworkPlayer : NetworkBehaviour
     {
         gameControl.ThrowingCard(NetworkCardConverter.NetworkCardToCard(_card), gameControl.actorControls[ind]);
     }
+
+    public void UpdateNetworkCompletedHandCards()
+    {
+        List<Card> cards = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
+
+        completedHandCards.Clear();
+        for (int i = 0; i < cards.Count; i++)
+        {
+            completedHandCards.Add(NetworkCardConverter.CardToNetworkCard(cards[i]));
+        }
+
+        RPC_OpenCompletedHandPanel(playInd);
+    }
+
 
     [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
     public void RPC_OpenCompletedHandPanel(int playerInd)

@@ -821,7 +821,7 @@ public class GameControl : MonoBehaviour
     {
         if (GameManager.Instance.IsMultiplayer())
         {
-            networkGlobals.UpdateNetworkCompletedHandCards();
+            myNetworkPlayer.UpdateNetworkCompletedHandCards();
         }
         else
         {

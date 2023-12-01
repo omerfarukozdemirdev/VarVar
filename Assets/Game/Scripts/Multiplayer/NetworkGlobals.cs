@@ -18,9 +18,6 @@ public class NetworkGlobals : NetworkBehaviour
     [UnitySerializeField][Networked][Capacity(104)]
     public NetworkLinkedList<NetworkCard> deckCards => default;
 
-    [UnitySerializeField][Networked][Capacity(11)]
-    public NetworkLinkedList<NetworkCard> completedHandCards => default;
-
     [Networked] public int cardDealerInd { get; set; }
 
     private GameControl gameControl;
@@ -100,19 +97,6 @@ public class NetworkGlobals : NetworkBehaviour
         }
     }
 
-    public void UpdateNetworkCompletedHandCards()
-    {
-        List<Card> cards = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
-
-        completedHandCards.Clear();
-        for (int i = 0; i < cards.Count; i++)
-        {
-            completedHandCards.Add(NetworkCardConverter.CardToNetworkCard(cards[i]));
-        }
-
-        gameControl.myNetworkPlayer.RPC_OpenCompletedHandPanel(gameControl.myNetworkPlayer.playInd);
-    }
-
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
     public void RPC_PrepeareStartGame()
     {
@@ -148,6 +132,4 @@ public class NetworkGlobals : NetworkBehaviour
 
         gameControl.DeckFromThrowed();
     }
-
-
 }
