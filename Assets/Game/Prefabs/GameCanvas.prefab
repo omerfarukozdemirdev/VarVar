@@ -28723,6 +28723,7 @@ MonoBehaviour:
   - {fileID: 3543767143421603735}
   - {fileID: 63808197608809310}
   playerCountText: {fileID: 7629737991951065181}
+  playersWaitingText: {fileID: 4093504962466873004}
 --- !u!1 &8440172414022328275
 GameObject:
   m_ObjectHideFlags: 0

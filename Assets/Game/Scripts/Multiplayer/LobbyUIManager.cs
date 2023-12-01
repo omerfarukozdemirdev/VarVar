@@ -5,17 +5,18 @@ public class LobbyUIManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI[] playerNameTexts;
     [SerializeField] private TextMeshProUGUI playerCountText;
+    [SerializeField] private GameObject playersWaitingText;
 
     private void Awake()
     {
-        playerCountText.gameObject.SetActive(false);
+        playersWaitingText.SetActive(false);
         ResetPlayerNames();
     }
 
     public void SetPlayerCountText(int value, int maxPlayer)
     {
-        if (!playerCountText.gameObject.activeSelf)
-            playerCountText.gameObject.SetActive(true);
+        if (!playersWaitingText.activeSelf)
+            playersWaitingText.SetActive(true);
 
         playerCountText.text = value + " / " + maxPlayer;
     }
