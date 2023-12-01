@@ -12,11 +12,9 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     NetworkRunner networkRunner;
     NetworkSceneManagerBase loader;
-    //List<PlayerRef> players = new List<PlayerRef>();
 
     public bool isHost;
     public int maxPlayer = 2;
-    //bool connected;
 
     void Awake()
     {
@@ -31,7 +29,8 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     public void StartQuickGame()
     {
         if (!Connect()) return;
-        //connected = true;
+
+        FindObjectOfType<LobbyUIManager>().SetMesssage("Connecting...");
 
         networkRunner.ProvideInput = true;
         networkRunner.StartGame(new StartGameArgs
@@ -49,7 +48,6 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
             return;
 
         if (!Connect()) return;
-        //connected = true;
 
         networkRunner.ProvideInput = true;
         networkRunner.StartGame(new StartGameArgs
@@ -64,8 +62,6 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     bool Connect()
     {
-        //players.Clear();
-
         if (networkRunner != null) return false;
 
         networkRunner = Instantiate(networkRunnerPrefab, transform);
@@ -83,7 +79,6 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     public void CloseConnection()
     {
-        //connected = false;
         Disconnect();
     }
 
@@ -95,7 +90,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     #region CALLBACKS
     public void OnConnectedToServer(NetworkRunner runner)
     {
-        Debug.Log("Connected");
+        FindObjectOfType<LobbyUIManager>().SetMesssage("Connected");
         networkRunner.Spawn(networkPlayerPrefab, Vector3.zero, Quaternion.identity, runner.LocalPlayer);
     }
 
@@ -107,13 +102,13 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
     {
-        Debug.Log("Connection Failed");
+        FindObjectOfType<LobbyUIManager>().SetMesssage("Connection Failed");
         Disconnect();
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        Debug.Log("PlayerJoined");
+        FindObjectOfType<LobbyUIManager>().SetPlayerCountText(0,maxPlayer);
         isHost = networkRunner.IsSharedModeMasterClient;
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)

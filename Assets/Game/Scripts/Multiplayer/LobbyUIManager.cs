@@ -15,6 +15,10 @@ public class LobbyUIManager : MonoBehaviour
     {
         playerCountText.text = value + " / " + maxPlayer;
     }
+    public void SetMesssage(string messsage)
+    {
+        playerCountText.text = messsage;
+    }
 
     public void ActivatePlayerName(int ind, string name)
     {
