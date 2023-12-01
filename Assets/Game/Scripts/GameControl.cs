@@ -399,13 +399,14 @@ public class GameControl : MonoBehaviour
         gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
     }
 
+
     public void DisableEnableTakeCardBtns(bool tf)
     {
         throwedCardBtn.SetActive(tf);
         deckCardBtn.SetActive(tf);
     }
 
-    void CreateDeck()
+    public void CreateDeck()
     {
         deck = new List<Card>(); // Kart listesini başlat
 
@@ -427,7 +428,7 @@ public class GameControl : MonoBehaviour
         }
     }
 
-    void ShuffleDeck()
+    public void ShuffleDeck()
     {
         // Kartları karıştır
         for (int i = 0; i < deck.Count; i++)
@@ -437,7 +438,6 @@ public class GameControl : MonoBehaviour
             deck[i] = deck[randomIndex];
             deck[randomIndex] = temp;
         }
-
     }
 
     Card FindCardInDeck(Card card)
@@ -1328,7 +1328,6 @@ public class GameControl : MonoBehaviour
             actorControls[i].gameObject.SetActive(true);
         }
         actorControls = AC;
-
 
         for (int i = 0; i < actorControls.Count; i++)
         {

@@ -309,7 +309,7 @@ MonoBehaviour:
   networkGlobalPrefab:
     RawGuidValue: ecc3fb21770ae4841bd6067f177eee34
   isHost: 0
-  maxPlayer: 2
+  maxPlayer: 3
 --- !u!4 &242795779
 Transform:
   m_ObjectHideFlags: 0

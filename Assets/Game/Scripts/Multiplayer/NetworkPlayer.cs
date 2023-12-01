@@ -7,6 +7,10 @@ public class NetworkPlayer : NetworkBehaviour
     private GameControl gameControl;
 
     [Networked] public NetworkString<_32> nickName { get; set; }
+    //[UnitySerializeField]
+    //[Networked]
+    //[Capacity(11)]
+    //public NetworkLinkedList<Card> cardsInHand => default;
 
     public bool localPlayer;
 
