@@ -97,8 +97,8 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        Debug.Log("Disconnected");
         Disconnect();
+        FindObjectOfType<GameControl>().Menu();
     }
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
@@ -115,9 +115,26 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
-        Debug.Log("PlayerLeft");
-        FindObjectOfType<GameControl>().UpdateLobbyPlayerNames();
-        //Disconnect();
+        switch (GameManager.Instance.gameStat)
+        {
+            case GameManager.GameStat.menu:
+                break;
+            case GameManager.GameStat.lobby:
+
+                FindObjectOfType<GameControl>().UpdateLobbyPlayerNames();
+
+                break;
+            case GameManager.GameStat.game:
+
+                FindObjectOfType<GameControl>().OpenDisconnetPopup();
+
+                break;
+            case GameManager.GameStat.handCompleted:
+
+                FindObjectOfType<GameControl>().OpenDisconnetPopup();
+
+                break;
+        }
     }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {

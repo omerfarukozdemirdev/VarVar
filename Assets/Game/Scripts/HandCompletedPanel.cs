@@ -24,6 +24,8 @@ public class HandCompletedPanel : MonoBehaviour
 
     public void OpenPanel(ActorControl actorControl)
     {
+        GameManager.Instance.gameStat = GameManager.GameStat.handCompleted;
+
         completeHeaderText.text = "Hand Completed";
         //if (gameControl.networkPassCounter == gameControl.orderOfPlayActors.Count - 1 && gameControl.actorControls.Count > 2)
         //{

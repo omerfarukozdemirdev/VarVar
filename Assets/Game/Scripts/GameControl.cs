@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GameControl : MonoBehaviour
 {
@@ -63,6 +64,8 @@ public class GameControl : MonoBehaviour
     [SerializeField] GameObject statisticPanel;
 
     public LobbyUIManager lobbyUIManager;
+    public GameObject disconnetPopup;
+    public TextMeshProUGUI disconnetPopupNickName;
 
     public bool TestMode;
 
@@ -105,8 +108,11 @@ public class GameControl : MonoBehaviour
     {
         if (GameManager.Instance.IsMultiplayer())
         {
+            GameManager.Instance.gameStat = GameManager.GameStat.lobby;
+
             networkHandler = FindObjectOfType<NetworkHandler>();
             networkHandler.StartQuickGame();
+
 
             lobbyUIManager.gameObject.SetActive(true);
             return;
@@ -972,6 +978,12 @@ public class GameControl : MonoBehaviour
             actorControls[i].actorName = networkGlobals.orderedNetworkPlayers[i].nickName.ToString();
             actorControls[i].SetNameText(actorControls[i].actorName);
         }
+    }
+
+    public void OpenDisconnetPopup()
+    {
+        disconnetPopupNickName.text = "Oyuncu";
+        disconnetPopup.SetActive(true);
     }
 }
 

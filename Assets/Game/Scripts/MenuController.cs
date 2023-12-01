@@ -50,14 +50,13 @@ public class MenuController : MonoBehaviour
         FindObjectOfType<MakeNoise>().PlaySFX(29, 0);
     }
 
+    private void Start()
+    {
+        GameManager.Instance.gameStat = GameManager.GameStat.menu;
+    }
+
     public void PlayGame()
     {
-        //GameManager.Instance.CurrentGameMode = GameManager.GameMode.Quick;
-        //gameConfig.cardDealerInd = -1;
-
-        //FindObjectOfType<MakeNoise>().PlaySFX(30, 0);
-        //UnityEngine.SceneManagement.SceneManager.LoadScene(3);
-
         GameManager.Instance.gameMode = GameManager.GameMode.Single;
 
         GoToPlayGame();
@@ -65,12 +64,6 @@ public class MenuController : MonoBehaviour
 
     public void PlayMultiplayerGame()
     {
-        //GameManager.Instance.CurrentGameMode = GameManager.GameMode.Friends;
-        //gameConfig.cardDealerInd = -1;
-
-        //FindObjectOfType<MakeNoise>().PlaySFX(30, 0);
-        //UnityEngine.SceneManagement.SceneManager.LoadScene(4);
-
         GameManager.Instance.gameMode = GameManager.GameMode.Multiplayer;
 
         GoToPlayGame();

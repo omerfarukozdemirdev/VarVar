@@ -4,6 +4,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public enum GameStat
+    {
+        menu,
+        lobby,
+        game,
+        handCompleted
+    }
+
     public enum GameMode
     {
         Single,
@@ -11,7 +19,7 @@ public class GameManager : MonoBehaviour
     }
 
     public GameMode gameMode;
-    //public GameMode CurrentGameMode;
+    public GameStat gameStat;
 
     void Awake()
     {

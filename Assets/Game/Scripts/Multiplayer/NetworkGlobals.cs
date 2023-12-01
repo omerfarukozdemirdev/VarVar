@@ -107,6 +107,8 @@ public class NetworkGlobals : NetworkBehaviour
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
     public void RPC_PrepeareStartGame()
     {
+        GameManager.Instance.gameStat = GameManager.GameStat.game;
+
         if (!gameControl.networkHandler.isHost)
         {
             gameControl.deck.Clear();
@@ -121,7 +123,6 @@ public class NetworkGlobals : NetworkBehaviour
 
             gameControl.SortOrderOfPlayActors();
         }
-
 
         gameControl.PrepeareStartGame();
         gameControl.lobbyUIManager.gameObject.SetActive(false);
