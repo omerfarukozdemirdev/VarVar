@@ -392,13 +392,17 @@ public class GameControl : MonoBehaviour
 
         SortOrderOfPlayActors();
 
+        PrepeareStartGame();
+    }
+
+    void PrepeareStartGame()
+    {
         DisableEnableTakeCardBtns(false);
 
         tableAnimationControl.StartGame();
 
         gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
     }
-
 
     public void DisableEnableTakeCardBtns(bool tf)
     {
@@ -558,7 +562,7 @@ public class GameControl : MonoBehaviour
         }
         else
         {
-            cardDealerInd = Random.Range(0, actorControls.Count);
+            cardDealerInd = Random.Range(0, gameLimit);
             //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
             //{
             //    cardDealerInd = 0;
@@ -566,7 +570,7 @@ public class GameControl : MonoBehaviour
         }
     }
 
-    void SortOrderOfPlayActors()
+    public void SortOrderOfPlayActors()
     {
         orderOfPlayActors = new List<ActorControl>();
 
@@ -1335,6 +1339,8 @@ public class GameControl : MonoBehaviour
         }
  
         lobbyUIManager.gameObject.SetActive(false);
+
+        PrepeareStartGame();
     }
 }
 

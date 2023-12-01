@@ -81,9 +81,13 @@ public class NetworkGlobals : NetworkBehaviour
             gameControl.ChooseRandomCardDealer();
             cardDealerInd = gameControl.cardDealerInd;
 
+            gameControl.SortOrderOfPlayActors();
             //
 
+            //
             RPC_StartMultiplayerGame();
+            //
+
         }
     }
 
@@ -91,6 +95,7 @@ public class NetworkGlobals : NetworkBehaviour
     public void RPC_StartMultiplayerGame()
     {
         gameControl.StartMultiplayerGame();
+
     }
 
 
