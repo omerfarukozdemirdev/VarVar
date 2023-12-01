@@ -8,7 +8,7 @@ public class NetworkPlayer : NetworkBehaviour
 
     [Networked] public NetworkString<_32> nickName { get; set; }
 
-    private int playInd; 
+    public int playInd;
     public bool localPlayer;
 
     public override void Spawned()
@@ -46,10 +46,10 @@ public class NetworkPlayer : NetworkBehaviour
     }
 
     [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
-    public void RPC_DecidePlayer(bool pass, bool betUp)
+    public void RPC_DecidePlayer(bool pass, bool betUp, int ind)
     {
-        gameControl.actorControls[playInd].pass = pass;
-        gameControl.actorControls[playInd].betUp = betUp;
+        gameControl.actorControls[ind].pass = pass;
+        gameControl.actorControls[ind].betUp = betUp;
 
         gameControl.DecidePlayer();
     }

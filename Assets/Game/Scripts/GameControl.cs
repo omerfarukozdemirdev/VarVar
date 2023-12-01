@@ -1126,7 +1126,7 @@ public class GameControl : MonoBehaviour
 
         if (GameManager.Instance.IsMultiplayer())
         {
-            myNetworkPlayer.RPC_DecidePlayer(playerControl.actorControl.pass, playerControl.actorControl.betUp);
+            myNetworkPlayer.RPC_DecidePlayer(playerControl.actorControl.pass, playerControl.actorControl.betUp, myNetworkPlayer.playInd);
         }
         else
         {
