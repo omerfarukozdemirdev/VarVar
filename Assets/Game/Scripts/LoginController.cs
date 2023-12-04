@@ -13,7 +13,7 @@ public class LoginController : MonoBehaviour
         if (!PlayerPrefs.HasKey("Sound"))
             PlayerPrefs.SetInt("Sound", 1);
 
-        UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+       UnityEngine.SceneManagement.SceneManager.LoadScene(2);       
     }
 
     public void GuestPlay()

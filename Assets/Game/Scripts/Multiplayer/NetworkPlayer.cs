@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using Fusion;
 
@@ -8,11 +7,16 @@ public class NetworkPlayer : NetworkBehaviour
 
     [Networked] public NetworkString<_32> nickName { get; set; }
 
-    [UnitySerializeField][Networked][Capacity(11)]
-    public NetworkLinkedList<NetworkCard> completedHandCards => default;
+    //[UnitySerializeField][Networked][Capacity(11)]
+    //public NetworkLinkedList<NetworkCard> completedHandCards => default;
+
+    //[Networked][Capacity(11)]
+    //public NetworkLinkedList<byte> completedHandCardsByte => default;
 
     public int playInd;
     public bool localPlayer;
+    public bool gotPlayInd;
+
 
     public override void Spawned()
     {
@@ -37,62 +41,67 @@ public class NetworkPlayer : NetworkBehaviour
     }
 
     [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.InputAuthority)]
-    public void RPC_PlayInd(int ind)
+    public void RPC_PlayInd(byte ind)
     {
-        playInd = ind;
+        playInd = (int)ind;
         gameControl.playerControl.actorControl = gameControl.actorControls[playInd];
         gameControl.playerControl.actorControl.player = true;
+
+        gotPlayInd = true;
     }
 
-    [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.InputAuthority)]
-    public void RPC_CardsInHand(NetworkCard _card)
-    {
-        gameControl.actorControls[playInd].cardsInHand.Add(NetworkCardConverter.NetworkCardToCard(_card));   
-    }
 
     [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
-    public void RPC_DecidePlayer(bool pass, bool betUp, int ind)
+    public void RPC_DecidePlayer(byte pass, byte betUp, byte ind)
     {
-        gameControl.actorControls[ind].pass = pass;
-        gameControl.actorControls[ind].betUp = betUp;
+        gameControl.actorControls[(int)ind].pass = (int)pass == 1;
+        gameControl.actorControls[(int)ind].betUp = (int)betUp == 1;
 
-        gameControl.actorControls[ind].DecidePlayer();
+        gameControl.actorControls[(int)ind].DecidePlayer();
         gameControl.desicionInd++;
     }
 
     [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
-    public void RPC_TakeCard(bool _fromDeck, int ind)
+    public void RPC_TakeCard(byte _fromDeck, byte ind)
     {
         if (gameControl.actorControls[ind].player)
             return;
 
-        gameControl.PickCard(gameControl.actorControls[ind], _fromDeck);
+        gameControl.PickCard(gameControl.actorControls[(int)ind], (int)_fromDeck == 1);
     }
 
     [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
-    public void RPC_ThrowCard(NetworkCard _card, int ind)
+    public void RPC_ThrowCard(byte _card, byte ind)//(NetworkCard _card, int ind)
     {
-        gameControl.ThrowingCard(NetworkCardConverter.NetworkCardToCard(_card), gameControl.actorControls[ind]);
+        gameControl.ThrowingCard(NetworkCardConverter.IntToCard(_card), gameControl.actorControls[(int)ind]);
     }
 
     public void UpdateNetworkCompletedHandCards()
     {
-        List<Card> cards = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
+        //List<Card> cards = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
 
-        completedHandCards.Clear();
-        for (int i = 0; i < cards.Count; i++)
-        {
-            completedHandCards.Add(NetworkCardConverter.CardToNetworkCard(cards[i]));
-        }
+        //completedHandCardsByte.Clear();
+        //for (int i = 0; i < cards.Count; i++)
+        //{
+        //    completedHandCardsByte.Add((byte)NetworkCardConverter.CardToInt(cards[i]));
+        //}
 
-        RPC_OpenCompletedHandPanel(playInd);
+        RPC_OpenCompletedHandPanel((byte)playInd, NetworkCardConverter.CardsToString(gameControl.playerControl.GetUIOrderedCards()));
     }
 
 
     [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]
-    public void RPC_OpenCompletedHandPanel(int playerInd)
+    public void RPC_OpenCompletedHandPanel(byte playerInd, string cardsInHandString)
     {
-        gameControl.OpenHandCompletedPanel(gameControl.actorControls[playerInd]);
+        gameControl.actorControls[(int)playerInd].cardsInHand = NetworkCardConverter.StringToCards(cardsInHandString);
+
+
+        gameControl.OpenHandCompletedPanel(gameControl.actorControls[(int)playerInd]);
+
+        if (!gameControl.networkHandler.isHost)
+        {
+            gameControl.networkGlobals.RPC_HandCompletedCheck((byte)gameControl.myNetworkPlayer.playInd);
+        }
     }
 
     [Rpc(sources: RpcSources.StateAuthority, targets: RpcTargets.All)]
@@ -101,4 +110,5 @@ public class NetworkPlayer : NetworkBehaviour
         gameControl.NextTouring();
         gameControl.networkGlobals.Setup();
     }
+
 }

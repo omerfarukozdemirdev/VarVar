@@ -684,7 +684,7 @@ public class GameControl : MonoBehaviour
     {
         if (GameManager.Instance.IsMultiplayer())
         {
-            myNetworkPlayer.RPC_ThrowCard(NetworkCardConverter.CardToNetworkCard(cardType), myNetworkPlayer.playInd);
+            myNetworkPlayer.RPC_ThrowCard((byte)NetworkCardConverter.CardToInt(cardType), (byte)myNetworkPlayer.playInd);
         }
         else
         {
@@ -723,7 +723,7 @@ public class GameControl : MonoBehaviour
         playerControl.TakeCard(cardType);
 
         if (GameManager.Instance.IsMultiplayer())
-            myNetworkPlayer.RPC_TakeCard(false, myNetworkPlayer.playInd);
+            myNetworkPlayer.RPC_TakeCard(0, (byte)myNetworkPlayer.playInd);
     }
 
     public void TakeCardFromDeck()
@@ -742,7 +742,7 @@ public class GameControl : MonoBehaviour
         CheckDeckCardCount();
 
         if (GameManager.Instance.IsMultiplayer())
-            myNetworkPlayer.RPC_TakeCard(true, myNetworkPlayer.playInd);
+            myNetworkPlayer.RPC_TakeCard(1, (byte)myNetworkPlayer.playInd);
     }
 
     void CheckDeckCardCount()
@@ -756,8 +756,9 @@ public class GameControl : MonoBehaviour
                     deck = new List<Card>(throwedCards);
                     ShuffleDeck();
 
-                    networkGlobals.UpdateNetworkDeckCards();
-                    networkGlobals.RPC_DeckFromThrowed();
+                    //networkGlobals.UpdateNetworkDeckCards();
+                    //networkGlobals.RPC_DeckFromThrowed()
+                    networkGlobals.UpdateNetworkDeckCardsFromThrowed();
                 }
             }
             return;
@@ -822,7 +823,7 @@ public class GameControl : MonoBehaviour
 
         if (GameManager.Instance.IsMultiplayer())
         {
-            myNetworkPlayer.RPC_DecidePlayer(playerControl.actorControl.pass, playerControl.actorControl.betUp, myNetworkPlayer.playInd);
+            myNetworkPlayer.RPC_DecidePlayer((byte)playerControl.actorControl.pass.GetHashCode(), (byte)playerControl.actorControl.betUp.GetHashCode(), (byte)myNetworkPlayer.playInd);
         }
         else
         {
@@ -981,6 +982,23 @@ public class GameControl : MonoBehaviour
         {
             actorControls[i].actorName = networkGlobals.orderedNetworkPlayers[i].nickName.ToString();
             actorControls[i].SetNameText(actorControls[i].actorName);
+        }
+    }
+
+    public void DealCardsToMultiplayerActors()
+    {
+        for (int i = 0; i < actorControls.Count; i++)
+        {
+            List<Card> cards = new List<Card>();
+
+            for (int c = 0; c < 9; c++)
+            {
+                cards.Add(deck[0]);
+                deck.Remove(deck[0]);
+            }
+
+            actorControls[i].cardsInHand = new List<Card>(cards);
+            actorControls[i].ArrangeHand();
         }
     }
 

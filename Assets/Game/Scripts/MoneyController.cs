@@ -1,10 +1,8 @@
 using UnityEngine;
-//using UnityEngine.UI;
 using TMPro;
 
 public class MoneyController : MonoBehaviour
 {
-    //[SerializeField] private Text moneyCountText;
     [SerializeField] private TextMeshProUGUI moneyCountTmp;
 
     private int moneyCount;

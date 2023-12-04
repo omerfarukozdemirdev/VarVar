@@ -154,11 +154,12 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.SonerAltincit.VarVar
+    Android: com.aryanabla.soner
+    Standalone: com.aryanabla.soner
     iPhone: com.aryanabla.soner
   buildNumber:
     Standalone: 0
-    iPhone: 13
+    iPhone: 15
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
   AndroidBundleVersionCode: 1

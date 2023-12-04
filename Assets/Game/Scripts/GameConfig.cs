@@ -16,20 +16,4 @@ public class GameConfig : ScriptableObject
     public int cardBackInd;
     public Material[] cardBacks;
     public Sprite[] cardBackSprites;
-
-    //public int backgroundInd;
-    //public Sprite[] backGrounds;
-
-    //public int tableInd;
-    //public Sprite[] tables;
-
-    //public ShopMenuCoins[] shopMenuCoins;
-
 }
-
-//[System.Serializable]
-//public class ShopMenuCoins
-//{
-//    public int coincount;
-//    public float prize;
-//}

@@ -28,8 +28,16 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     public void StartQuickGame()
     {
-        if (!Connect()) return;
+        if (!Connect())
+        {
+            Disconnect();
+            FindObjectOfType<GameControl>().lobbyUIManager.SetMesssage("Disconnected");
+            FindObjectOfType<GameControl>().lobbyUIManager.playersWaitingText.SetActive(false);
+            FindObjectOfType<GameControl>().lobbyUIManager.roomMaxPlayerText.gameObject.SetActive(false);
+            return;
+        }
 
+        FindObjectOfType<GameControl>().lobbyUIManager.roomMaxPlayerText.gameObject.SetActive(true);
         FindObjectOfType<GameControl>().lobbyUIManager.SetMesssage("Connecting...");
 
         networkRunner.ProvideInput = true;
@@ -73,14 +81,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     public void Disconnect()
     {
         if (networkRunner is null) return;
-
-
         networkRunner.Shutdown();
-    }
-
-    public void CloseConnection()
-    {
-        Disconnect();
     }
 
     public void SpawnNetworkGlobals()
@@ -97,8 +98,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        Disconnect();
-        FindObjectOfType<GameControl>().Menu();
+
     }
 
     public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
@@ -111,7 +111,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     {
         FindObjectOfType<GameControl>().UpdateLobbyPlayerNames();
 
-        isHost = networkRunner.IsSharedModeMasterClient;
+        isHost = networkRunner.IsSharedModeMasterClient; 
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {

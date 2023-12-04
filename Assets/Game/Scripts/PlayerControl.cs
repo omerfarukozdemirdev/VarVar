@@ -43,11 +43,6 @@ public class PlayerControl : MonoBehaviour
         if(!GameManager.Instance.IsMultiplayer())
             actorControl.player = true;
 
-        //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
-        //{
-        //    actorControl.player = true;
-        //}
-
         actorControl.totalCoins = PlayerPrefs.GetInt("CoinCount");
         DisableUICards();
     }
@@ -236,15 +231,6 @@ public class PlayerControl : MonoBehaviour
     IEnumerator TakingCard(Card cardType)
     {
         actorControl.AddCard(cardType);
-        //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
-        //{
-        //    actorControl.AddCard(cardType);
-
-        //}
-        //else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-        //{
-        //    NetworkPlayer.Players[gameControl.actorControls.IndexOf(gameControl.playerControl.actorControl)].RPC_AddCard(NetworkGameManager.Instance.CardToNetworkCard(cardType));
-        //}
 
         cardsInLastSlot.SetActive(true);
         cardIns[cardIns.Length - 1].gameObject.SetActive(true);
@@ -326,15 +312,6 @@ public class PlayerControl : MonoBehaviour
         Card card = cardPicked.GetComponentInChildren<CardTypeHolder>().cardType;
 
         actorControl.RemoveCard(card);
-        //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Quick)
-        //{
-        //    actorControl.RemoveCard(card);
-
-        //}
-        //else if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-        //{
-        //    NetworkPlayer.Players[gameControl.actorControls.IndexOf(gameControl.playerControl.actorControl)].RPC_RemoveCard(NetworkGameManager.Instance.CardToNetworkCard(card));
-        //}
 
         holdedCardInFinishArea = card;
 
@@ -355,15 +332,6 @@ public class PlayerControl : MonoBehaviour
         cardPicked = null;
         ChangeGridSpacing(gridSpacingCollaps, gridPaddingCollaps);
 
-        //if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Friends)
-        //{
-        //    gameControl.CompletedHand = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
-        //    NetworkGameManager.Instance.Rpc_ClearCompletedHand();
-        //    foreach (Card cardOfCompletedHand in gameControl.CompletedHand)
-        //    {
-        //        NetworkGameManager.Instance.Rpc_AddCardToCompletedHand(NetworkGameManager.Instance.CardToNetworkCard(cardOfCompletedHand));
-        //    }
-        //}
         gameControl.OpenCompleteHandWarningPanel();
     }
 

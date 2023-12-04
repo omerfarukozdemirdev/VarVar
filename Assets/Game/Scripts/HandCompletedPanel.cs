@@ -10,8 +10,8 @@ public class HandCompletedPanel : MonoBehaviour
     [SerializeField] Text rewardText;
     public Image[] cardSprites;
 
-    [SerializeField] GameObject nextButton;
-    [SerializeField] GameObject mainMenuButton;
+    public GameObject nextButton;
+    public GameObject mainMenuButton;
     [SerializeField] private Text completeHeaderText;
 
     private GameControl gameControl;
@@ -69,18 +69,20 @@ public class HandCompletedPanel : MonoBehaviour
 
         if (GameManager.Instance.IsMultiplayer())
         {
-            NetworkPlayer networkPlayer = new NetworkPlayer();
-            for(int i = 0; i < gameControl.networkGlobals.orderedNetworkPlayers.Count; i++)
-            {
-                if(gameControl.networkGlobals.orderedNetworkPlayers[i].completedHandCards.Count > 0)
-                {
-                    networkPlayer = gameControl.networkGlobals.orderedNetworkPlayers[i];
-                    break;
-                }
-            }
+            //NetworkPlayer networkPlayer = new NetworkPlayer();
+            //for(int i = 0; i < gameControl.networkGlobals.orderedNetworkPlayers.Count; i++)
+            //{
+            //    if (gameControl.networkGlobals.orderedNetworkPlayers[i].completedHandCardsByte.Count > 0)
+            //    {
+            //        networkPlayer = gameControl.networkGlobals.orderedNetworkPlayers[i];
+            //        break;
+            //    }
+            //}
 
-            for (int i = 0; i < networkPlayer.completedHandCards.Count; i++)
-                cards.Add(NetworkCardConverter.NetworkCardToCard(networkPlayer.completedHandCards[i]));
+            //for (int i = 0; i < networkPlayer.completedHandCardsByte.Count; i++)
+            //    cards.Add(NetworkCardConverter.IntToCard((int)networkPlayer.completedHandCardsByte[i]));
+
+            cards = actorControl.cardsInHand;
         }
         else
         {
@@ -104,9 +106,15 @@ public class HandCompletedPanel : MonoBehaviour
 
         if (GameManager.Instance.IsMultiplayer())
         {
+            nextButton.SetActive(false);
+
             if (!gameControl.networkHandler.isHost)
             {
-                nextButton.SetActive(false);
+                //nextButton.SetActive(false);
+
+                // Reset Network Variables
+                gameControl.myNetworkPlayer.gotPlayInd = false;
+                gameControl.networkGlobals.gotDeck = false;
             }
         }
 

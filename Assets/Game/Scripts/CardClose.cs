@@ -55,6 +55,4 @@ public class CardClose : MonoBehaviour
 
         gameObject.SetActive(false);
     }
-
-
 }
