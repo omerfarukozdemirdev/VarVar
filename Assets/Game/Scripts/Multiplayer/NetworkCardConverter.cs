@@ -7,7 +7,7 @@ public class NetworkCardConverter
         if (card.suit == CardSuit.Joker)
             return 53;
 
-        return ( ((int)card.suit - 1) * 13 ) + card.value;
+        return (((int)card.suit - 1) * 13) + card.value;
     }
 
     public static Card IntToCard(int value)
@@ -22,8 +22,8 @@ public class NetworkCardConverter
             return card;
         }
 
-        card.suit = (CardSuit)( (value - 1) / 13) + 1;
-        card.value = ( (value - 1) % 13 ) + 1;
+        card.suit = (CardSuit)((value - 1) / 13) + 1;
+        card.value = ((value - 1) % 13) + 1;
 
         return card;
     }
@@ -33,7 +33,7 @@ public class NetworkCardConverter
         string cardkString = "";
         for (int i = 0; i < cards.Count; i++)
         {
-            int value = NetworkCardConverter.CardToInt(cards[i]);
+            int value = CardToInt(cards[i]);
 
             if (i == cards.Count - 1)
                 cardkString += value;
@@ -51,7 +51,7 @@ public class NetworkCardConverter
         for (int i = 0; i < parsed.Length; i++)
         {
             int value = int.Parse(parsed[i]);
-            cards.Add(NetworkCardConverter.IntToCard(value));
+            cards.Add(IntToCard(value));
         }
 
         return cards;

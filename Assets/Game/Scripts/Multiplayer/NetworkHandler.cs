@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
 using Fusion;
 using Fusion.Sockets;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
@@ -15,6 +15,8 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     public bool isHost;
     public int maxPlayer = 2;
+
+    private string sessionName;
 
     void Awake()
     {
@@ -40,11 +42,16 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
         FindObjectOfType<GameControl>().lobbyUIManager.roomMaxPlayerText.gameObject.SetActive(true);
         FindObjectOfType<GameControl>().lobbyUIManager.SetMesssage("Connecting...");
 
+        if (FindObjectOfType<GameControl>().TestMode)
+            sessionName = "VarVarTest";
+        else
+            sessionName = "VarVar";
+
         networkRunner.ProvideInput = true;
         networkRunner.StartGame(new StartGameArgs
         {
             GameMode = GameMode.Shared,
-            CustomLobbyName = "VarVar",
+            CustomLobbyName = sessionName,
             PlayerCount = maxPlayer,
             SceneManager = loader
         });
@@ -111,7 +118,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     {
         FindObjectOfType<GameControl>().UpdateLobbyPlayerNames();
 
-        isHost = networkRunner.IsSharedModeMasterClient; 
+        isHost = networkRunner.IsSharedModeMasterClient;
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
@@ -138,7 +145,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     }
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
-        if (networkRunner!= null  && networkRunner.gameObject)
+        if (networkRunner != null && networkRunner.gameObject)
             Destroy(networkRunner.gameObject);
 
         networkRunner = null;

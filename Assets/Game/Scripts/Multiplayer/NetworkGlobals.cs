@@ -1,6 +1,6 @@
-using UnityEngine;
 using Fusion;
 using System.Collections.Generic;
+using UnityEngine;
 
 public enum MPCheckState
 {
@@ -12,7 +12,9 @@ public enum MPCheckState
 
 public class NetworkGlobals : NetworkBehaviour
 {
-    [UnitySerializeField][Networked][Capacity(7)]
+    [UnitySerializeField]
+    [Networked]
+    [Capacity(7)]
     public NetworkLinkedList<NetworkPlayer> orderedNetworkPlayers => default;
 
     //[Networked][Capacity(104)]
@@ -126,7 +128,7 @@ public class NetworkGlobals : NetworkBehaviour
                 if (handCompletedCheck.Count == gameControl.actorControls.Count - 1) // host hariç
                 {
                     mpCheckState = MPCheckState.none;
- 
+
                     if (gameControl.gameCounter == gameControl.gameLimit)
                         FindObjectOfType<HandCompletedPanel>(true).mainMenuButton.SetActive(true);
                     else

@@ -240,7 +240,7 @@ MonoBehaviour:
   lobbyUIManager: {fileID: 5374562838557262380}
   disconnetPopup: {fileID: 5374562838557262382}
   disconnetPopupNickName: {fileID: 5374562838557262381}
-  TestMode: 0
+  TestMode: 1
   networkHandler: {fileID: 0}
   myNetworkPlayer: {fileID: 0}
   networkGlobals: {fileID: 0}

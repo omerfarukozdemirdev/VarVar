@@ -1,5 +1,5 @@
-using UnityEngine;
 using Fusion;
+using UnityEngine;
 
 public class NetworkPlayer : NetworkBehaviour
 {
@@ -32,7 +32,7 @@ public class NetworkPlayer : NetworkBehaviour
 
         gameControl.UpdateLobbyPlayerNames();
 
-        if(gameControl.networkHandler.maxPlayer == gameControl.GetNetworkPlayerCount() && gameControl.networkHandler.isHost)
+        if (gameControl.networkHandler.maxPlayer == gameControl.GetNetworkPlayerCount() && gameControl.networkHandler.isHost)
         {
             Runner.SessionInfo.IsOpen = false;
             Runner.SessionInfo.IsVisible = false;

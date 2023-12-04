@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class GameControl : MonoBehaviour
 {
@@ -488,7 +488,7 @@ public class GameControl : MonoBehaviour
                     playingActors.Add(orderOfPlayActors[i]);
             }
 
-            if(playingActors.Count <= 1)
+            if (playingActors.Count <= 1)
             {
                 FindObjectOfType<HandCompletedPanel>(true).OpenPanel(null);
                 return;
@@ -644,7 +644,7 @@ public class GameControl : MonoBehaviour
             cardClose.Pick(actorControl.actorTransform.GetChild(0).position);
             tableAnimationControl.cardCloses.Remove(cardClose);
 
-            if(!GameManager.Instance.IsMultiplayer())
+            if (!GameManager.Instance.IsMultiplayer())
                 actorControl.AddCard(deck[0]);
 
             deck.Remove(deck[0]);
@@ -691,7 +691,7 @@ public class GameControl : MonoBehaviour
             ThrowingCard(cardType, actorControl);
         }
     }
-    
+
     public void ThrowingCard(Card cardType, ActorControl actorControl)
     {
         makeNoise.PlaySFX(16, 0);
@@ -971,7 +971,7 @@ public class GameControl : MonoBehaviour
             actorControls[i].gameObject.SetActive(false);
 
         List<ActorControl> AC = new List<ActorControl>();
-        for(int i = 0; i < gameLimit; i++)
+        for (int i = 0; i < gameLimit; i++)
         {
             AC.Add(actorControls[i]);
             actorControls[i].gameObject.SetActive(true);
