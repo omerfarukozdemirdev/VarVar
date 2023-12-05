@@ -1,5 +1,5 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class LobbyUIManager : MonoBehaviour
 {
@@ -46,7 +46,7 @@ public class LobbyUIManager : MonoBehaviour
 
     public void ResetPlayerNames()
     {
-        for(int i = 0; i < playerNameTexts.Length; i++)
+        for (int i = 0; i < playerNameTexts.Length; i++)
             playerNameTexts[i].transform.parent.gameObject.SetActive(false);
     }
 }

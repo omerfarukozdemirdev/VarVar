@@ -100,7 +100,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
     public void OnConnectedToServer(NetworkRunner runner)
     {
         FindObjectOfType<GameControl>().lobbyUIManager.SetMesssage("Connected");
-        networkRunner.Spawn(networkPlayerPrefab, Vector3.zero, Quaternion.identity, runner.LocalPlayer);
+        //networkRunner.Spawn(networkPlayerPrefab, Vector3.zero, Quaternion.identity, runner.LocalPlayer);
     }
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
@@ -116,9 +116,16 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
+        isHost = networkRunner.IsSharedModeMasterClient;
+
+        if (player == runner.LocalPlayer)
+        {
+            NetworkObject networkPlayer = runner.Spawn(networkPlayerPrefab, Vector3.zero, Quaternion.identity, player);
+            runner.SetPlayerObject(player, networkPlayer);
+        }
+
         FindObjectOfType<GameControl>().UpdateLobbyPlayerNames();
 
-        isHost = networkRunner.IsSharedModeMasterClient;
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {

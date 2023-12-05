@@ -85,10 +85,10 @@ public class NetworkGlobals : NetworkBehaviour
             gameControl.DealCardsToMultiplayerActors();
 
             gameControl.actorControls[0].player = true;
-            for (int i = 1; i < orderedNetworkPlayers.Count; i++)
-            {
-                orderedNetworkPlayers[i].RPC_PlayInd((byte)i);
-            }
+            //for (int i = 1; i < orderedNetworkPlayers.Count; i++)
+            //{
+            //    orderedNetworkPlayers[i].RPC_PlayInd((byte)i);
+            //}
 
             // Dağıtıcıyı belirle
             gameControl.ChooseRandomCardDealer();
@@ -197,7 +197,7 @@ public class NetworkGlobals : NetworkBehaviour
             gameControl.cardDealerInd = (int)ind;
 
             // Prepeare Start Game Check
-            if (gameControl.myNetworkPlayer.gotPlayInd && gotDeck)// && orderedNetworkPlayers.Count > 0)
+            if (gameControl.myNetworkPlayer.gotPlayInd && gotDeck && gameControl.myNetworkPlayer.gotPlayerObject)// && orderedNetworkPlayers.Count > 0)
                 RPC_PrepeareStartGameCheck((byte)gameControl.myNetworkPlayer.playInd);
         }
     }

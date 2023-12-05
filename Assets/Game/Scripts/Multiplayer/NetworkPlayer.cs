@@ -16,7 +16,7 @@ public class NetworkPlayer : NetworkBehaviour
     public int playInd;
     public bool localPlayer;
     public bool gotPlayInd;
-
+    public bool gotPlayerObject;
 
     public override void Spawned()
     {
@@ -40,15 +40,53 @@ public class NetworkPlayer : NetworkBehaviour
         }
     }
 
-    [Rpc(sources: RpcSources.Proxies, targets: RpcTargets.InputAuthority)]
-    public void RPC_PlayInd(byte ind)
+    private void Update()
     {
-        playInd = (int)ind;
-        gameControl.playerControl.actorControl = gameControl.actorControls[playInd];
-        gameControl.playerControl.actorControl.player = true;
-
-        gotPlayInd = true;
+        CheckGotPlayerObject();
+        SetPlayInd();
     }
+
+    void CheckGotPlayerObject()
+    {
+        if (gotPlayerObject)
+            return;
+
+        if (Runner.TryGetPlayerObject(Runner.LocalPlayer, out var plObject))
+        {
+            gotPlayerObject = true;
+        }
+
+    }
+
+    void SetPlayInd()
+    {
+        if (!gotPlayerObject)
+            return;
+
+        var index = 0;
+        foreach (PlayerRef playerRef in Runner.ActivePlayers)
+        {
+            if (playerRef == Runner.LocalPlayer)
+            {
+                playInd = index;
+                gameControl.playerControl.actorControl = gameControl.actorControls[playInd];
+                gameControl.playerControl.actorControl.player = true;
+
+                gotPlayInd = true;
+            }
+            index++;
+        }
+    }
+
+    //[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.InputAuthority)]
+    //public void RPC_PlayInd(byte ind)
+    //{
+    //    playInd = (int)ind;
+    //    gameControl.playerControl.actorControl = gameControl.actorControls[playInd];
+    //    gameControl.playerControl.actorControl.player = true;
+
+    //    gotPlayInd = true;
+    //}
 
 
     [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]

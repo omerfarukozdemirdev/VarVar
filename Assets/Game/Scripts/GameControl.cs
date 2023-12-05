@@ -1,3 +1,4 @@
+using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -978,10 +979,18 @@ public class GameControl : MonoBehaviour
         }
         actorControls = AC;
 
-        for (int i = 0; i < actorControls.Count; i++)
+        //for (int i = 0; i < actorControls.Count; i++)
+        //{
+        //    actorControls[i].actorName = networkGlobals.orderedNetworkPlayers[i].nickName.ToString();
+        //    actorControls[i].SetNameText(actorControls[i].actorName);
+        //}
+
+        var index = 0;
+        foreach (PlayerRef playerRef in networkGlobals.Runner.ActivePlayers)
         {
-            actorControls[i].actorName = networkGlobals.orderedNetworkPlayers[i].nickName.ToString();
-            actorControls[i].SetNameText(actorControls[i].actorName);
+            actorControls[index].actorName = networkGlobals.Runner.GetPlayerObject(playerRef).GetComponent<NetworkPlayer>().nickName.ToString();
+            actorControls[index].SetNameText(actorControls[index].actorName);
+            index++;
         }
     }
 
