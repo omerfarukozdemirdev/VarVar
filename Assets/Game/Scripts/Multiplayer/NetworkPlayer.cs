@@ -30,7 +30,7 @@ public class NetworkPlayer : NetworkBehaviour
             gameControl.myNetworkPlayer = this;
         }
 
-        gameControl.UpdateLobbyPlayerNames();
+        //gameControl.UpdateLobbyPlayerNames();
 
         if (gameControl.networkHandler.maxPlayer == gameControl.GetNetworkPlayerCount() && gameControl.networkHandler.isHost)
         {
@@ -43,8 +43,8 @@ public class NetworkPlayer : NetworkBehaviour
     private void Update()
     {
         CheckGotPlayerObject();
-        SetPlayInd();
     }
+
 
     void CheckGotPlayerObject()
     {
@@ -54,15 +54,15 @@ public class NetworkPlayer : NetworkBehaviour
         if (Runner.TryGetPlayerObject(Runner.LocalPlayer, out var plObject))
         {
             gotPlayerObject = true;
+            FindObjectOfType<GameControl>().UpdateLobbyPlayerNames();
+            SetPlayInd();
+
         }
 
     }
 
     void SetPlayInd()
     {
-        if (!gotPlayerObject)
-            return;
-
         var index = 0;
         foreach (PlayerRef playerRef in Runner.ActivePlayers)
         {

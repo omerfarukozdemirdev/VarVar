@@ -124,7 +124,7 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
             runner.SetPlayerObject(player, networkPlayer);
         }
 
-        FindObjectOfType<GameControl>().UpdateLobbyPlayerNames();
+        //FindObjectOfType<GameControl>().UpdateLobbyPlayerNames();
 
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)

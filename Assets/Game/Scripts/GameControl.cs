@@ -1,6 +1,7 @@
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -950,13 +951,25 @@ public class GameControl : MonoBehaviour
     // Multiplayer
     public void UpdateLobbyPlayerNames()
     {
-        NetworkPlayer[] networkPlayers = FindObjectsOfType<NetworkPlayer>();
+        //NetworkPlayer[] networkPlayers = FindObjectsOfType<NetworkPlayer>();
 
-        lobbyUIManager.SetPlayerCountText(networkPlayers.Length, networkHandler.maxPlayer);
+        //lobbyUIManager.SetPlayerCountText(networkPlayers.Length, networkHandler.maxPlayer);
+
+        //lobbyUIManager.ResetPlayerNames();
+        //for (int i = 0; i < networkPlayers.Length; i++)
+        //    lobbyUIManager.ActivatePlayerName(i, networkPlayers[i].nickName.ToString());
+
+        NetworkRunner networkRunner = FindObjectOfType<NetworkRunner>();
+        lobbyUIManager.SetPlayerCountText(networkRunner.ActivePlayers.Count(), networkHandler.maxPlayer);
 
         lobbyUIManager.ResetPlayerNames();
-        for (int i = 0; i < networkPlayers.Length; i++)
-            lobbyUIManager.ActivatePlayerName(i, networkPlayers[i].nickName.ToString());
+
+        var index = 0;
+        foreach (PlayerRef playerRef in networkRunner.ActivePlayers)
+        {
+            lobbyUIManager.ActivatePlayerName(index, networkRunner.GetPlayerObject(playerRef).GetComponent<NetworkPlayer>().nickName.ToString());
+            index++;
+        }
     }
 
     public int GetNetworkPlayerCount()
