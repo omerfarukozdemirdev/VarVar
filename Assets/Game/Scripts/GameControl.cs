@@ -1024,9 +1024,9 @@ public class GameControl : MonoBehaviour
         }
     }
 
-    public void OpenDisconnetPopup()
+    public void OpenDisconnetPopup(PlayerRef playerRef)
     {
-        disconnetPopupNickName.text = "Oyuncu";
+        disconnetPopupNickName.text = actorControls[playerRef].actorName;
         disconnetPopup.SetActive(true);
     }
 }

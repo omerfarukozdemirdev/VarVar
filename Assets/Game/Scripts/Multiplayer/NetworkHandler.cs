@@ -140,12 +140,12 @@ public class NetworkHandler : MonoBehaviour, INetworkRunnerCallbacks
                 break;
             case GameManager.GameStat.game:
 
-                FindObjectOfType<GameControl>().OpenDisconnetPopup();
+                FindObjectOfType<GameControl>().OpenDisconnetPopup(player);
 
                 break;
             case GameManager.GameStat.handCompleted:
 
-                FindObjectOfType<GameControl>().OpenDisconnetPopup();
+                FindObjectOfType<GameControl>().OpenDisconnetPopup(player);
 
                 break;
         }
