@@ -84,7 +84,7 @@ public class NetworkGlobals : NetworkBehaviour
             // Oyuncuların kartlarını belirle
             gameControl.DealCardsToMultiplayerActors();
 
-            gameControl.actorControls[0].player = true;
+            //gameControl.actorControls[0].player = true;
             //for (int i = 1; i < orderedNetworkPlayers.Count; i++)
             //{
             //    orderedNetworkPlayers[i].RPC_PlayInd((byte)i);
