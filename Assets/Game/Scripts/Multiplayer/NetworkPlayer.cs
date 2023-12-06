@@ -63,19 +63,24 @@ public class NetworkPlayer : NetworkBehaviour
 
     void SetPlayInd()
     {
-        var index = 0;
-        foreach (PlayerRef playerRef in Runner.ActivePlayers)
-        {
-            if (playerRef == Runner.LocalPlayer)
-            {
-                playInd = index;
-                gameControl.playerControl.actorControl = gameControl.actorControls[playInd];
-                gameControl.playerControl.actorControl.player = true;
+        playInd = Runner.LocalPlayer;
+        gameControl.playerControl.actorControl = gameControl.actorControls[playInd];
+        gameControl.playerControl.actorControl.player = true;
+        gotPlayInd = true;
 
-                gotPlayInd = true;
-            }
-            index++;
-        }
+        //var index = 0;
+        //foreach (PlayerRef playerRef in Runner.ActivePlayers)
+        //{
+        //    if (playerRef == Runner.LocalPlayer)
+        //    {
+        //        playInd = index;
+        //        gameControl.playerControl.actorControl = gameControl.actorControls[playInd];
+        //        gameControl.playerControl.actorControl.player = true;
+
+        //        gotPlayInd = true;
+        //    }
+        //    index++;
+        //}
     }
 
     //[Rpc(sources: RpcSources.Proxies, targets: RpcTargets.InputAuthority)]
