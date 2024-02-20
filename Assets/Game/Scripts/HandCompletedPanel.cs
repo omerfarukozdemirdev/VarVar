@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,12 +17,16 @@ public class HandCompletedPanel : MonoBehaviour
 
     private GameControl gameControl;
 
+    private List<Card> cards;
+    public List<GameObject> loserPlayerTabs;
+    public GameObject winnerPlayerTab;
+    
     private void Awake()
     {
         gameControl = FindObjectOfType<GameControl>();
         panelBG.SetActive(false);
     }
-
+    
     public void OpenPanel(ActorControl actorControl)
     {
         GameManager.Instance.gameStat = GameManager.GameStat.handCompleted;
@@ -42,7 +47,9 @@ public class HandCompletedPanel : MonoBehaviour
             panelBG.SetActive(true);
             return;
         }
- 
+        
+        InitTabArea();
+        
         completeHeaderText.text = "Hand Completed";
 
         gameControl.actorControls.ForEach(x => x.totalBetMoney = x.totalBetMoney + x.moneyIn);
@@ -65,7 +72,7 @@ public class HandCompletedPanel : MonoBehaviour
         for (int i = 0; i < cardSprites.Length; i++)
             cardSprites[i].gameObject.SetActive(false);
 
-        List<Card> cards = new List<Card>();
+        cards = new List<Card>();
 
         if (GameManager.Instance.IsMultiplayer())
         {
@@ -125,4 +132,63 @@ public class HandCompletedPanel : MonoBehaviour
     {
         panelBG.SetActive(false);
     }
+
+    void InitTabArea()
+    {
+        foreach (var tab in loserPlayerTabs)
+        {
+            tab.SetActive(false);
+        }
+
+        foreach (var control in gameControl.actorControls)
+        {
+            var index = gameControl.actorControls.IndexOf(control);
+            var tab = loserPlayerTabs[index];
+            var button = tab.GetComponent<Button>();
+        
+            if (control.handWin)
+            {
+                winnerPlayerTab.transform.GetChild(1).GetComponent<Text>().text = control.actorName;
+                winnerPlayerTab.GetComponent<Button>().onClick.AddListener(delegate { ShowWinnerPlayerHand(control); });
+            }
+            else
+            {
+                tab.SetActive(true);
+                tab.transform.GetChild(1).GetComponent<Text>().text = control.actorName;
+                button.onClick.AddListener(delegate { ShowLoserPlayerHand(control); });
+            }
+        }
+    }
+
+    public void ShowWinnerPlayerHand(ActorControl actorControl)
+    {
+        UpdatePlayerInfos(actorControl);
+        ShowPlayerHand(true, cards);
+    }
+
+    public void ShowLoserPlayerHand(ActorControl actorControl)
+    {
+        UpdatePlayerInfos(actorControl);
+        ShowPlayerHand(false, actorControl.cardsInHand);
+    }
+
+    void ShowPlayerHand(bool isWin, List<Card> cards)
+    {
+        cardSprites[cardSprites.Length - 1].gameObject.SetActive(false);
+
+        int totalCard = isWin ? cardSprites.Length : cardSprites.Length - 1;
+
+        for (int i = 0; i < totalCard; i++)
+        {
+            cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(cards[i], gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
+            cardSprites[i].gameObject.SetActive(true);
+        }
+    }
+
+    void UpdatePlayerInfos(ActorControl actorControl)
+    {
+        actorAvatar.sprite = actorControl.actorAvatar.sprite;
+        actorNameText.text = actorControl.actorName;
+    }
+
 }

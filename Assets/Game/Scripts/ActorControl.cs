@@ -24,6 +24,7 @@ public class ActorControl : MonoBehaviour
 
     public int handCompleteStep;
     public bool handCompleted;
+    public bool handWin;
 
     public bool pass;
     public bool betUp;
@@ -254,7 +255,7 @@ public class ActorControl : MonoBehaviour
             }
         }
 
-        if (gameControl.passCount > 2)
+        if (gameControl.passCount > 1)
         {
             pass = false;
 
@@ -365,11 +366,13 @@ public class ActorControl : MonoBehaviour
                 gameControl.makeNoise.PlaySFX(18, 0);
                 gameControl.makeNoise.PlaySFX(25, 0);
 
-                FindObjectOfType<HandCompletedPanel>(true).OpenPanel(this);
+                this.handWin = true;
                 winCounter++;
                 totalWinMoney += gameControl.rewardMoney;
                 totalCoins += 100;
                 gameControl.coinController.EarnCoin(100);
+                
+                FindObjectOfType<HandCompletedPanel>(true).OpenPanel(this);
                 return;
             }
 
