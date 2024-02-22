@@ -48,7 +48,7 @@ public class HandCompletedPanel : MonoBehaviour
             return;
         }
         
-        InitTabArea();
+        InitTabArea(actorControl);
         
         completeHeaderText.text = "Hand Completed";
 
@@ -133,29 +133,29 @@ public class HandCompletedPanel : MonoBehaviour
         panelBG.SetActive(false);
     }
 
-    void InitTabArea()
+    void InitTabArea(ActorControl winnerActorControl)
     {
         foreach (var tab in loserPlayerTabs)
         {
             tab.SetActive(false);
         }
 
-        foreach (var control in gameControl.actorControls)
+        foreach (var actorControl in gameControl.actorControls)
         {
-            var index = gameControl.actorControls.IndexOf(control);
+            var index = gameControl.actorControls.IndexOf(actorControl);
             var tab = loserPlayerTabs[index];
             var button = tab.GetComponent<Button>();
         
-            if (control.handWin)
+            if (winnerActorControl==actorControl)
             {
-                winnerPlayerTab.transform.GetChild(1).GetComponent<Text>().text = control.actorName;
-                winnerPlayerTab.GetComponent<Button>().onClick.AddListener(delegate { ShowWinnerPlayerHand(control); });
+                winnerPlayerTab.transform.GetChild(1).GetComponent<Text>().text = winnerActorControl.actorName;
+                winnerPlayerTab.GetComponent<Button>().onClick.AddListener(delegate { ShowWinnerPlayerHand(winnerActorControl); });
             }
             else
             {
                 tab.SetActive(true);
-                tab.transform.GetChild(1).GetComponent<Text>().text = control.actorName;
-                button.onClick.AddListener(delegate { ShowLoserPlayerHand(control); });
+                tab.transform.GetChild(1).GetComponent<Text>().text = actorControl.actorName;
+                button.onClick.AddListener(delegate { ShowLoserPlayerHand(actorControl); });
             }
         }
     }
@@ -176,8 +176,12 @@ public class HandCompletedPanel : MonoBehaviour
     {
         cardSprites[cardSprites.Length - 1].gameObject.SetActive(false);
 
-        int totalCard = isWin ? cardSprites.Length : cardSprites.Length - 1;
-
+        int totalCard = cardSprites.Length;
+        if (!isWin || (isWin && GameManager.Instance.IsMultiplayer()))
+        {
+            totalCard--;
+        }
+        
         for (int i = 0; i < totalCard; i++)
         {
             cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(cards[i], gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);

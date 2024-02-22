@@ -121,6 +121,7 @@ public class ActorControl : MonoBehaviour
 
         handCompleteStep = 0;
         handCompleted = false;
+        handWin = false;
 
         moneyIn = 0;
 
@@ -363,16 +364,7 @@ public class ActorControl : MonoBehaviour
         {
             if (handCompleted)
             {
-                gameControl.makeNoise.PlaySFX(18, 0);
-                gameControl.makeNoise.PlaySFX(25, 0);
-
-                this.handWin = true;
-                winCounter++;
-                totalWinMoney += gameControl.rewardMoney;
-                totalCoins += 100;
-                gameControl.coinController.EarnCoin(100);
-                
-                FindObjectOfType<HandCompletedPanel>(true).OpenPanel(this);
+                StartCoroutine(HandCompleted());
                 return;
             }
 
@@ -381,6 +373,23 @@ public class ActorControl : MonoBehaviour
         }
 
         StartCoroutine(PickCard());
+    }
+
+    IEnumerator HandCompleted()
+    {
+        yield return new WaitForSeconds(1f);
+        
+        gameControl.makeNoise.PlaySFX(18, 0);
+        gameControl.makeNoise.PlaySFX(25, 0);
+
+        handWin = true;
+        winCounter++;
+        totalWinMoney += gameControl.rewardMoney;
+        totalCoins += 100;
+        gameControl.coinController.EarnCoin(100);
+        
+        FindObjectOfType<HandCompletedPanel>(true).OpenPanel(this);
+
     }
 
     IEnumerator PickCard()
