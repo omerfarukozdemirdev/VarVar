@@ -120,7 +120,6 @@ public class HandCompletedPanel : MonoBehaviour
                 //nextButton.SetActive(false);
 
                 // Reset Network Variables
-                gameControl.myNetworkPlayer.gotPlayInd = false;
                 gameControl.networkGlobals.gotDeck = false;
             }
         }

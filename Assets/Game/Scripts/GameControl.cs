@@ -216,7 +216,7 @@ public class GameControl : MonoBehaviour
         tableAnimationControl.Reset();
         playerControl.ResetValues();
     }
-
+    
     void StartGame()
     {
         CreateDeck();
