@@ -593,7 +593,7 @@ public class GameControl : MonoBehaviour
             DisableEnableTakeCardBtns(true);
             iTween.ScaleTo(playingActors[playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
             
-            playerControl.StartTimer();
+            playerControl.StartTimer(playingActors[playingInd]);
             
         }
         else
@@ -601,6 +601,20 @@ public class GameControl : MonoBehaviour
             if (GameManager.Instance.IsMultiplayer())
             {
                 playingActors[playingInd].BlinkAvatar();
+                
+                if (playingActors[playingInd].onlineBot)
+                {
+                    //playingActors[playingInd].gameControl.playerControl.StartTimer(playingActors[playingInd]);
+                    //playingActors[playingInd].gameControl.playerControl.TimeOutPickCard(playingActors[playingInd]);
+                    //playingActors[playingInd].gameControl.playerControl.TimeOutThrowCard(playingActors[playingInd]);
+                    //playingActors[playingInd].player = false;
+                    StartCoroutine(OnlineBotPlayCoroutine());
+
+                    if (networkHandler.isHost)
+                    {
+                        
+                    }
+                }
             }
             else
             {
@@ -638,7 +652,7 @@ public class GameControl : MonoBehaviour
         throwedCards.Add(card);
     }
 
-    public void PickCard(ActorControl actorControl, bool fromDeck)
+    public void PickCard(ActorControl actorControl, bool fromDeck, bool onlineBot)
     {
         makeNoise.PlaySFX(15, 0);
 
@@ -651,6 +665,10 @@ public class GameControl : MonoBehaviour
 
             if (!GameManager.Instance.IsMultiplayer())
                 actorControl.AddCard(deck[0]);
+
+            if (onlineBot)
+                actorControl.AddCard(deck[0]);
+
 
             deck.Remove(deck[0]);
 
@@ -696,44 +714,6 @@ public class GameControl : MonoBehaviour
             ThrowingCard(cardType, actorControl);
         }
     }
-
-    // // oyuncunun süresi bittiğinde oto kapalı desteden kart çeker
-    // public void TimeOutPickCard(ActorControl actorControl)
-    // {
-    //     makeNoise.PlaySFX(15, 0);
-    //
-    //     CardClose cardClose = tableAnimationControl.cardCloses[tableAnimationControl.cardCloses.Count - 1];
-    //     cardClose.gameObject.SetActive(true);
-    //     cardClose.Pick(actorControl.actorTransform.GetChild(0).position);
-    //     tableAnimationControl.cardCloses.Remove(cardClose);
-    //
-    //     // if (!GameManager.Instance.IsMultiplayer())
-    //     //     actorControl.AddCard(deck[0]);
-    //
-    //     actorControl.cardsInHand.Add(deck[0]);
-    //
-    //     playerControl.cardsInLastSlot.SetActive(true);
-    //     playerControl.cardsInLastSlot.transform.GetChild(0).gameObject.SetActive(true);
-    //     playerControl.cardsInLastSlot.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = CardSpriteConverter.GetCardSpriteInd(actorControl.cardsInHand.Last(), gameConfig.deckStyles[gameConfig.deckStyleInd]);
-    //     
-    //     deck.Remove(deck[0]);
-    //
-    //     CheckDeckCardCount();
-    // }
-    //
-    // // oyuncunun süresi bittiğinde oto kart atar
-    // public void TimeOutThrowCard(Card cardType, ActorControl actorControl)
-    // {
-    //     if (GameManager.Instance.IsMultiplayer())
-    //     {
-    //         myNetworkPlayer.RPC_ThrowCard((byte)NetworkCardConverter.CardToInt(cardType), (byte)myNetworkPlayer.playInd);
-    //     }
-    //     else
-    //     {
-    //         ThrowingCard(cardType, actorControl);
-    //         playerControl.cardsInLastSlot.SetActive(false);
-    //     }
-    // }
     
     public void ThrowingCard(Card cardType, ActorControl actorControl)
     {
@@ -1069,6 +1049,19 @@ public class GameControl : MonoBehaviour
     {
         disconnetPopupNickName.text = actorControls[playerRef].actorName;
         disconnetPopup.SetActive(true);
+    }
+
+    public void SetOnlineBot(PlayerRef playerRef)
+    {
+        actorControls[playerRef].onlineBot = true;
+        actorControls[playerRef].SetNameText("BOT");
+    }
+
+    IEnumerator OnlineBotPlayCoroutine()
+    {
+        playingActors[playingInd].gameControl.PickCard(playingActors[playingInd],true,true);
+        yield return new WaitForSeconds(0.5f);
+        playingActors[playingInd].gameControl.ThrowingCard(playingActors[playingInd].cardsInHand.Last(), playingActors[playingInd]);
     }
 }
 

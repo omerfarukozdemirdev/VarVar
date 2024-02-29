@@ -17,7 +17,7 @@ public class NetworkPlayer : NetworkBehaviour
     public bool localPlayer;
     public bool gotPlayInd;
     public bool gotPlayerObject;
-
+    
     public override void Spawned()
     {
         gameControl = FindObjectOfType<GameControl>();
@@ -99,7 +99,7 @@ public class NetworkPlayer : NetworkBehaviour
         if (gameControl.actorControls[ind].player)
             return;
 
-        gameControl.PickCard(gameControl.actorControls[(int)ind], (int)_fromDeck == 1);
+        gameControl.PickCard(gameControl.actorControls[(int)ind], (int)_fromDeck == 1,false);
     }
 
     [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.All)]

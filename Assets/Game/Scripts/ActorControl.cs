@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ActorControl : MonoBehaviour
 {
     public bool player;
+    public bool onlineBot;
 
     public Transform actorTransform;
     public List<Card> cardsInHand;
@@ -30,7 +31,7 @@ public class ActorControl : MonoBehaviour
     public bool betUp;
 
     private HandAranger handAranger;
-    private GameControl gameControl;
+    public GameControl gameControl;
 
     public int winCounter;
     public int passCounter;
@@ -398,7 +399,8 @@ public class ActorControl : MonoBehaviour
     {
         // oyuncu kart çekiyor
         iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
-
+        timerCircle.gameObject.SetActive(true);
+        iTween.ValueTo(gameObject, iTween.Hash("from", 1f, "to", 0f, "time", gameControl.timeOutTimer, "onupdate", "UpdateRadialFill", "easetype", iTween.EaseType.linear));
         yield return new WaitForSeconds(Random.Range(.1f, .6f));
 
         bool pickFromDeck = true;
@@ -416,7 +418,12 @@ public class ActorControl : MonoBehaviour
             }
         }
 
-        gameControl.PickCard(this, pickFromDeck);
+        gameControl.PickCard(this, pickFromDeck,false);
+    }
+    
+    void UpdateRadialFill(float value)
+    {
+        timerCircle.fillAmount = value;
     }
     
     IEnumerator ThrowCard()
@@ -445,6 +452,8 @@ public class ActorControl : MonoBehaviour
         iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
 
         TakeDrink();
+        timerCircle.gameObject.SetActive(false);
+
     }
 
     void TakeDrink()
