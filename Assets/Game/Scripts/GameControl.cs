@@ -75,6 +75,8 @@ public class GameControl : MonoBehaviour
     public NetworkPlayer myNetworkPlayer;
     public NetworkGlobals networkGlobals;
 
+    public float timeOutTimer;
+
     private void Awake()
     {
         tableAnimationControl = FindObjectOfType<TableAnimationControl>();
@@ -590,6 +592,9 @@ public class GameControl : MonoBehaviour
         {
             DisableEnableTakeCardBtns(true);
             iTween.ScaleTo(playingActors[playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+            
+            playerControl.StartTimer();
+            
         }
         else
         {
@@ -601,13 +606,19 @@ public class GameControl : MonoBehaviour
             {
                 playingActors[playingInd].PlayCard();
             }
+            NextPlayingInd();
         }
 
+    }
+
+    public void NextPlayingInd()
+    {
         playingInd++;
         if (playingInd > playingActors.Count - 1)
             playingInd = 0;
+        
+        playerControl.StopTimer();
     }
-
 
     IEnumerator FirstGroundCard()
     {
@@ -667,7 +678,7 @@ public class GameControl : MonoBehaviour
         if (!GameManager.Instance.IsMultiplayer())
             actorControl.PlayCard();
     }
-
+    
     IEnumerator PickCardFromThrowed(Vector3 pos)
     {
         pos.y = transform.position.y;
@@ -694,6 +705,44 @@ public class GameControl : MonoBehaviour
         }
     }
 
+    // // oyuncunun süresi bittiğinde oto kapalı desteden kart çeker
+    // public void TimeOutPickCard(ActorControl actorControl)
+    // {
+    //     makeNoise.PlaySFX(15, 0);
+    //
+    //     CardClose cardClose = tableAnimationControl.cardCloses[tableAnimationControl.cardCloses.Count - 1];
+    //     cardClose.gameObject.SetActive(true);
+    //     cardClose.Pick(actorControl.actorTransform.GetChild(0).position);
+    //     tableAnimationControl.cardCloses.Remove(cardClose);
+    //
+    //     // if (!GameManager.Instance.IsMultiplayer())
+    //     //     actorControl.AddCard(deck[0]);
+    //
+    //     actorControl.cardsInHand.Add(deck[0]);
+    //
+    //     playerControl.cardsInLastSlot.SetActive(true);
+    //     playerControl.cardsInLastSlot.transform.GetChild(0).gameObject.SetActive(true);
+    //     playerControl.cardsInLastSlot.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = CardSpriteConverter.GetCardSpriteInd(actorControl.cardsInHand.Last(), gameConfig.deckStyles[gameConfig.deckStyleInd]);
+    //     
+    //     deck.Remove(deck[0]);
+    //
+    //     CheckDeckCardCount();
+    // }
+    //
+    // // oyuncunun süresi bittiğinde oto kart atar
+    // public void TimeOutThrowCard(Card cardType, ActorControl actorControl)
+    // {
+    //     if (GameManager.Instance.IsMultiplayer())
+    //     {
+    //         myNetworkPlayer.RPC_ThrowCard((byte)NetworkCardConverter.CardToInt(cardType), (byte)myNetworkPlayer.playInd);
+    //     }
+    //     else
+    //     {
+    //         ThrowingCard(cardType, actorControl);
+    //         playerControl.cardsInLastSlot.SetActive(false);
+    //     }
+    // }
+    
     public void ThrowingCard(Card cardType, ActorControl actorControl)
     {
         makeNoise.PlaySFX(16, 0);
@@ -747,7 +796,7 @@ public class GameControl : MonoBehaviour
             myNetworkPlayer.RPC_TakeCard(1, (byte)myNetworkPlayer.playInd);
     }
 
-    void CheckDeckCardCount()
+    public void CheckDeckCardCount()
     {
         if (GameManager.Instance.IsMultiplayer())
         {

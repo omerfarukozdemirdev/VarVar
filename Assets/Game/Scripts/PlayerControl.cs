@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +19,7 @@ public class PlayerControl : MonoBehaviour
 
     [Space]
     [SerializeField] Transform[] cardIns;
-    [SerializeField] GameObject cardsInLastSlot;
+    public GameObject cardsInLastSlot;
     [SerializeField] Transform pickedCardParent;
     public GameObject throwedCardArea;
     private Animator throwedCardAreaAnimator;
@@ -34,6 +35,9 @@ public class PlayerControl : MonoBehaviour
 
     private GameControl gameControl;
 
+    [SerializeField] private float currentTime = 0f;
+    private Coroutine timerCoroutine;
+    
     private void Awake()
     {
         gameControl = FindObjectOfType<GameControl>();
@@ -302,6 +306,8 @@ public class PlayerControl : MonoBehaviour
 
         cardPicked = null;
         ChangeGridSpacing(gridSpacingCollaps, gridPaddingCollaps);
+        gameControl.NextPlayingInd();
+
     }
 
     void HoldCardInFinishArea()
@@ -429,4 +435,186 @@ public class PlayerControl : MonoBehaviour
     {
         gridLayoutGRP.padding = new RectOffset(0, 0, 0, newValue);
     }
+    
+    #region Oyuncu Timer
+    // sıra oyuncuya geldiğinde timer başlar ve bu süre içerisinde hiç işlem yapmazsa oto kart çekilip atılır.
+    // eğer bu süre içerisinde kart çekmiş ve atmamış ise sadece oto kart atılır.
+    IEnumerator TimeEndCoroutine()
+    {
+//        iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+        
+        if (!gameControl.playerControl.cardsInLastSlot.gameObject.activeSelf)
+        {
+            yield return new WaitForSeconds(Random.Range(.1f, .6f));
+
+            TimeOutPickCard(actorControl);
+        }
+ 
+        yield return new WaitForSeconds(Random.Range(0.6f, 1.1f));
+        
+        gameControl.playerControl.TimeOutThrowCard();
+    }
+
+    //süre bittiğinde
+    void TimeEnd()
+    {
+        SetControllableCards(false);
+        StartCoroutine(TimeEndCoroutine());
+        currentTime = 0;
+        actorControl.timerCircle.gameObject.SetActive(false);
+        gameControl.NextPlayingInd();
+        SetControllableCards(true);
+    }
+
+    // süre başladığında
+    void TimeStart()
+    {        
+        currentTime = 0;
+        actorControl.timerCircle.gameObject.SetActive(true);
+    }
+    
+    // süreç boyunca olacaklar
+    IEnumerator TimerCoroutine()
+    {
+        TimeStart();
+        
+        while (currentTime < gameControl.timeOutTimer)
+        {
+            currentTime += Time.deltaTime;
+
+            actorControl.timerCircle.fillAmount =1-( currentTime / gameControl.timeOutTimer);
+
+            yield return null;
+        }
+
+        if (gameControl.playingActors[gameControl.playingInd].player)
+        {
+            TimeEnd();
+        }
+    }
+
+    // süreyi başlat
+    public void StartTimer()
+    {
+        timerCoroutine= StartCoroutine(TimerCoroutine());
+    }
+
+    // süreyi durdurup işlemi kestiğinde. yani süre bitmeden kart çekip atıldığında
+    public void StopTimer()
+    {
+        if (timerCoroutine==null)
+            return;
+        
+        StopCoroutine(timerCoroutine);
+        actorControl.timerCircle.gameObject.SetActive(false);
+        gameControl.DisableEnableTakeCardBtns(false);
+        SetControllableCards(true);
+        gameControl.playerControl.throwedCardArea.SetActive(false);
+        gameControl.playerControl.finishCardArea.SetActive(false);
+    }
+    
+    public void TimeOutThrowCard()
+    {
+        //gameControl.completeHandBtn.SetActive(false);
+        throwedCardArea.SetActive(false);
+        finishCardArea.SetActive(false);
+
+        
+        if (cardsInLastSlot.GetComponentInChildren<CardTypeHolder>().cardType.suit!=CardSuit.Joker)
+        {
+            for (int i = 0; i < actorControl.cardsInHand.Count; i++)
+            {
+                if (cardsInLastSlot.GetComponentInChildren<CardTypeHolder>().cardType==actorControl.cardsInHand[i])
+                {
+                        gameControl.ThrowCard(actorControl.cardsInHand[i], actorControl);
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < actorControl.cardsInHand.Count; i++)
+            {
+                if (cardIns[cardIns.Length - 2].GetComponentInChildren<CardTypeHolder>().cardType==actorControl.cardsInHand[i])
+                {
+                        gameControl.ThrowCard(actorControl.cardsInHand[i], actorControl);
+                        cardIns[cardIns.Length - 2].GetComponentInChildren<CardTypeHolder>().cardType.suit =
+                            CardSuit.Joker;
+                        cardIns[cardIns.Length - 2].GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = CardSpriteConverter.GetCardSpriteInd(cardsInLastSlot.GetComponentInChildren<CardTypeHolder>().cardType, gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
+                }
+            }
+        }
+        
+        int ind = 10;
+        for (int i = ind; i < cardIns.Length - 1; i++)
+        {
+            GameObject c = cardIns[i + 1].GetChild(0).GetChild(0).gameObject;
+            c.transform.SetParent(cardIns[i].GetChild(0));
+            MoveToZero(c);
+        }
+
+        cardsInLastSlot.SetActive(false);
+        cardIns[cardIns.Length - 1].gameObject.SetActive(false);
+
+        ChangeGridSpacing(gridSpacingCollaps, gridPaddingCollaps);
+        gameControl.NextPlayingInd();
+    }
+    
+    // // oyuncunun süresi bittiğinde oto kapalı desteden kart çeker
+    public void TimeOutPickCard(ActorControl actorControl)
+    {
+        gameControl.makeNoise.PlaySFX(15, 0);
+    
+        CardClose cardClose = gameControl.tableAnimationControl.cardCloses[gameControl.tableAnimationControl.cardCloses.Count - 1];
+        cardClose.gameObject.SetActive(true);
+        cardClose.Pick(actorControl.actorTransform.GetChild(0).position);
+        gameControl.tableAnimationControl.cardCloses.Remove(cardClose);
+    
+        // if (!GameManager.Instance.IsMultiplayer())
+        //     actorControl.AddCard(deck[0]);
+    
+        //actorControl.AddCard(gameControl.deck[0]);
+        actorControl.cardsInHand.Add(gameControl.deck[0]);
+
+        cardsInLastSlot.GetComponentInChildren<CardTypeHolder>(true).cardType = gameControl.deck[0];
+    
+        gameControl.playerControl.cardsInLastSlot.SetActive(true);
+        gameControl.playerControl.cardsInLastSlot.transform.GetChild(0).gameObject.SetActive(true);
+        gameControl.playerControl.cardsInLastSlot.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = CardSpriteConverter.GetCardSpriteInd(actorControl.cardsInHand.Last(), gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
+        
+        gameControl.deck.Remove(gameControl.deck[0]);
+    
+        gameControl.CheckDeckCardCount();
+    }
+
+    // süre bittiğinde kartların raycasttarget ı kapatılıyor ve kart atıldığında açılıyor. böylece oto kart çekilip oto kart atıldığı anda 
+    // kartlara dokunulup hareket edilmesi engelleniyor
+    void SetControllableCards(bool state)
+    {
+        for (int i = 0; i < cardIns.Length; i++)
+        {
+            if (!cardIns[i].GetComponentInChildren<Image>())
+                continue;
+            cardIns[i].GetComponentInChildren<Image>().raycastTarget = state;
+        }
+    }
+    
+    // public void TimeOutTakeCardFromDeck()
+    // {
+    //     gameControl.makeNoise.PlaySFX(15, 0);
+    //     gameControl.DisableEnableTakeCardBtns(false);
+    //
+    //     CardClose cardClose = gameControl.tableAnimationControl.cardCloses[gameControl.tableAnimationControl.cardCloses.Count - 1];
+    //     cardClose.gameObject.SetActive(false);
+    //     gameControl.tableAnimationControl.cardCloses.Remove(cardClose);
+    //
+    //     TakeCard(gameControl.deck[0]);
+    //     gameControl.deck.Remove(gameControl.deck[0]);
+    //
+    //
+    //     gameControl.CheckDeckCardCount();
+    //
+    //     // if (GameManager.Instance.IsMultiplayer())
+    //     //     myNetworkPlayer.RPC_TakeCard(1, (byte)myNetworkPlayer.playInd);
+    // }
+    #endregion
 }

@@ -38,9 +38,11 @@ public class ActorControl : MonoBehaviour
     public int totalBetMoney;
     public int totalCoins;
     public GameObject drink;
-
+    
     private NameGenerator nameGenerator;
     public Gender gender;
+    
+    public Image timerCircle;
 
     private void Awake()
     {
@@ -71,7 +73,7 @@ public class ActorControl : MonoBehaviour
             actorNameText.text = actorName;
         }
     }
-
+    
     void SetRandomGender()
     {
         Gender[] genders = (Gender[])System.Enum.GetValues(typeof(Gender));
@@ -416,7 +418,7 @@ public class ActorControl : MonoBehaviour
 
         gameControl.PickCard(this, pickFromDeck);
     }
-
+    
     IEnumerator ThrowCard()
     {
         yield return new WaitForSeconds(Random.Range(.5f, .8f));
