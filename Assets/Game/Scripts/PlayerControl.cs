@@ -115,6 +115,7 @@ public class PlayerControl : MonoBehaviour
                     if (inThrowedArea)
                     {
                         ThrowCard();
+                        StopTimer();
                         return;
                     }
                     if (inFinishArea)
@@ -306,7 +307,7 @@ public class PlayerControl : MonoBehaviour
 
         cardPicked = null;
         ChangeGridSpacing(gridSpacingCollaps, gridPaddingCollaps);
-        gameControl.NextPlayingInd();
+        //gameControl.NextPlayingInd();
 
     }
 
@@ -441,7 +442,7 @@ public class PlayerControl : MonoBehaviour
     // eğer bu süre içerisinde kart çekmiş ve atmamış ise sadece oto kart atılır.
     IEnumerator TimeEndCoroutine()
     {
-//        iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+        iTween.ScaleTo(actorControl.transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
         
         if (!gameControl.playerControl.cardsInLastSlot.gameObject.activeSelf)
         {
@@ -462,7 +463,7 @@ public class PlayerControl : MonoBehaviour
         StartCoroutine(TimeEndCoroutine());
         currentTime = 0;
         actorControl.timerCircle.gameObject.SetActive(false);
-        gameControl.NextPlayingInd();
+        //gameControl.NextPlayingInd();
         SetControllableCards(true);
     }
 
@@ -487,7 +488,7 @@ public class PlayerControl : MonoBehaviour
             yield return null;
         }
 
-        if (gameControl.playingActors[gameControl.playingInd].player)
+        if (actorControl.player)
         {
             TimeEnd();
         }
@@ -506,6 +507,8 @@ public class PlayerControl : MonoBehaviour
             return;
         
         StopCoroutine(timerCoroutine);
+        //gameControl.NextActor();
+
         actorControl.timerCircle.gameObject.SetActive(false);
         gameControl.DisableEnableTakeCardBtns(false);
         SetControllableCards(true);
@@ -556,7 +559,7 @@ public class PlayerControl : MonoBehaviour
         cardIns[cardIns.Length - 1].gameObject.SetActive(false);
 
         ChangeGridSpacing(gridSpacingCollaps, gridPaddingCollaps);
-        gameControl.NextPlayingInd();
+        //gameControl.NextPlayingInd();
     }
     
     // // oyuncunun süresi bittiğinde oto kapalı desteden kart çeker
@@ -584,6 +587,9 @@ public class PlayerControl : MonoBehaviour
         gameControl.deck.Remove(gameControl.deck[0]);
     
         gameControl.CheckDeckCardCount();
+        
+        if (GameManager.Instance.IsMultiplayer())
+            gameControl.myNetworkPlayer.RPC_TakeCard(1, (byte)gameControl.myNetworkPlayer.playInd);
     }
 
     // süre bittiğinde kartların raycasttarget ı kapatılıyor ve kart atıldığında açılıyor. böylece oto kart çekilip oto kart atıldığı anda 

@@ -606,20 +606,12 @@ public class GameControl : MonoBehaviour
             {
                 playingActors[playingInd].PlayCard();
             }
-            NextPlayingInd();
         }
-
-    }
-
-    public void NextPlayingInd()
-    {
         playingInd++;
         if (playingInd > playingActors.Count - 1)
             playingInd = 0;
-        
-        playerControl.StopTimer();
     }
-
+    
     IEnumerator FirstGroundCard()
     {
         lastThrowedCard = throwedCardObjs[throwedCards.Count];
