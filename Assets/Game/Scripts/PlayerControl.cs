@@ -37,14 +37,14 @@ public class PlayerControl : MonoBehaviour
 
     [SerializeField] private float currentTime = 0f;
     private Coroutine timerCoroutine;
-    
+
     private void Awake()
     {
         gameControl = FindObjectOfType<GameControl>();
         throwedCardAreaAnimator = throwedCardArea.GetComponent<Animator>();
         finishCardAreaAnimator = finishCardArea.GetComponent<Animator>();
 
-        if(!GameManager.Instance.IsMultiplayer())
+        if (!GameManager.Instance.IsMultiplayer())
             actorControl.player = true;
 
         actorControl.totalCoins = PlayerPrefs.GetInt("CoinCount");
@@ -436,23 +436,23 @@ public class PlayerControl : MonoBehaviour
     {
         gridLayoutGRP.padding = new RectOffset(0, 0, 0, newValue);
     }
-    
+
     #region Oyuncu Timer
     // sıra oyuncuya geldiğinde timer başlar ve bu süre içerisinde hiç işlem yapmazsa oto kart çekilip atılır.
     // eğer bu süre içerisinde kart çekmiş ve atmamış ise sadece oto kart atılır.
     IEnumerator TimeEndCoroutine(ActorControl currentActorController)
     {
         iTween.ScaleTo(currentActorController.transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
-        
+
         if (!currentActorController.gameControl.playerControl.cardsInLastSlot.gameObject.activeSelf)
         {
             yield return new WaitForSeconds(Random.Range(.1f, .6f));
 
             TimeOutPickCard(currentActorController);
         }
- 
+
         yield return new WaitForSeconds(Random.Range(0.6f, 1.1f));
-        
+
         currentActorController.gameControl.playerControl.TimeOutThrowCard(currentActorController);
     }
 
@@ -469,21 +469,22 @@ public class PlayerControl : MonoBehaviour
 
     // süre başladığında
     void TimeStart(ActorControl currentActorController)
-    {        
+    {
         currentTime = 0;
         currentActorController.timerCircle.gameObject.SetActive(true);
     }
-    
+
     // süreç boyunca olacaklar
     IEnumerator TimerCoroutine(ActorControl currentActorController)
     {
         TimeStart(currentActorController);
-        
+
         while (currentTime < currentActorController.gameControl.timeOutTimer)
         {
             currentTime += Time.deltaTime;
 
-            currentActorController.timerCircle.fillAmount =1-( currentTime / currentActorController.gameControl.timeOutTimer);
+            //currentActorController.timerCircle.fillAmount = 1f - (currentTime / currentActorController.gameControl.timeOutTimer);
+            currentActorController.timerCircle.fillAmount = Mathf.Lerp(0.7f, 0f, currentTime / currentActorController.gameControl.timeOutTimer);
 
             yield return null;
         }
@@ -497,15 +498,15 @@ public class PlayerControl : MonoBehaviour
     // süreyi başlat
     public void StartTimer(ActorControl currentActorController)
     {
-        timerCoroutine= StartCoroutine(TimerCoroutine(currentActorController));
+        timerCoroutine = StartCoroutine(TimerCoroutine(currentActorController));
     }
 
     // süreyi durdurup işlemi kestiğinde. yani süre bitmeden kart çekip atıldığında
     public void StopTimer(ActorControl currentActorController)
     {
-        if (timerCoroutine==null)
+        if (timerCoroutine == null)
             return;
-        
+
         StopCoroutine(timerCoroutine);
         currentActorController.timerCircle.gameObject.SetActive(false);
         currentActorController.gameControl.DisableEnableTakeCardBtns(false);
@@ -513,19 +514,19 @@ public class PlayerControl : MonoBehaviour
         currentActorController.gameControl.playerControl.throwedCardArea.SetActive(false);
         currentActorController.gameControl.playerControl.finishCardArea.SetActive(false);
     }
-    
+
     public void TimeOutThrowCard(ActorControl currentActorController)
     {
         throwedCardArea.SetActive(false);
         finishCardArea.SetActive(false);
-        
-        if (cardsInLastSlot.GetComponentInChildren<CardTypeHolder>().cardType.suit!=CardSuit.Joker)
+
+        if (cardsInLastSlot.GetComponentInChildren<CardTypeHolder>().cardType.suit != CardSuit.Joker)
         {
             for (int i = 0; i < currentActorController.cardsInHand.Count; i++)
             {
-                if (cardsInLastSlot.GetComponentInChildren<CardTypeHolder>().cardType==currentActorController.cardsInHand[i])
+                if (cardsInLastSlot.GetComponentInChildren<CardTypeHolder>().cardType == currentActorController.cardsInHand[i])
                 {
-                        gameControl.ThrowCard(currentActorController.cardsInHand[i], currentActorController);
+                    gameControl.ThrowCard(currentActorController.cardsInHand[i], currentActorController);
                 }
             }
         }
@@ -533,16 +534,16 @@ public class PlayerControl : MonoBehaviour
         {
             for (int i = 0; i < currentActorController.cardsInHand.Count; i++)
             {
-                if (cardIns[cardIns.Length - 2].GetComponentInChildren<CardTypeHolder>().cardType==currentActorController.cardsInHand[i])
+                if (cardIns[cardIns.Length - 2].GetComponentInChildren<CardTypeHolder>().cardType == currentActorController.cardsInHand[i])
                 {
                     currentActorController.gameControl.ThrowCard(currentActorController.cardsInHand[i], currentActorController);
-                        cardIns[cardIns.Length - 2].GetComponentInChildren<CardTypeHolder>().cardType.suit =
-                            CardSuit.Joker;
-                        cardIns[cardIns.Length - 2].GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = CardSpriteConverter.GetCardSpriteInd(cardsInLastSlot.GetComponentInChildren<CardTypeHolder>().cardType, gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
+                    cardIns[cardIns.Length - 2].GetComponentInChildren<CardTypeHolder>().cardType.suit =
+                        CardSuit.Joker;
+                    cardIns[cardIns.Length - 2].GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = CardSpriteConverter.GetCardSpriteInd(cardsInLastSlot.GetComponentInChildren<CardTypeHolder>().cardType, gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
                 }
             }
         }
-        
+
         int ind = 10;
         for (int i = ind; i < cardIns.Length - 1; i++)
         {
@@ -556,12 +557,12 @@ public class PlayerControl : MonoBehaviour
 
         ChangeGridSpacing(gridSpacingCollaps, gridPaddingCollaps);
     }
-    
+
     // // oyuncunun süresi bittiğinde oto kapalı desteden kart çeker
     public void TimeOutPickCard(ActorControl currentActorController)
     {
         currentActorController.gameControl.makeNoise.PlaySFX(15, 0);
-    
+
         CardClose cardClose = currentActorController.gameControl.tableAnimationControl.cardCloses[currentActorController.gameControl.tableAnimationControl.cardCloses.Count - 1];
         cardClose.gameObject.SetActive(true);
         cardClose.Pick(actorControl.actorTransform.GetChild(0).position);
@@ -571,15 +572,15 @@ public class PlayerControl : MonoBehaviour
         currentActorController.cardsInHand.Add(currentActorController.gameControl.deck[0]);
 
         cardsInLastSlot.GetComponentInChildren<CardTypeHolder>(true).cardType = gameControl.deck[0];
-    
+
         currentActorController.gameControl.playerControl.cardsInLastSlot.SetActive(true);
         currentActorController.gameControl.playerControl.cardsInLastSlot.transform.GetChild(0).gameObject.SetActive(true);
         currentActorController.gameControl.playerControl.cardsInLastSlot.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = CardSpriteConverter.GetCardSpriteInd(actorControl.cardsInHand.Last(), gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
-        
+
         currentActorController.gameControl.deck.Remove(gameControl.deck[0]);
-    
+
         currentActorController.gameControl.CheckDeckCardCount();
-        
+
         if (GameManager.Instance.IsMultiplayer())
             currentActorController.gameControl.myNetworkPlayer.RPC_TakeCard(1, (byte)currentActorController.gameControl.myNetworkPlayer.playInd);
     }

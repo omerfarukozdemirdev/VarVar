@@ -75,7 +75,12 @@ public class GameControl : MonoBehaviour
     public NetworkPlayer myNetworkPlayer;
     public NetworkGlobals networkGlobals;
 
-    public float timeOutTimer;
+    public float timeOutTimer; //oyuncunun eli oynaması için timer
+    public float betTimer; // oyuncunun bet yapması için timer
+    private Coroutine betTimerCoroutine;
+    private float betTimerCurrentTime = 0f;
+    public Image betTimerFilled;
+
 
     private void Awake()
     {
@@ -218,7 +223,7 @@ public class GameControl : MonoBehaviour
         tableAnimationControl.Reset();
         playerControl.ResetValues();
     }
-    
+
     void StartGame()
     {
         CreateDeck();
@@ -592,16 +597,16 @@ public class GameControl : MonoBehaviour
         {
             DisableEnableTakeCardBtns(true);
             iTween.ScaleTo(playingActors[playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
-            
+
             playerControl.StartTimer(playingActors[playingInd]);
-            
+
         }
         else
         {
             if (GameManager.Instance.IsMultiplayer())
             {
                 playingActors[playingInd].BlinkAvatar();
-                
+
                 if (playingActors[playingInd].onlineBot)
                 {
                     //playingActors[playingInd].gameControl.playerControl.StartTimer(playingActors[playingInd]);
@@ -612,7 +617,7 @@ public class GameControl : MonoBehaviour
 
                     if (networkHandler.isHost)
                     {
-                        
+
                     }
                 }
             }
@@ -625,7 +630,7 @@ public class GameControl : MonoBehaviour
         if (playingInd > playingActors.Count - 1)
             playingInd = 0;
     }
-    
+
     IEnumerator FirstGroundCard()
     {
         lastThrowedCard = throwedCardObjs[throwedCards.Count];
@@ -688,7 +693,7 @@ public class GameControl : MonoBehaviour
         if (!GameManager.Instance.IsMultiplayer())
             actorControl.PlayCard();
     }
-    
+
     IEnumerator PickCardFromThrowed(Vector3 pos)
     {
         pos.y = transform.position.y;
@@ -714,7 +719,7 @@ public class GameControl : MonoBehaviour
             ThrowingCard(cardType, actorControl);
         }
     }
-    
+
     public void ThrowingCard(Card cardType, ActorControl actorControl)
     {
         makeNoise.PlaySFX(16, 0);
@@ -806,6 +811,8 @@ public class GameControl : MonoBehaviour
     {
         makeNoise.PlaySFX(11, 0);
 
+        BetStartTimer();
+
         if (betUp)
         {
             desicitonPanelBetText.text = "$1000";
@@ -854,6 +861,7 @@ public class GameControl : MonoBehaviour
             desicionInd++;
         }
 
+        StopTimer();
         desicitonPanel.SetActive(false);
     }
 
@@ -1059,10 +1067,59 @@ public class GameControl : MonoBehaviour
 
     IEnumerator OnlineBotPlayCoroutine()
     {
-        playingActors[playingInd].gameControl.PickCard(playingActors[playingInd],true,true);
+        playingActors[playingInd].gameControl.PickCard(playingActors[playingInd], true, true);
         yield return new WaitForSeconds(0.5f);
         playingActors[playingInd].gameControl.ThrowingCard(playingActors[playingInd].cardsInHand.Last(), playingActors[playingInd]);
     }
+
+    #region Bet Timer region
+    // süreyi başlat
+    public void BetStartTimer()
+    {
+        betTimerCoroutine = StartCoroutine(BetTimerCoroutine());
+    }
+
+    // süre başladığında
+    void BetTimeStarted()
+    {
+        betTimerCurrentTime = 0;
+        betTimerFilled.gameObject.SetActive(true);
+    }
+
+    // süreç boyunca olacaklar
+    IEnumerator BetTimerCoroutine()
+    {
+        BetTimeStarted();
+
+        while (betTimerCurrentTime < betTimer)
+        {
+            betTimerCurrentTime += Time.deltaTime;
+
+            betTimerFilled.fillAmount = 1f - (betTimerCurrentTime / betTimer);
+            //currentActorController.timerCircle.fillAmount = Mathf.Lerp(0.7f, 0f, currentTime / currentActorController.gameControl.timeOutTimer);
+
+            yield return null;
+        }
+
+        BetTimeEnded();
+    }
+
+    //süre bittiğinde
+    void BetTimeEnded()
+    {
+        betTimerCurrentTime = 0;
+        CloseDesicionPanel(1);
+    }
+
+    // süreyi durdurup işlemi kestiğinde. yani süre bitmeden oyuncu var ya da pass dediğinde
+    public void StopTimer()
+    {
+        if (betTimerCoroutine == null)
+            return;
+
+        StopCoroutine(betTimerCoroutine);
+    }
+    #endregion
 }
 
 

@@ -39,10 +39,10 @@ public class ActorControl : MonoBehaviour
     public int totalBetMoney;
     public int totalCoins;
     public GameObject drink;
-    
+
     private NameGenerator nameGenerator;
     public Gender gender;
-    
+
     public Image timerCircle;
 
     private void Awake()
@@ -58,6 +58,7 @@ public class ActorControl : MonoBehaviour
         passCounter = 0;
         totalWinMoney = 0;
         totalBetMoney = 0;
+
     }
 
     private void Start()
@@ -74,7 +75,7 @@ public class ActorControl : MonoBehaviour
             actorNameText.text = actorName;
         }
     }
-    
+
     void SetRandomGender()
     {
         Gender[] genders = (Gender[])System.Enum.GetValues(typeof(Gender));
@@ -131,6 +132,8 @@ public class ActorControl : MonoBehaviour
         GetComponent<CanvasGroup>().alpha = 1;
         speechBalloon.transform.localScale = Vector3.one;
         money.transform.localScale = Vector3.one;
+
+        timerCircle.gameObject.SetActive(false);
 
         DefaultAvatar();
     }
@@ -381,7 +384,7 @@ public class ActorControl : MonoBehaviour
     IEnumerator HandCompleted()
     {
         yield return new WaitForSeconds(1f);
-        
+
         gameControl.makeNoise.PlaySFX(18, 0);
         gameControl.makeNoise.PlaySFX(25, 0);
 
@@ -390,7 +393,7 @@ public class ActorControl : MonoBehaviour
         totalWinMoney += gameControl.rewardMoney;
         totalCoins += 100;
         gameControl.coinController.EarnCoin(100);
-        
+
         FindObjectOfType<HandCompletedPanel>(true).OpenPanel(this);
 
     }
@@ -400,7 +403,7 @@ public class ActorControl : MonoBehaviour
         // oyuncu kart çekiyor
         iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
         timerCircle.gameObject.SetActive(true);
-        iTween.ValueTo(gameObject, iTween.Hash("from", 1f, "to", 0f, "time", gameControl.timeOutTimer, "onupdate", "UpdateRadialFill", "easetype", iTween.EaseType.linear));
+        iTween.ValueTo(gameObject, iTween.Hash("from", 0.7f, "to", 0f, "time", gameControl.timeOutTimer, "onupdate", "UpdateRadialFill", "easetype", iTween.EaseType.linear));
         yield return new WaitForSeconds(Random.Range(.1f, .6f));
 
         bool pickFromDeck = true;
@@ -418,14 +421,14 @@ public class ActorControl : MonoBehaviour
             }
         }
 
-        gameControl.PickCard(this, pickFromDeck,false);
+        gameControl.PickCard(this, pickFromDeck, false);
     }
-    
+
     void UpdateRadialFill(float value)
     {
         timerCircle.fillAmount = value;
     }
-    
+
     IEnumerator ThrowCard()
     {
         yield return new WaitForSeconds(Random.Range(.5f, .8f));
