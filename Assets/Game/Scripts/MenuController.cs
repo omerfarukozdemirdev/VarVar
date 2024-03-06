@@ -12,6 +12,8 @@ public class MenuController : MonoBehaviour
     [SerializeField] private MeshRenderer[] cardBacks;
     [SerializeField] private TMP_InputField firstPlayerNameTmp;
     [SerializeField] private GameObject firstPlayerNameCanvas;
+    [SerializeField] private TMP_InputField playTimeTmp;
+    [SerializeField] private TMP_InputField betTimeTmp;
 
     private void Awake()
     {
@@ -30,6 +32,8 @@ public class MenuController : MonoBehaviour
 
         gameConfig.avatarInd = 0;//PlayerPrefs.GetInt("Avatar");
         SetAvatar();
+
+        InitTimers();
 
         FindObjectOfType<MakeNoise>().PlaySFX(29, 0);
     }
@@ -76,5 +80,32 @@ public class MenuController : MonoBehaviour
     public void SetAvatar()
     {
         Avatar.sprite = gameConfig.avatars[gameConfig.avatarInd];
+    }
+
+    void InitTimers()
+    {
+        if (!PlayerPrefs.HasKey("BetTime"))
+        {
+            PlayerPrefs.SetInt("BetTime", 12);
+        }
+
+        betTimeTmp.text = PlayerPrefs.GetInt("BetTime").ToString();
+        
+        if (!PlayerPrefs.HasKey("PlayTime"))
+        {
+            PlayerPrefs.SetInt("PlayTime", 15);
+        }
+
+        playTimeTmp.text = PlayerPrefs.GetInt("PlayTime").ToString();
+    }
+
+    public void SetPlayTime()
+    {
+        PlayerPrefs.SetInt("PlayTime", int.Parse(playTimeTmp.text));
+    }
+
+    public void SetBetTime()
+    {
+        PlayerPrefs.SetInt("BetTime", int.Parse(betTimeTmp.text));
     }
 }

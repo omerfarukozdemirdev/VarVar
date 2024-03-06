@@ -747,7 +747,7 @@ MonoBehaviour:
   myNetworkPlayer: {fileID: 0}
   networkGlobals: {fileID: 0}
   timeOutTimer: 15
-  betTimer: 5
+  betTimer: 12
   betTimerFilled: {fileID: 1333306696}
 --- !u!4 &327959629
 Transform:

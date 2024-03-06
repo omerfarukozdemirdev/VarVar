@@ -110,6 +110,8 @@ public class GameControl : MonoBehaviour
         gameCounter = 1;
         gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
 
+        InitTimers();
+
         lobbyUIManager.gameObject.SetActive(false);
     }
 
@@ -135,6 +137,12 @@ public class GameControl : MonoBehaviour
             deckCountText.text = "";
         else
             deckCountText.text = deck.Count.ToString();
+    }
+
+    void InitTimers()
+    {
+        betTimer = PlayerPrefs.GetInt("BetTime");
+        timeOutTimer = PlayerPrefs.GetInt("PlayTime");
     }
 
     void ResetValues()
@@ -613,7 +621,7 @@ public class GameControl : MonoBehaviour
                     //playingActors[playingInd].gameControl.playerControl.TimeOutPickCard(playingActors[playingInd]);
                     //playingActors[playingInd].gameControl.playerControl.TimeOutThrowCard(playingActors[playingInd]);
                     //playingActors[playingInd].player = false;
-                    StartCoroutine(OnlineBotPlayCoroutine());
+                    //StartCoroutine(OnlineBotPlayCoroutine());
 
                     if (networkHandler.isHost)
                     {
