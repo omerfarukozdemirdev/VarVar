@@ -23,11 +23,23 @@ public class MakeNoise : MonoBehaviour {
             sources[i] = clone.GetComponent<AudioSource>();
             audiotagss[i] = sources[i].GetComponent<AudioTag>();
         }
+
+        MusicOnOff((PlayerPrefs.GetInt("Music") == 1));
+        SoundOnOff((PlayerPrefs.GetInt("Sound") == 1));
+
     }
 
     public void MusicOnOff(bool onOff)
     {
         transform.GetChild(0).gameObject.SetActive(onOff);
+    }
+
+    public void SoundOnOff(bool onOff)
+    {
+        for (int i = 0;i < sources.Length;i++)
+        {
+            sources[i].gameObject.SetActive(onOff);
+        }
     }
 
     public void SetSoundVolume(float volume)

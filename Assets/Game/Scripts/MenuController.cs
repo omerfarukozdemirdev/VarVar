@@ -6,6 +6,7 @@ public class MenuController : MonoBehaviour
 {
     public GameConfig gameConfig;
 
+    [SerializeField] private MakeNoise audioManager;
     [SerializeField] private TMP_InputField playerNameTmp;
     [SerializeField] private Image Avatar;
     [SerializeField] private SpriteRenderer[] cards;
@@ -14,6 +15,8 @@ public class MenuController : MonoBehaviour
     [SerializeField] private GameObject firstPlayerNameCanvas;
     [SerializeField] private TMP_InputField playTimeTmp;
     [SerializeField] private TMP_InputField betTimeTmp;
+    [SerializeField] private UISwitcher.UISwitcher soundSwitcher;
+    [SerializeField] private UISwitcher.UISwitcher musicSwitcher;
 
     private void Awake()
     {
@@ -35,7 +38,11 @@ public class MenuController : MonoBehaviour
 
         InitTimers();
 
-        FindObjectOfType<MakeNoise>().PlaySFX(29, 0);
+        audioManager = FindObjectOfType<MakeNoise>();
+
+        InitSettings();
+
+        audioManager.PlaySFX(29, 0);
     }
 
     private void Start()
@@ -107,5 +114,34 @@ public class MenuController : MonoBehaviour
     public void SetBetTime()
     {
         PlayerPrefs.SetInt("BetTime", int.Parse(betTimeTmp.text));
+    }
+
+    void InitSettings()
+    {
+        if (!PlayerPrefs.HasKey("Sound"))
+        {
+            PlayerPrefs.SetInt("Sound", 1);
+        }
+
+        soundSwitcher.isOn=(PlayerPrefs.GetInt("Sound") ==1);
+
+        if (!PlayerPrefs.HasKey("Music"))
+        {
+            PlayerPrefs.SetInt("Music", 1);
+        }
+
+        musicSwitcher.isOn = (PlayerPrefs.GetInt("Music") == 1);
+    }
+
+    public void SetSoundSwitch()
+    {
+        PlayerPrefs.SetInt("Sound", soundSwitcher.isOn ? 1 : 0);
+        audioManager.SoundOnOff(soundSwitcher.isOn);
+
+    }
+    public void SetMusicSwitch()
+    {
+        PlayerPrefs.SetInt("Music", musicSwitcher.isOn ? 1 : 0);
+        audioManager.MusicOnOff(musicSwitcher.isOn);
     }
 }
