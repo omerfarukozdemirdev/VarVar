@@ -5,12 +5,12 @@ public class MoneyController : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI moneyCountTmp;
 
-    private int moneyCount;
+    public int moneyCount;
 
     private void Awake()
     {
         moneyCount = PlayerPrefs.GetInt("MoneyCount");
-        moneyCount = Mathf.Clamp(moneyCount, 1000, moneyCount);
+        //moneyCount = Mathf.Clamp(moneyCount, 1000, moneyCount);
 
         SetMoneyCountText();
     }
@@ -36,7 +36,7 @@ public class MoneyController : MonoBehaviour
         }
 
         moneyCount -= count;
-        moneyCount = Mathf.Clamp(moneyCount, 1000, moneyCount);
+        //moneyCount = Mathf.Clamp(moneyCount, 1000, moneyCount);
 
         PlayerPrefs.SetInt("MoneyCount", moneyCount);
 

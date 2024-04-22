@@ -58,7 +58,7 @@ public class GameControl : MonoBehaviour
     [HideInInspector] public MakeNoise makeNoise;
 
     public int gameCounter;
-    public int gameLimit;
+    [HideInInspector] public int gameLimit;
     public Text gameTourText;
     public CoinController coinController;
     public DrinkController drinkController;
@@ -81,6 +81,9 @@ public class GameControl : MonoBehaviour
     private float betTimerCurrentTime = 0f;
     public Image betTimerFilled;
 
+    [SerializeField] private SelectSoloModePanel selectSoloModePanel;
+    public int playerCount; // oyuncu sayısı
+    public List<ActorControl> players = new List<ActorControl>();
 
     private void Awake()
     {
@@ -125,10 +128,11 @@ public class GameControl : MonoBehaviour
             //networkHandler.StartQuickGame();
 
             lobbyUIManager.gameObject.SetActive(true);
-            return;
         }
-
-        Invoke("StartGame", .5f);
+        else
+        {
+            selectSoloModePanel.gameObject.SetActive (true);
+        }
     }
 
     private void Update()
@@ -213,6 +217,31 @@ public class GameControl : MonoBehaviour
 
         NextTouring();
         Invoke("StartGame", 1f);
+    }
+
+    // seçilen oyuncu sayısına göre oyuncuları oluşturma
+    public void SetPlayers()
+    {
+        actorControls.ForEach(x=>x.actorTransform.gameObject.SetActive(false));
+        actorControls.ForEach(x=>x.gameObject.SetActive(false));
+        actorControls.Clear();
+
+        for (int i = 0; i < playerCount; i++)
+        {
+            actorControls.Add(players[i]);
+            actorControls[i].gameObject.SetActive(true);
+            actorControls[i].actorTransform.gameObject.SetActive(true);
+        }
+    }
+
+    // solo lobby deki play butonundan çağrılıyor
+    public void SoloStartGame()
+    {
+        gameLimit = playerCount;
+        SetPlayers();
+        Invoke("StartGame", .5f);
+        selectSoloModePanel.gameObject.SetActive(false);
+
     }
 
     public void NextTouring()
@@ -815,6 +844,7 @@ public class GameControl : MonoBehaviour
         tableAnimationControl.CreateDeckFromThrowedCards(deck.Count);
     }
 
+    // var pas panelinin açılması
     void OpenDesicitonPanel()
     {
         makeNoise.PlaySFX(11, 0);
@@ -835,6 +865,7 @@ public class GameControl : MonoBehaviour
         desicitonPanel.SetActive(true);
     }
 
+    // var pas paneli karar butonları fonksiyonu
     public void CloseDesicionPanel(int ind)
     {
         switch (ind)

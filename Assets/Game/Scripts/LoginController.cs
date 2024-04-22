@@ -4,8 +4,8 @@ public class LoginController : MonoBehaviour
 {
     private void Awake()
     {
-        if (!PlayerPrefs.HasKey("MoneyCount"))
-            PlayerPrefs.SetInt("MoneyCount", 10000);
+        //if (!PlayerPrefs.HasKey("MoneyCount"))
+        //    PlayerPrefs.SetInt("MoneyCount", 10000);
 
         if (!PlayerPrefs.HasKey("Music"))
             PlayerPrefs.SetInt("Music", 1);

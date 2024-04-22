@@ -6845,6 +6845,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moneyCountTmp: {fileID: 5374562839840719656}
+  moneyCount: 0
 --- !u!1 &5374562838631013850
 GameObject:
   m_ObjectHideFlags: 0
@@ -8148,6 +8149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: 0
+  onlineBot: 0
   actorTransform: {fileID: 0}
   cardsInHand: []
   missingCards: []
@@ -8162,8 +8164,10 @@ MonoBehaviour:
   moneyAtractorParticle: {fileID: 2636841236867760165}
   handCompleteStep: 0
   handCompleted: 0
+  handWin: 0
   pass: 0
   betUp: 0
+  gameControl: {fileID: 0}
   winCounter: 0
   passCounter: 0
   totalWinMoney: 0
@@ -8171,6 +8175,7 @@ MonoBehaviour:
   totalCoins: 0
   drink: {fileID: 5374562838867899728}
   gender: 0
+  timerCircle: {fileID: 0}
 --- !u!225 &5374562838742060744
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -12009,6 +12014,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: 0
+  onlineBot: 0
   actorTransform: {fileID: 0}
   cardsInHand: []
   missingCards: []
@@ -12023,8 +12029,10 @@ MonoBehaviour:
   moneyAtractorParticle: {fileID: 4818528431269880284}
   handCompleteStep: 0
   handCompleted: 0
+  handWin: 0
   pass: 0
   betUp: 0
+  gameControl: {fileID: 0}
   winCounter: 0
   passCounter: 0
   totalWinMoney: 0
@@ -12032,6 +12040,7 @@ MonoBehaviour:
   totalCoins: 0
   drink: {fileID: 5374562840392137281}
   gender: 0
+  timerCircle: {fileID: 0}
 --- !u!225 &5374562839166868376
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -14201,6 +14210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: 0
+  onlineBot: 0
   actorTransform: {fileID: 0}
   cardsInHand: []
   missingCards: []
@@ -14215,8 +14225,10 @@ MonoBehaviour:
   moneyAtractorParticle: {fileID: 4818528431266901055}
   handCompleteStep: 0
   handCompleted: 0
+  handWin: 0
   pass: 0
   betUp: 0
+  gameControl: {fileID: 0}
   winCounter: 0
   passCounter: 0
   totalWinMoney: 0
@@ -14224,6 +14236,7 @@ MonoBehaviour:
   totalCoins: 0
   drink: {fileID: 5374562840219004251}
   gender: 0
+  timerCircle: {fileID: 0}
 --- !u!225 &5374562839339642797
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -17187,6 +17200,8 @@ MonoBehaviour:
   nextButton: {fileID: 5374562840061468270}
   mainMenuButton: {fileID: 5374562839987650145}
   completeHeaderText: {fileID: 5374562840122283447}
+  loserPlayerTabs: []
+  winnerPlayerTab: {fileID: 0}
 --- !u!1 &5374562839632768460
 GameObject:
   m_ObjectHideFlags: 0
@@ -18186,6 +18201,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: 0
+  onlineBot: 0
   actorTransform: {fileID: 0}
   cardsInHand: []
   missingCards: []
@@ -18200,8 +18216,10 @@ MonoBehaviour:
   moneyAtractorParticle: {fileID: 4818528430779987879}
   handCompleteStep: 0
   handCompleted: 0
+  handWin: 0
   pass: 0
   betUp: 0
+  gameControl: {fileID: 0}
   winCounter: 0
   passCounter: 0
   totalWinMoney: 0
@@ -18209,6 +18227,7 @@ MonoBehaviour:
   totalCoins: 0
   drink: {fileID: 5374562840056162414}
   gender: 0
+  timerCircle: {fileID: 0}
 --- !u!225 &5374562839740025284
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -18384,6 +18403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: 0
+  onlineBot: 0
   actorTransform: {fileID: 0}
   cardsInHand: []
   missingCards: []
@@ -18398,8 +18418,10 @@ MonoBehaviour:
   moneyAtractorParticle: {fileID: 4818528431117268464}
   handCompleteStep: 0
   handCompleted: 0
+  handWin: 0
   pass: 0
   betUp: 0
+  gameControl: {fileID: 0}
   winCounter: 0
   passCounter: 0
   totalWinMoney: 0
@@ -18407,6 +18429,7 @@ MonoBehaviour:
   totalCoins: 0
   drink: {fileID: 5374562839680351587}
   gender: 0
+  timerCircle: {fileID: 0}
 --- !u!225 &5374562839759063012
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -25012,6 +25035,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: 0
+  onlineBot: 0
   actorTransform: {fileID: 0}
   cardsInHand: []
   missingCards: []
@@ -25026,8 +25050,10 @@ MonoBehaviour:
   moneyAtractorParticle: {fileID: 4818528432321925728}
   handCompleteStep: 0
   handCompleted: 0
+  handWin: 0
   pass: 0
   betUp: 0
+  gameControl: {fileID: 0}
   winCounter: 0
   passCounter: 0
   totalWinMoney: 0
@@ -25035,6 +25061,7 @@ MonoBehaviour:
   totalCoins: 0
   drink: {fileID: 5374562839702539330}
   gender: 0
+  timerCircle: {fileID: 0}
 --- !u!225 &5374562840242291352
 CanvasGroup:
   m_ObjectHideFlags: 0

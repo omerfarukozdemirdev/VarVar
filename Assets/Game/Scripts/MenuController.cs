@@ -17,6 +17,8 @@ public class MenuController : MonoBehaviour
     [SerializeField] private TMP_InputField betTimeTmp;
     [SerializeField] private UISwitcher.UISwitcher soundSwitcher;
     [SerializeField] private UISwitcher.UISwitcher musicSwitcher;
+    [SerializeField] private Button playButton;
+    [SerializeField] private GameObject lowMoneyMessage;
 
     private void Awake()
     {
@@ -48,6 +50,12 @@ public class MenuController : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.gameStat = GameManager.GameStat.menu;
+
+        //if (FindObjectOfType<MoneyController>().moneyCount<4000)
+        //{
+        //    playButton.interactable = false;
+        //    lowMoneyMessage.SetActive(true);
+        //}
     }
 
     public void PlayGame()

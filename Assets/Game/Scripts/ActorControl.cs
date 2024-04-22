@@ -176,6 +176,7 @@ public class ActorControl : MonoBehaviour
         ArrangeHand();
     }
 
+    // ele yatırılan miktar
     public void SetMoney(int value)
     {
         int oldMoneyIn = 0;
@@ -262,10 +263,24 @@ public class ActorControl : MonoBehaviour
             }
         }
 
-        if (gameControl.passCount > 1)
+        // oyuncu sayısına göre bir oyundaki en az oyuncu sayısı. her mod için en az 3 kişi oynamak zorunda. ona göre diğerleri pas diyebilir
+        switch (gameControl.playerCount)
         {
-            pass = false;
-
+            case 6:
+                if (gameControl.passCount > 1)
+                {
+                    pass = false;
+                }
+                break;
+            case 5:
+                if (gameControl.passCount > 0)
+                {
+                    pass = false;
+                }
+                break;
+            case 4:
+                pass = false;
+                break;
         }
 
         if (pass)
@@ -283,11 +298,13 @@ public class ActorControl : MonoBehaviour
         iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
     }
 
+    // var pas panelden gelen playerın kararı sonucu olacaklar
     public void DecidePlayer()
     {
         StartCoroutine(Decide());
     }
 
+    // playerın ve botun var pas kararı sonrası
     IEnumerator Decide()
     {
         gameControl.makeNoise.PlaySFX(14, 0);

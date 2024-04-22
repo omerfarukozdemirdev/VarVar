@@ -13,7 +13,7 @@ public class SplashController : MonoBehaviour
         Application.targetFrameRate = 60;
 
         if (!PlayerPrefs.HasKey("MoneyCount"))
-            PlayerPrefs.SetInt("MoneyCount", 10000);
+            PlayerPrefs.SetInt("MoneyCount", 5000);
 
         if (!PlayerPrefs.HasKey("Music"))
             PlayerPrefs.SetInt("Music", 1);
