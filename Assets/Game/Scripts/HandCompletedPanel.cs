@@ -176,10 +176,10 @@ public class HandCompletedPanel : MonoBehaviour
         cardSprites[cardSprites.Length - 1].gameObject.SetActive(false);
 
         int totalCard = cardSprites.Length;
-        if (!isWin || (isWin && GameManager.Instance.IsMultiplayer()))
-        {
+        //if (!isWin || (isWin && GameManager.Instance.IsMultiplayer()))
+        //{
             totalCard--;
-        }
+        //}
         
         for (int i = 0; i < totalCard; i++)
         {

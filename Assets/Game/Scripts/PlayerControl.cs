@@ -36,7 +36,8 @@ public class PlayerControl : MonoBehaviour
     private GameControl gameControl;
 
     [SerializeField] private float currentTime = 0f;
-    private Coroutine timerCoroutine;
+    public Coroutine timerCoroutine;
+    public bool timerPause;
 
     private void Awake()
     {
@@ -120,6 +121,7 @@ public class PlayerControl : MonoBehaviour
                     }
                     if (inFinishArea)
                     {
+                        timerPause=true;
                         HoldCardInFinishArea();
                         return;
                     }
@@ -481,12 +483,19 @@ public class PlayerControl : MonoBehaviour
 
         while (currentTime < currentActorController.gameControl.timeOutTimer)
         {
-            currentTime += Time.deltaTime;
+            if(timerPause)
+            {
+                yield return null;
+            }
+            else
+            {
+                currentTime += Time.deltaTime;
 
-            //currentActorController.timerCircle.fillAmount = 1f - (currentTime / currentActorController.gameControl.timeOutTimer);
-            currentActorController.timerCircle.fillAmount = Mathf.Lerp(0.7f, 0f, currentTime / currentActorController.gameControl.timeOutTimer);
+                //currentActorController.timerCircle.fillAmount = 1f - (currentTime / currentActorController.gameControl.timeOutTimer);
+                currentActorController.timerCircle.fillAmount = Mathf.Lerp(0.7f, 0f, currentTime / currentActorController.gameControl.timeOutTimer);
 
-            yield return null;
+                yield return null;
+            }
         }
 
         if (currentActorController.player)

@@ -184,6 +184,8 @@ public class GameControl : MonoBehaviour
         passCount = 0;
 
         newDesicitonActors.Clear();
+
+        playerControl.timerPause = false;
     }
 
     public void NewGame()
@@ -947,6 +949,7 @@ public class GameControl : MonoBehaviour
     {
         if (CheckPlayerHandCompleted())
         {
+            playerControl.StopTimer(playerControl.actorControl);
             PlayerHandCompleted();
         }
         else
@@ -984,6 +987,7 @@ public class GameControl : MonoBehaviour
             completeHandWarningPanel.SetActive(false);
             //playerControl.throwedCardArea.SetActive(true);
             playerControl.HoldedCardInFinishAreaToCardsInHand();
+            playerControl.timerPause = false;
         }
     }
 
