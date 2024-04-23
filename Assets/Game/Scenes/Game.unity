@@ -3543,6 +3543,7 @@ MonoBehaviour:
   finishCardArea: {fileID: 1693602076}
   totalMoneyText: {fileID: 832708784}
   currentTime: 0
+  timerPause: 0
 --- !u!4 &385796834
 Transform:
   m_ObjectHideFlags: 0
@@ -18024,6 +18025,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5374562839280972091, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5374562839286963171, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -18088,6 +18093,10 @@ PrefabInstance:
       propertyPath: actorTransform
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5374562839411520405, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5374562839411520491, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: gameControl
       value: 
@@ -18103,6 +18112,10 @@ PrefabInstance:
     - target: {fileID: 5374562839430116446, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5374562839430777310, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5374562839465816525, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_AnchorMax.y
@@ -18412,6 +18425,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 327959628}
+    - target: {fileID: 5374562840148161896, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5374562840148161902, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

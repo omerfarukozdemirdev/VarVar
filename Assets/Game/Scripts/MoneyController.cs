@@ -50,4 +50,10 @@ public class MoneyController : MonoBehaviour
     {
         moneyCountTmp.text = moneyCount.ToString();
     }
+
+    public void IAPBuyChip(int amount)
+    {
+        EarnMoney(amount);
+        SetMoneyCountText();
+    }
 }

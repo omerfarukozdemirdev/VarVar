@@ -47,7 +47,7 @@ public class CoinController : MonoBehaviour
         return true;
     }
 
-    void SetCoinCountText()
+    public void SetCoinCountText()
     {
         coinCountTmp.text = coinCount.ToString();
     }

@@ -19,6 +19,7 @@ public class MenuController : MonoBehaviour
     [SerializeField] private UISwitcher.UISwitcher musicSwitcher;
     [SerializeField] private Button playButton;
     [SerializeField] private GameObject lowMoneyMessage;
+    public GameObject noChipPopup;
 
     private void Awake()
     {

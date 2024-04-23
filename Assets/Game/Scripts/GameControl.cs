@@ -186,6 +186,8 @@ public class GameControl : MonoBehaviour
         newDesicitonActors.Clear();
 
         playerControl.timerPause = false;
+
+        drinkController.drinkButton.SetActive(false);
     }
 
     public void NewGame()
@@ -626,6 +628,9 @@ public class GameControl : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
 
         NextActor();
+
+        drinkController.drinkButton.SetActive(true);
+
     }
 
     public void NextActor()
