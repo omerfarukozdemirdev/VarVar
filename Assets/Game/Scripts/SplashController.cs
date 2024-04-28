@@ -16,7 +16,7 @@ public class SplashController : MonoBehaviour
             PlayerPrefs.SetInt("MoneyCount", 5000);
 
         if (!PlayerPrefs.HasKey("Music"))
-            PlayerPrefs.SetInt("Music", 1);
+            PlayerPrefs.SetFloat("Music", 0.1f);
 
         if (!PlayerPrefs.HasKey("Sound"))
             PlayerPrefs.SetInt("Sound", 1);

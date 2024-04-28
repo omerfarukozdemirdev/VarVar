@@ -136,10 +136,10 @@ public class MenuController : MonoBehaviour
 
         if (!PlayerPrefs.HasKey("Music"))
         {
-            PlayerPrefs.SetInt("Music", 1);
+            PlayerPrefs.SetFloat("Music", 0.1f);
         }
 
-        musicSwitcher.isOn = (PlayerPrefs.GetInt("Music") == 1);
+        musicSwitcher.isOn = (PlayerPrefs.GetFloat("Music") == 0.1f);
     }
 
     public void SetSoundSwitch()
@@ -150,7 +150,7 @@ public class MenuController : MonoBehaviour
     }
     public void SetMusicSwitch()
     {
-        PlayerPrefs.SetInt("Music", musicSwitcher.isOn ? 1 : 0);
+        PlayerPrefs.SetFloat("Music", musicSwitcher.isOn ? 0.1f : 0);
         audioManager.MusicOnOff(musicSwitcher.isOn);
     }
 }

@@ -5,26 +5,26 @@ using UnityEngine.Purchasing;
 
 public class IAPManager : MonoBehaviour
 {
-    private string chip5000 = "com.company.varvar.chip5000";
-    private string chip10000 = "com.company.varvar.chip10000";
-    private string chip15000 = "com.company.varvar.chip15000";
+    private string product1 = "com.gamebro.varvar.product1";
+    private string product2 = "com.gamebro.varvar.product2";
+    private string product3 = "com.gamebro.varvar.product3";
 
     
     public void OnPurchaseComplete(Product product)
     {
-        if(product.definition.id==chip5000)
+        if(product.definition.id== product1)
         {
             Debug.Log("5000");
             GetReward(5000);
         }
         
-        if(product.definition.id==chip10000)
+        if(product.definition.id== product2)
         {
             Debug.Log("10000");
             GetReward(10000);
         }
 
-        if (product.definition.id == chip15000)
+        if (product.definition.id == product3)
         {
             Debug.Log("15000");
             GetReward(15000);

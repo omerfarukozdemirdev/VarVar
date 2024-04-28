@@ -24,7 +24,7 @@ public class MakeNoise : MonoBehaviour {
             audiotagss[i] = sources[i].GetComponent<AudioTag>();
         }
 
-        MusicOnOff((PlayerPrefs.GetInt("Music") == 1));
+        MusicOnOff((PlayerPrefs.GetFloat("Music") == 0.1f));
         SoundOnOff((PlayerPrefs.GetInt("Sound") == 1));
 
     }
