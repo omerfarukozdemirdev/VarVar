@@ -3248,7 +3248,7 @@ MonoBehaviour:
   lobbyUIManager: {fileID: 5374562838557262380}
   disconnetPopup: {fileID: 5374562838557262382}
   disconnetPopupNickName: {fileID: 5374562838557262381}
-  TestMode: 1
+  TestMode: 0
   networkHandler: {fileID: 0}
   myNetworkPlayer: {fileID: 0}
   networkGlobals: {fileID: 0}
@@ -18517,10 +18517,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5374562838410548796, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_Text
+      value: Play Next Tour
+      objectReference: {fileID: 0}
     - target: {fileID: 5374562838420296366, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 385796833}
+    - target: {fileID: 5374562838422417058, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_Text
+      value: 'Drag
+
+        to
+
+        Finish'
+      objectReference: {fileID: 0}
     - target: {fileID: 5374562838440628843, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -18540,6 +18552,14 @@ PrefabInstance:
     - target: {fileID: 5374562838450719697, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5374562838491581019, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_Text
+      value: 'Drag
+
+        to
+
+        Throw'
       objectReference: {fileID: 0}
     - target: {fileID: 5374562838550391162, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -18769,6 +18789,10 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 385796833}
+    - target: {fileID: 5374562838919009668, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_Text
+      value: Your pairs are correct?
+      objectReference: {fileID: 0}
     - target: {fileID: 5374562838949109773, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -18904,6 +18928,10 @@ PrefabInstance:
     - target: {fileID: 5374562839235915999, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5374562839239689310, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_Text
+      value: New Game
       objectReference: {fileID: 0}
     - target: {fileID: 5374562839278376368, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_AnchorMax.y
@@ -19064,6 +19092,10 @@ PrefabInstance:
     - target: {fileID: 5374562839502528188, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5374562839544686107, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_Text
+      value: Make sure your pairs correctly to finish the game!
       objectReference: {fileID: 0}
     - target: {fileID: 5374562839547468182, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_AnchorMax.y
@@ -19484,6 +19516,10 @@ PrefabInstance:
     - target: {fileID: 5374562840315129154, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5374562840350346173, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5374562840414850347, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
