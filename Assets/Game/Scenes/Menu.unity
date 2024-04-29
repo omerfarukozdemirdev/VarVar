@@ -1817,7 +1817,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7106706371290363145, guid: 7db05c01fd59470478240ec34f8f5c5b, type: 3}
       propertyPath: amount
-      value: 15000
+      value: 12000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2030,11 +2030,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7148989875244347007, guid: 627ce5c6954020f4d95bb664511ac0bd, type: 3}
       propertyPath: m_text
-      value: $ 6,99
+      value: $ 11,99
       objectReference: {fileID: 0}
     - target: {fileID: 8834977585925833339, guid: 627ce5c6954020f4d95bb664511ac0bd, type: 3}
       propertyPath: m_text
-      value: 15.000 Chip
+      value: 12.500 Chip
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7122,7 +7122,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7106706371290363145, guid: 7db05c01fd59470478240ec34f8f5c5b, type: 3}
       propertyPath: amount
-      value: 10000
+      value: 7000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -7940,11 +7940,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7148989875244347007, guid: 627ce5c6954020f4d95bb664511ac0bd, type: 3}
       propertyPath: m_text
-      value: $ 4,99
+      value: $ 5,99
       objectReference: {fileID: 0}
     - target: {fileID: 8834977585925833339, guid: 627ce5c6954020f4d95bb664511ac0bd, type: 3}
       propertyPath: m_text
-      value: 10.000 Chip
+      value: 5.000 Chip
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12317,6 +12317,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8834977585925833339, guid: 627ce5c6954020f4d95bb664511ac0bd, type: 3}
+      propertyPath: m_text
+      value: 2000 Chip
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12985,7 +12989,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7106706371290363145, guid: 7db05c01fd59470478240ec34f8f5c5b, type: 3}
       propertyPath: amount
-      value: 5000
+      value: 3000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

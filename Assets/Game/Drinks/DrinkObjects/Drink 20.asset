@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Drink 20
   Icon: {fileID: 21300000, guid: e73c480aec89f4d5b8d17a5e1a70c90b, type: 3}
-  Price: 250
+  Price: 2000
