@@ -5,9 +5,9 @@ using UnityEngine.Purchasing;
 
 public class IAPManager : MonoBehaviour
 {
-    private string product1 = "com.gamebro.varvar.product1";
-    private string product2 = "com.gamebro.varvar.product2";
-    private string product3 = "com.gamebro.varvar.product3";
+    private string product1 = "com.varvar.game.product1";
+    private string product2 = "com.varvar.game.product2";
+    private string product3 = "com.varvar.game.product3";
 
 
     public void OnPurchaseComplete(Product product)

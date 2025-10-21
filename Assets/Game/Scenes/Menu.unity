@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1914,7 +1913,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2769849765360763866, guid: 627ce5c6954020f4d95bb664511ac0bd, type: 3}
       propertyPath: productId
-      value: com.gamebro.varvar.product3
+      value: com.varvar.game.product3
       objectReference: {fileID: 0}
     - target: {fileID: 2769849765360763866, guid: 627ce5c6954020f4d95bb664511ac0bd, type: 3}
       propertyPath: onPurchaseComplete.m_PersistentCalls.m_Calls.Array.size
@@ -4557,7 +4556,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &924002723
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5114,12 +5113,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!224 &974232930 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3043129439015418205, guid: 7db05c01fd59470478240ec34f8f5c5b, type: 3}
@@ -7824,7 +7823,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2769849765360763866, guid: 627ce5c6954020f4d95bb664511ac0bd, type: 3}
       propertyPath: productId
-      value: com.gamebro.varvar.product2
+      value: com.varvar.game.product2
       objectReference: {fileID: 0}
     - target: {fileID: 2769849765360763866, guid: 627ce5c6954020f4d95bb664511ac0bd, type: 3}
       propertyPath: onPurchaseComplete.m_PersistentCalls.m_Calls.Array.size
@@ -12207,7 +12206,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2769849765360763866, guid: 627ce5c6954020f4d95bb664511ac0bd, type: 3}
       propertyPath: productId
-      value: com.gamebro.varvar.product1
+      value: com.varvar.game.product1
       objectReference: {fileID: 0}
     - target: {fileID: 2769849765360763866, guid: 627ce5c6954020f4d95bb664511ac0bd, type: 3}
       propertyPath: onPurchaseComplete.m_PersistentCalls.m_Calls.Array.size
