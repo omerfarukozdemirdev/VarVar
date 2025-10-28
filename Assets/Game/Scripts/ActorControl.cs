@@ -39,11 +39,14 @@ public class ActorControl : MonoBehaviour
     public int totalBetMoney;
     public int totalCoins;
     public GameObject drink;
+    public GameObject emoji;
 
     private NameGenerator nameGenerator;
     public Gender gender;
 
     public Image timerCircle;
+
+    private Coroutine emojiCoroutine;
 
     private void Awake()
     {
@@ -402,6 +405,7 @@ public class ActorControl : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
 
+        gameControl.StopAllActorEmojies();
         gameControl.makeNoise.PlaySFX(18, 0);
         gameControl.makeNoise.PlaySFX(25, 0);
 
@@ -412,7 +416,6 @@ public class ActorControl : MonoBehaviour
         gameControl.coinController.EarnCoin(100);
 
         FindObjectOfType<HandCompletedPanel>(true).OpenPanel(this);
-
     }
 
     IEnumerator PickCard()
@@ -490,6 +493,54 @@ public class ActorControl : MonoBehaviour
             }
         }
     }
+
+    public void StartEmojiCoroutine()
+    {
+        if (emojiCoroutine == null && !player)
+        {
+            emojiCoroutine = StartCoroutine(SendEmojiCoroutine());
+        }
+    }
+
+    public void StopEmojiCoroutine()
+    {
+        if (emojiCoroutine != null)
+        {
+            StopCoroutine(emojiCoroutine);
+            emojiCoroutine = null;
+
+            var emojiContent = emoji.transform.GetChild(0);
+            iTween.Stop(emojiContent.gameObject);
+            emojiContent.localScale = Vector3.zero;
+        }
+    }
+
+    public IEnumerator SendEmojiCoroutine()
+    {
+        yield return new WaitForSeconds(Random.Range(0, 10));
+
+        while (true)
+        {
+            SendEmoji();
+
+            yield return new WaitForSeconds(Random.Range(7, 14));
+        }
+    }
+
+    void SendEmoji()
+    {
+        if (Random.Range(0, 2) == 0)
+            return;
+
+        var emojiContent = emoji.transform.GetChild(0);
+
+        iTween.Stop(emojiContent.gameObject);
+
+        emojiContent.GetComponent<Image>().sprite = gameControl.emojiController.emojis[Random.Range(0, gameControl.emojiController.emojis.Length)];
+        iTween.ScaleTo(emojiContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
+        iTween.ScaleTo(emojiContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce, "delay", 5f));
+    }
+
 }
 
 public enum Gender

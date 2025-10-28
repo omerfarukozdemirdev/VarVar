@@ -31,6 +31,7 @@ public class PlayerControl : MonoBehaviour
     private Transform cardPicked = null;
     private float cardPickOffsetX;
 
+    public Card lastTakedCardFromThrowed;
     private Card holdedCardInFinishArea;
 
     private GameControl gameControl;
@@ -55,6 +56,8 @@ public class PlayerControl : MonoBehaviour
     public void ResetValues()
     {
         cardPicked = null;
+        lastTakedCardFromThrowed = null;
+
         DisableUICards();
 
         Set();
@@ -111,9 +114,13 @@ public class PlayerControl : MonoBehaviour
 
             if (Input.GetMouseButtonUp(0))
             {
-                if (throwedCardArea.activeSelf && !gameControl.completeHandWarningPanel.activeSelf && cardPicked.GetComponentInChildren<CardTypeHolder>().cardType.suit != CardSuit.Joker)
+                var isCardAreasActive = throwedCardArea.activeSelf || finishCardArea.activeSelf;
+                if (isCardAreasActive && !gameControl.completeHandWarningPanel.activeSelf && cardPicked.GetComponentInChildren<CardTypeHolder>().cardType.suit != CardSuit.Joker)
                 {
-                    if (inThrowedArea)
+                    var isCardLastTakedFromThrowed = lastTakedCardFromThrowed != null && cardPicked.GetComponentInChildren<CardTypeHolder>().cardType.suit == lastTakedCardFromThrowed.suit
+                        && cardPicked.GetComponentInChildren<CardTypeHolder>().cardType.value == lastTakedCardFromThrowed.value;
+
+                    if (inThrowedArea && !isCardLastTakedFromThrowed)
                     {
                         ThrowCard();
                         StopTimer(actorControl);
@@ -185,10 +192,16 @@ public class PlayerControl : MonoBehaviour
     void ThrowedFinishHandAreaEnable()
     {
         throwedCardArea.SetActive(false);
-        throwedCardArea.SetActive(cardsInLastSlot.activeSelf && cardPicked.GetComponentInChildren<CardTypeHolder>().cardType.suit != CardSuit.Joker);
+
+        var isThrowedCardAreaActive = cardsInLastSlot.activeSelf && cardPicked.GetComponentInChildren<CardTypeHolder>().cardType.suit != CardSuit.Joker;
+
+        var isCardLastTakedFromThrowed = lastTakedCardFromThrowed != null && cardPicked.GetComponentInChildren<CardTypeHolder>().cardType.suit == lastTakedCardFromThrowed.suit
+                       && cardPicked.GetComponentInChildren<CardTypeHolder>().cardType.value == lastTakedCardFromThrowed.value;
+
+        throwedCardArea.SetActive(isThrowedCardAreaActive && !isCardLastTakedFromThrowed);
 
         finishCardArea.SetActive(false);
-        finishCardArea.SetActive(throwedCardArea.activeSelf);
+        finishCardArea.SetActive(isThrowedCardAreaActive);
     }
 
     public void CardPicked(Transform pickedCard)
@@ -287,6 +300,7 @@ public class PlayerControl : MonoBehaviour
     void ThrowCard()
     {
         //gameControl.completeHandBtn.SetActive(false);
+        lastTakedCardFromThrowed = null;
         throwedCardArea.SetActive(false);
         finishCardArea.SetActive(false);
 
@@ -563,7 +577,7 @@ public class PlayerControl : MonoBehaviour
 
         cardsInLastSlot.SetActive(false);
         cardIns[cardIns.Length - 1].gameObject.SetActive(false);
-
+        lastTakedCardFromThrowed = null;
         ChangeGridSpacing(gridSpacingCollaps, gridPaddingCollaps);
     }
 

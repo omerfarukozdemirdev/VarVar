@@ -63,6 +63,8 @@ public class GameControl : MonoBehaviour
     public CoinController coinController;
     public DrinkController drinkController;
     public int drinkCounter;
+    public EmojiController emojiController;
+
     [SerializeField] GameObject statisticPanel;
 
     public LobbyUIManager lobbyUIManager;
@@ -188,6 +190,7 @@ public class GameControl : MonoBehaviour
         playerControl.timerPause = false;
 
         drinkController.drinkButton.SetActive(false);
+        emojiController.emojiButton.SetActive(false);
     }
 
     public void NewGame()
@@ -630,7 +633,15 @@ public class GameControl : MonoBehaviour
         NextActor();
 
         drinkController.drinkButton.SetActive(true);
+        emojiController.emojiButton.SetActive(true);
 
+        actorControls.ForEach(x =>
+        {
+            if (!x.player)
+            {
+                x.StartEmojiCoroutine();
+            }
+        });
     }
 
     public void NextActor()
@@ -639,6 +650,8 @@ public class GameControl : MonoBehaviour
 
         if (playingActors[playingInd].player)
         {
+            makeNoise.PlaySFX(31, 0);
+
             DisableEnableTakeCardBtns(true);
             iTween.ScaleTo(playingActors[playingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
 
@@ -793,7 +806,7 @@ public class GameControl : MonoBehaviour
         lastThrowedCard.SetActive(false);
 
         playerControl.TakeCard(cardType);
-
+        playerControl.lastTakedCardFromThrowed = cardType;
         if (GameManager.Instance.IsMultiplayer())
             myNetworkPlayer.RPC_TakeCard(0, (byte)myNetworkPlayer.playInd);
     }
@@ -934,6 +947,8 @@ public class GameControl : MonoBehaviour
 
     public void OpenHandCompletedPanel(ActorControl actorControl)
     {
+        StopAllActorEmojies();
+
         makeNoise.PlaySFX(18, 0);
         makeNoise.PlaySFX(25, 0);
 
@@ -948,6 +963,14 @@ public class GameControl : MonoBehaviour
         actorControl.totalCoins += 100;
         actorControl.winCounter++;
         actorControl.totalWinMoney += rewardMoney;
+    }
+
+    public void StopAllActorEmojies()
+    {
+        actorControls.ForEach(x =>
+        {
+            x.StopEmojiCoroutine();
+        });
     }
 
     public void OpenCompleteHandWarningPanel()
