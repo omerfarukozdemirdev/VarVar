@@ -1,4 +1,3 @@
-using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,15 +66,10 @@ public class GameControl : MonoBehaviour
 
     [SerializeField] GameObject statisticPanel;
 
-    public LobbyUIManager lobbyUIManager;
     public GameObject disconnetPopup;
     public TextMeshProUGUI disconnetPopupNickName;
 
     public bool TestMode;
-
-    public NetworkHandler networkHandler;
-    public NetworkPlayer myNetworkPlayer;
-    public NetworkGlobals networkGlobals;
 
     public float timeOutTimer; //oyuncunun eli oynaması için timer
     public float betTimer; // oyuncunun bet yapması için timer
@@ -116,8 +110,6 @@ public class GameControl : MonoBehaviour
         gameTourText.text = gameCounter.ToString() + " / " + gameLimit.ToString();
 
         InitTimers();
-
-        lobbyUIManager.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -125,11 +117,6 @@ public class GameControl : MonoBehaviour
         if (GameManager.Instance.IsMultiplayer())
         {
             GameManager.Instance.gameStat = GameManager.GameStat.lobby;
-
-            networkHandler = FindObjectOfType<NetworkHandler>();
-            //networkHandler.StartQuickGame();
-
-            lobbyUIManager.gameObject.SetActive(true);
         }
         else
         {
@@ -206,9 +193,6 @@ public class GameControl : MonoBehaviour
 
     public void Menu()
     {
-        if (GameManager.Instance.IsMultiplayer())
-            networkHandler.Disconnect();
-
         FindObjectOfType<MakeNoise>().PlaySFX(26, 0);
         gameConfig.cardDealerInd = -1;
         UnityEngine.SceneManagement.SceneManager.LoadScene(2);
@@ -216,12 +200,6 @@ public class GameControl : MonoBehaviour
 
     public void NextTour()
     {
-        if (GameManager.Instance.IsMultiplayer())
-        {
-            myNetworkPlayer.RPC_NextTour();
-            return;
-        }
-
         NextTouring();
         Invoke("StartGame", 1f);
     }
@@ -660,29 +638,9 @@ public class GameControl : MonoBehaviour
         }
         else
         {
-            if (GameManager.Instance.IsMultiplayer())
-            {
-                playingActors[playingInd].BlinkAvatar();
-
-                if (playingActors[playingInd].onlineBot)
-                {
-                    //playingActors[playingInd].gameControl.playerControl.StartTimer(playingActors[playingInd]);
-                    //playingActors[playingInd].gameControl.playerControl.TimeOutPickCard(playingActors[playingInd]);
-                    //playingActors[playingInd].gameControl.playerControl.TimeOutThrowCard(playingActors[playingInd]);
-                    //playingActors[playingInd].player = false;
-                    //StartCoroutine(OnlineBotPlayCoroutine());
-
-                    if (networkHandler.isHost)
-                    {
-
-                    }
-                }
-            }
-            else
-            {
-                playingActors[playingInd].PlayCard();
-            }
+            playingActors[playingInd].PlayCard();
         }
+
         playingInd++;
         if (playingInd > playingActors.Count - 1)
             playingInd = 0;
@@ -767,14 +725,7 @@ public class GameControl : MonoBehaviour
 
     public void ThrowCard(Card cardType, ActorControl actorControl)
     {
-        if (GameManager.Instance.IsMultiplayer())
-        {
-            myNetworkPlayer.RPC_ThrowCard((byte)NetworkCardConverter.CardToInt(cardType), (byte)myNetworkPlayer.playInd);
-        }
-        else
-        {
-            ThrowingCard(cardType, actorControl);
-        }
+        ThrowingCard(cardType, actorControl);
     }
 
     public void ThrowingCard(Card cardType, ActorControl actorControl)
@@ -807,8 +758,6 @@ public class GameControl : MonoBehaviour
 
         playerControl.TakeCard(cardType);
         playerControl.lastTakedCardFromThrowed = cardType;
-        if (GameManager.Instance.IsMultiplayer())
-            myNetworkPlayer.RPC_TakeCard(0, (byte)myNetworkPlayer.playInd);
     }
 
     public void TakeCardFromDeck()
@@ -825,30 +774,10 @@ public class GameControl : MonoBehaviour
 
 
         CheckDeckCardCount();
-
-        if (GameManager.Instance.IsMultiplayer())
-            myNetworkPlayer.RPC_TakeCard(1, (byte)myNetworkPlayer.playInd);
     }
 
     public void CheckDeckCardCount()
     {
-        if (GameManager.Instance.IsMultiplayer())
-        {
-            if (networkHandler.isHost)
-            {
-                if (deck.Count == 0)
-                {
-                    deck = new List<Card>(throwedCards);
-                    ShuffleDeck();
-
-                    //networkGlobals.UpdateNetworkDeckCards();
-                    //networkGlobals.RPC_DeckFromThrowed()
-                    networkGlobals.UpdateNetworkDeckCardsFromThrowed();
-                }
-            }
-            return;
-        }
-
         if (deck.Count == 0)
         {
             deck = new List<Card>(throwedCards);
@@ -910,15 +839,8 @@ public class GameControl : MonoBehaviour
                 break;
         }
 
-        if (GameManager.Instance.IsMultiplayer())
-        {
-            myNetworkPlayer.RPC_DecidePlayer((byte)playerControl.actorControl.pass.GetHashCode(), (byte)playerControl.actorControl.betUp.GetHashCode(), (byte)myNetworkPlayer.playInd);
-        }
-        else
-        {
-            playerControl.actorControl.DecidePlayer();
-            desicionInd++;
-        }
+        playerControl.actorControl.DecidePlayer();
+        desicionInd++;
 
         StopTimer();
         desicitonPanel.SetActive(false);
@@ -935,14 +857,7 @@ public class GameControl : MonoBehaviour
 
     void PlayerHandCompleted()
     {
-        if (GameManager.Instance.IsMultiplayer())
-        {
-            myNetworkPlayer.UpdateNetworkCompletedHandCards();
-        }
-        else
-        {
-            OpenHandCompletedPanel(playerControl.actorControl);
-        }
+        OpenHandCompletedPanel(playerControl.actorControl);
     }
 
     public void OpenHandCompletedPanel(ActorControl actorControl)
@@ -1045,102 +960,6 @@ public class GameControl : MonoBehaviour
         //playerWinPanel.SetActive(false);
         FindObjectOfType<HandCompletedPanel>(true).OpenPanel(playerControl.actorControl);
         makeNoise.PlaySFX(27, 0);
-    }
-
-
-    // Multiplayer
-    public void UpdateLobbyPlayerNames()
-    {
-        //NetworkPlayer[] networkPlayers = FindObjectsOfType<NetworkPlayer>();
-
-        //lobbyUIManager.SetPlayerCountText(networkPlayers.Length, networkHandler.maxPlayer);
-
-        //lobbyUIManager.ResetPlayerNames();
-        //for (int i = 0; i < networkPlayers.Length; i++)
-        //    lobbyUIManager.ActivatePlayerName(i, networkPlayers[i].nickName.ToString());
-
-        NetworkRunner networkRunner = FindObjectOfType<NetworkRunner>();
-        lobbyUIManager.SetPlayerCountText(networkRunner.ActivePlayers.Count(), networkHandler.maxPlayer);
-
-        lobbyUIManager.ResetPlayerNames();
-
-        var index = 0;
-        foreach (PlayerRef playerRef in networkRunner.ActivePlayers)
-        {
-            lobbyUIManager.ActivatePlayerName(index, networkRunner.GetPlayerObject(playerRef).GetComponent<NetworkPlayer>().nickName.ToString());
-            index++;
-        }
-    }
-
-    public int GetNetworkPlayerCount()
-    {
-        return FindObjectsOfType<NetworkPlayer>().Length;
-    }
-
-    public void SetMultiplayerActors()
-    {
-        gameLimit = networkHandler.maxPlayer;
-
-        for (int i = 0; i < actorControls.Count; i++)
-            actorControls[i].gameObject.SetActive(false);
-
-        List<ActorControl> AC = new List<ActorControl>();
-        for (int i = 0; i < gameLimit; i++)
-        {
-            AC.Add(actorControls[i]);
-            actorControls[i].gameObject.SetActive(true);
-        }
-        actorControls = AC;
-
-        //for (int i = 0; i < actorControls.Count; i++)
-        //{
-        //    actorControls[i].actorName = networkGlobals.orderedNetworkPlayers[i].nickName.ToString();
-        //    actorControls[i].SetNameText(actorControls[i].actorName);
-        //}
-
-        var index = 0;
-        foreach (PlayerRef playerRef in networkGlobals.Runner.ActivePlayers)
-        {
-            actorControls[index].actorName = networkGlobals.Runner.GetPlayerObject(playerRef).GetComponent<NetworkPlayer>().nickName.ToString();
-            actorControls[index].SetNameText(actorControls[index].actorName);
-            index++;
-        }
-    }
-
-    public void DealCardsToMultiplayerActors()
-    {
-        for (int i = 0; i < actorControls.Count; i++)
-        {
-            List<Card> cards = new List<Card>();
-
-            for (int c = 0; c < 9; c++)
-            {
-                cards.Add(deck[0]);
-                deck.Remove(deck[0]);
-            }
-
-            actorControls[i].cardsInHand = new List<Card>(cards);
-            actorControls[i].ArrangeHand();
-        }
-    }
-
-    public void OpenDisconnetPopup(PlayerRef playerRef)
-    {
-        disconnetPopupNickName.text = actorControls[playerRef].actorName;
-        disconnetPopup.SetActive(true);
-    }
-
-    public void SetOnlineBot(PlayerRef playerRef)
-    {
-        actorControls[playerRef].onlineBot = true;
-        actorControls[playerRef].SetNameText("BOT");
-    }
-
-    IEnumerator OnlineBotPlayCoroutine()
-    {
-        playingActors[playingInd].gameControl.PickCard(playingActors[playingInd], true, true);
-        yield return new WaitForSeconds(0.5f);
-        playingActors[playingInd].gameControl.ThrowingCard(playingActors[playingInd].cardsInHand.Last(), playingActors[playingInd]);
     }
 
     #region Bet Timer region

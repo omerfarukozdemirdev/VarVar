@@ -111,19 +111,6 @@ public class HandCompletedPanel : MonoBehaviour
             cardSprites[i].gameObject.SetActive(true);
         }
 
-        if (GameManager.Instance.IsMultiplayer())
-        {
-            nextButton.SetActive(false);
-
-            if (!gameControl.networkHandler.isHost)
-            {
-                //nextButton.SetActive(false);
-
-                // Reset Network Variables
-                gameControl.networkGlobals.gotDeck = false;
-            }
-        }
-
         panelBG.SetActive(true);
     }
 

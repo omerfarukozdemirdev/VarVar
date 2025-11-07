@@ -603,9 +603,6 @@ public class PlayerControl : MonoBehaviour
         currentActorController.gameControl.deck.Remove(gameControl.deck[0]);
 
         currentActorController.gameControl.CheckDeckCardCount();
-
-        if (GameManager.Instance.IsMultiplayer())
-            currentActorController.gameControl.myNetworkPlayer.RPC_TakeCard(1, (byte)currentActorController.gameControl.myNetworkPlayer.playInd);
     }
 
     // süre bittiğinde kartların raycasttarget ı kapatılıyor ve kart atıldığında açılıyor. böylece oto kart çekilip oto kart atıldığı anda 
