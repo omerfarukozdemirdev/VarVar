@@ -61,15 +61,6 @@ public class MenuController : MonoBehaviour
 
     public void PlayGame()
     {
-        GameManager.Instance.gameMode = GameManager.GameMode.Single;
-
-        GoToPlayGame();
-    }
-
-    public void PlayMultiplayerGame()
-    {
-        GameManager.Instance.gameMode = GameManager.GameMode.Multiplayer;
-
         GoToPlayGame();
     }
 

@@ -12,13 +12,6 @@ public class GameManager : MonoBehaviour
         handCompleted
     }
 
-    public enum GameMode
-    {
-        Single,
-        Multiplayer
-    }
-
-    public GameMode gameMode;
     public GameStat gameStat;
 
     void Awake()
@@ -39,10 +32,4 @@ public class GameManager : MonoBehaviour
         // Disable screen dimming
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
-
-    public bool IsMultiplayer()
-    {
-        return gameMode == GameMode.Multiplayer;
-    }
-
 }

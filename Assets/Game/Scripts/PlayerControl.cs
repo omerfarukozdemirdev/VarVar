@@ -46,8 +46,7 @@ public class PlayerControl : MonoBehaviour
         throwedCardAreaAnimator = throwedCardArea.GetComponent<Animator>();
         finishCardAreaAnimator = finishCardArea.GetComponent<Animator>();
 
-        if (!GameManager.Instance.IsMultiplayer())
-            actorControl.player = true;
+        actorControl.player = true;
 
         actorControl.totalCoins = PlayerPrefs.GetInt("CoinCount");
         DisableUICards();
@@ -122,8 +121,8 @@ public class PlayerControl : MonoBehaviour
 
                     if (inThrowedArea && !isCardLastTakedFromThrowed)
                     {
-                        ThrowCard();
                         StopTimer(actorControl);
+                        ThrowCard();
                         return;
                     }
                     if (inFinishArea)
@@ -292,7 +291,10 @@ public class PlayerControl : MonoBehaviour
             }
             else
             {
-                ThrowedFinishHandAreaEnable();
+                if (timerCoroutine != null)
+                {
+                    ThrowedFinishHandAreaEnable();
+                }
             }
         }
     }
@@ -458,6 +460,8 @@ public class PlayerControl : MonoBehaviour
     // eğer bu süre içerisinde kart çekmiş ve atmamış ise sadece oto kart atılır.
     IEnumerator TimeEndCoroutine(ActorControl currentActorController)
     {
+        yield return new WaitForSeconds(0.5f);
+
         iTween.ScaleTo(currentActorController.transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
 
         if (!currentActorController.gameControl.playerControl.cardsInLastSlot.gameObject.activeSelf)
@@ -467,20 +471,30 @@ public class PlayerControl : MonoBehaviour
             TimeOutPickCard(currentActorController);
         }
 
-        yield return new WaitForSeconds(Random.Range(0.6f, 1.1f));
+        yield return new WaitForSeconds(1f);
 
-        currentActorController.gameControl.playerControl.TimeOutThrowCard(currentActorController);
+        if (currentActorController.gameControl.playerControl.actorControl.cardsInHand.Count == 11)
+        {
+            currentActorController.gameControl.playerControl.TimeOutThrowCard(currentActorController);
+        }
+
+        SetControllableCards(true);
     }
 
     //süre bittiğinde
     void TimeEnd(ActorControl currentActorController)
     {
+        if (cardPicked != null)
+            CardReleased();
+        throwedCardArea.SetActive(false);
+        finishCardArea.SetActive(false);
+        gameControl.DisableEnableTakeCardBtns(false);
         SetControllableCards(false);
-        StartCoroutine(TimeEndCoroutine(currentActorController));
         currentTime = 0;
         actorControl.timerCircle.gameObject.SetActive(false);
         //gameControl.NextPlayingInd();
-        SetControllableCards(true);
+        //SetControllableCards(true);
+        StartCoroutine(TimeEndCoroutine(currentActorController));
     }
 
     // süre başladığında
@@ -531,9 +545,12 @@ public class PlayerControl : MonoBehaviour
             return;
 
         StopCoroutine(timerCoroutine);
+        timerCoroutine = null;
+        currentTime = 0;
+
         currentActorController.timerCircle.gameObject.SetActive(false);
         currentActorController.gameControl.DisableEnableTakeCardBtns(false);
-        SetControllableCards(true);
+        //SetControllableCards(true);
         currentActorController.gameControl.playerControl.throwedCardArea.SetActive(false);
         currentActorController.gameControl.playerControl.finishCardArea.SetActive(false);
     }
@@ -543,31 +560,25 @@ public class PlayerControl : MonoBehaviour
         throwedCardArea.SetActive(false);
         finishCardArea.SetActive(false);
 
-        if (cardsInLastSlot.GetComponentInChildren<CardTypeHolder>().cardType.suit != CardSuit.Joker)
+        int ind = 0;
+
+        Transform cardThrowed = null;
+
+        for (int i = cardIns.Length-1; i >= 0; i--)
         {
-            for (int i = 0; i < currentActorController.cardsInHand.Count; i++)
+            Card card = cardIns[i].GetComponentInChildren<CardTypeHolder>().cardType;
+            if (card.suit != CardSuit.Joker)
             {
-                if (cardsInLastSlot.GetComponentInChildren<CardTypeHolder>().cardType == currentActorController.cardsInHand[i])
-                {
-                    gameControl.ThrowCard(currentActorController.cardsInHand[i], currentActorController);
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < currentActorController.cardsInHand.Count; i++)
-            {
-                if (cardIns[cardIns.Length - 2].GetComponentInChildren<CardTypeHolder>().cardType == currentActorController.cardsInHand[i])
-                {
-                    currentActorController.gameControl.ThrowCard(currentActorController.cardsInHand[i], currentActorController);
-                    cardIns[cardIns.Length - 2].GetComponentInChildren<CardTypeHolder>().cardType.suit =
-                        CardSuit.Joker;
-                    cardIns[cardIns.Length - 2].GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = CardSpriteConverter.GetCardSpriteInd(cardsInLastSlot.GetComponentInChildren<CardTypeHolder>().cardType, gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
-                }
+                if (lastTakedCardFromThrowed != null && card.suit == lastTakedCardFromThrowed.suit && card.value == lastTakedCardFromThrowed.value)
+                    continue;
+
+                ind = i;
+                cardThrowed = cardIns[i].GetChild(0).GetChild(0);
+                gameControl.ThrowCard(card, actorControl);
+                break;
             }
         }
 
-        int ind = 10;
         for (int i = ind; i < cardIns.Length - 1; i++)
         {
             GameObject c = cardIns[i + 1].GetChild(0).GetChild(0).gameObject;
@@ -577,6 +588,10 @@ public class PlayerControl : MonoBehaviour
 
         cardsInLastSlot.SetActive(false);
         cardIns[cardIns.Length - 1].gameObject.SetActive(false);
+        cardThrowed.SetParent(cardIns[cardIns.Length - 1].GetChild(0));
+        cardThrowed.transform.localPosition = Vector3.zero;
+        cardThrowed.transform.localEulerAngles = Vector3.zero;
+
         lastTakedCardFromThrowed = null;
         ChangeGridSpacing(gridSpacingCollaps, gridPaddingCollaps);
     }

@@ -253,9 +253,6 @@ public class TableAnimationControl : MonoBehaviour
             throwedCard.transform.SetParent(actorControl.actorTransform);
             throwedCard.transform.localPosition = new Vector3(0, .1f, 0);
             throwedCard.transform.localScale = Vector3.one * .5f;
-
-            if (GameManager.Instance.IsMultiplayer())
-                actorControl.DefaultAvatar();
         }
 
         throwedCard.transform.SetParent(throwedCardsPos);

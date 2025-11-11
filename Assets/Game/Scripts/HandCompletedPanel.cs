@@ -74,33 +74,13 @@ public class HandCompletedPanel : MonoBehaviour
 
         cards = new List<Card>();
 
-        if (GameManager.Instance.IsMultiplayer())
+        if (actorControl.player)
         {
-            //NetworkPlayer networkPlayer = new NetworkPlayer();
-            //for(int i = 0; i < gameControl.networkGlobals.orderedNetworkPlayers.Count; i++)
-            //{
-            //    if (gameControl.networkGlobals.orderedNetworkPlayers[i].completedHandCardsByte.Count > 0)
-            //    {
-            //        networkPlayer = gameControl.networkGlobals.orderedNetworkPlayers[i];
-            //        break;
-            //    }
-            //}
-
-            //for (int i = 0; i < networkPlayer.completedHandCardsByte.Count; i++)
-            //    cards.Add(NetworkCardConverter.IntToCard((int)networkPlayer.completedHandCardsByte[i]));
-
-            cards = actorControl.cardsInHand;
+            cards = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
         }
         else
         {
-            if (actorControl.player)
-            {
-                cards = new List<Card>(gameControl.playerControl.GetUIOrderedCards());
-            }
-            else
-            {
-                cards = actorControl.cardsInHand;
-            }
+            cards = actorControl.cardsInHand;
         }
 
         //for (int i = 0; i < 11; i++)

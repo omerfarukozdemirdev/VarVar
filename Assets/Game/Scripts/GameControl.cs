@@ -114,14 +114,7 @@ public class GameControl : MonoBehaviour
 
     private void Start()
     {
-        if (GameManager.Instance.IsMultiplayer())
-        {
-            GameManager.Instance.gameStat = GameManager.GameStat.lobby;
-        }
-        else
-        {
-            selectSoloModePanel.gameObject.SetActive (true);
-        }
+        selectSoloModePanel.gameObject.SetActive(true);
     }
 
     private void Update()
@@ -182,12 +175,6 @@ public class GameControl : MonoBehaviour
 
     public void NewGame()
     {
-        if (GameManager.Instance.IsMultiplayer())
-        {
-            Menu();
-            return;
-        }
-
         UnityEngine.SceneManagement.SceneManager.LoadScene(3);
     }
 
@@ -536,17 +523,10 @@ public class GameControl : MonoBehaviour
         }
         else
         {
-            if (GameManager.Instance.IsMultiplayer())
-            {
-                desicionActors[desicionInd].BlinkAvatar();
-            }
-            else
-            {
-                if (!desicionActors[desicionInd].pass)
-                    desicionActors[desicionInd].DecideBet();
+            if (!desicionActors[desicionInd].pass)
+                desicionActors[desicionInd].DecideBet();
 
-                desicionInd++;
-            }
+            desicionInd++;
         }
     }
 
@@ -683,8 +663,7 @@ public class GameControl : MonoBehaviour
             cardClose.Pick(actorControl.actorTransform.GetChild(0).position);
             tableAnimationControl.cardCloses.Remove(cardClose);
 
-            if (!GameManager.Instance.IsMultiplayer())
-                actorControl.AddCard(deck[0]);
+            actorControl.AddCard(deck[0]);
 
             if (onlineBot)
                 actorControl.AddCard(deck[0]);
@@ -699,14 +678,12 @@ public class GameControl : MonoBehaviour
             Card cardType = throwedCards[throwedCards.Count - 1];
             throwedCards.Remove(cardType);
 
-            if (!GameManager.Instance.IsMultiplayer())
-                actorControl.AddCard(cardType);
+            actorControl.AddCard(cardType);
 
             StartCoroutine(PickCardFromThrowed(actorControl.actorTransform.GetChild(0).position));
         }
 
-        if (!GameManager.Instance.IsMultiplayer())
-            actorControl.PlayCard();
+        actorControl.PlayCard();
     }
 
     IEnumerator PickCardFromThrowed(Vector3 pos)
