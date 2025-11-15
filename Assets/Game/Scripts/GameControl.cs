@@ -87,7 +87,6 @@ public class GameControl : MonoBehaviour
         playerControl = FindObjectOfType<PlayerControl>();
         makeNoise = FindObjectOfType<MakeNoise>();
 
-        //completeHandBtn.SetActive(false);
         completeHandWarningPanel.SetActive(false);
 
         throwedCardObjs = new GameObject[104];
@@ -413,10 +412,6 @@ public class GameControl : MonoBehaviour
         orderOfPlayActors = new List<ActorControl>();
 
         int startInd = cardDealerInd;
-        //int startInd;
-
-        //startInd = 0;
-        //startInd = cardDealerInd;
 
         for (int i = 0; i < actorControls.Count; i++)
         {
@@ -875,7 +870,6 @@ public class GameControl : MonoBehaviour
         else
         {
             makeNoise.PlaySFX(11, 0);
-            //completeHandBtn.SetActive(false);
             completeHandWarningPanel.SetActive(true);
 
             playerControl.throwedCardArea.SetActive(false);
@@ -889,7 +883,6 @@ public class GameControl : MonoBehaviour
         {
             if (CheckPlayerHandCompleted())
             {
-                //completeHandBtn.SetActive(false);
                 completeHandWarningPanel.SetActive(false);
                 PlayerHandCompleted();
             }
@@ -903,9 +896,7 @@ public class GameControl : MonoBehaviour
         else
         {
             makeNoise.PlaySFX(17, 0);
-            //completeHandBtn.SetActive(true);
             completeHandWarningPanel.SetActive(false);
-            //playerControl.throwedCardArea.SetActive(true);
             playerControl.HoldedCardInFinishAreaToCardsInHand();
             playerControl.timerPause = false;
         }
@@ -934,7 +925,6 @@ public class GameControl : MonoBehaviour
 
     public void OpenPlayerHandCompletedPanel()
     {
-        //playerWinPanel.SetActive(false);
         FindObjectOfType<HandCompletedPanel>(true).OpenPanel(playerControl.actorControl);
         makeNoise.PlaySFX(27, 0);
     }
@@ -963,7 +953,6 @@ public class GameControl : MonoBehaviour
             betTimerCurrentTime += Time.deltaTime;
 
             betTimerFilled.fillAmount = 1f - (betTimerCurrentTime / betTimer);
-            //currentActorController.timerCircle.fillAmount = Mathf.Lerp(0.7f, 0f, currentTime / currentActorController.gameControl.timeOutTimer);
 
             yield return null;
         }

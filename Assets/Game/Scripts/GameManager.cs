@@ -29,7 +29,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // Disable screen dimming
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 }

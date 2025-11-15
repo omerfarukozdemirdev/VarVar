@@ -71,7 +71,7 @@ public class NameGenerator
 
     private string GetRandomNumber()
     {
-        int digits = Random.Range(1, 5); // Generate a random number of digits between 1 and 4
+        int digits = Random.Range(1, 5);
         int maxNumber = (int)Mathf.Pow(10, digits) - 1;
         return Random.Range(0, maxNumber + 1).ToString();
     }

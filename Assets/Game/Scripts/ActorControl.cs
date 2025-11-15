@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class ActorControl : MonoBehaviour
 {
     public bool player;
-    public bool onlineBot;
 
     public Transform actorTransform;
     public List<Card> cardsInHand;
@@ -61,7 +60,6 @@ public class ActorControl : MonoBehaviour
         passCounter = 0;
         totalWinMoney = 0;
         totalBetMoney = 0;
-
     }
 
     private void Start()

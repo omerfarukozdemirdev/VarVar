@@ -181,7 +181,6 @@ public class PlayerControl : MonoBehaviour
             CardTypeHolder cardTypeHolder = cardIns[i].GetComponentInChildren<CardTypeHolder>();
 
             cardTypeHolder.cardType = actorControl.cardsInHand[i];
-            //cardIns[i].GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = gameControl.cardImages.cardImages[CardSpriteConverter.GetCardSpriteInd(actorControl.cardsInHand[i])];
             cardIns[i].GetChild(0).GetChild(0).GetChild(0).GetComponent<Image>().sprite = CardSpriteConverter.GetCardSpriteInd(actorControl.cardsInHand[i], gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
 
             yield return new WaitForSeconds(.01f);
@@ -238,12 +237,10 @@ public class PlayerControl : MonoBehaviour
 
         throwedCardAreaAnimator.SetTrigger("Out");
         finishCardAreaAnimator.SetTrigger("Out");
-        //throwedCardArea.SetActive(cardsInLastSlot.activeSelf);
     }
 
     public void TakeCard(Card cardType)
     {
-        //gameControl.completeHandBtn.SetActive(true);
         StartCoroutine(TakingCard(cardType));
     }
 
@@ -256,7 +253,6 @@ public class PlayerControl : MonoBehaviour
 
         Transform takenCard = cardsInLastSlot.transform.GetChild(0).GetChild(0).GetChild(0);
 
-        //takenCard.GetChild(0).GetComponent<Image>().sprite = gameControl.cardImages.cardImages[CardSpriteConverter.GetCardSpriteInd(cardType)];
         takenCard.GetChild(0).GetComponent<Image>().sprite = CardSpriteConverter.GetCardSpriteInd(cardType, gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
 
         takenCard.GetChild(0).GetComponent<Animator>().SetTrigger("Take");
@@ -301,7 +297,6 @@ public class PlayerControl : MonoBehaviour
 
     void ThrowCard()
     {
-        //gameControl.completeHandBtn.SetActive(false);
         lastTakedCardFromThrowed = null;
         throwedCardArea.SetActive(false);
         finishCardArea.SetActive(false);
@@ -325,8 +320,6 @@ public class PlayerControl : MonoBehaviour
 
         cardPicked = null;
         ChangeGridSpacing(gridSpacingCollaps, gridPaddingCollaps);
-        //gameControl.NextPlayingInd();
-
     }
 
     void HoldCardInFinishArea()
@@ -492,8 +485,6 @@ public class PlayerControl : MonoBehaviour
         SetControllableCards(false);
         currentTime = 0;
         actorControl.timerCircle.gameObject.SetActive(false);
-        //gameControl.NextPlayingInd();
-        //SetControllableCards(true);
         StartCoroutine(TimeEndCoroutine(currentActorController));
     }
 
@@ -518,8 +509,6 @@ public class PlayerControl : MonoBehaviour
             else
             {
                 currentTime += Time.deltaTime;
-
-                //currentActorController.timerCircle.fillAmount = 1f - (currentTime / currentActorController.gameControl.timeOutTimer);
                 currentActorController.timerCircle.fillAmount = Mathf.Lerp(0.7f, 0f, currentTime / currentActorController.gameControl.timeOutTimer);
 
                 yield return null;
@@ -550,7 +539,6 @@ public class PlayerControl : MonoBehaviour
 
         currentActorController.timerCircle.gameObject.SetActive(false);
         currentActorController.gameControl.DisableEnableTakeCardBtns(false);
-        //SetControllableCards(true);
         currentActorController.gameControl.playerControl.throwedCardArea.SetActive(false);
         currentActorController.gameControl.playerControl.finishCardArea.SetActive(false);
     }
@@ -606,7 +594,6 @@ public class PlayerControl : MonoBehaviour
         cardClose.Pick(actorControl.actorTransform.GetChild(0).position);
         gameControl.tableAnimationControl.cardCloses.Remove(cardClose);
 
-        //actorControl.AddCard(gameControl.deck[0]);
         currentActorController.cardsInHand.Add(currentActorController.gameControl.deck[0]);
 
         cardsInLastSlot.GetComponentInChildren<CardTypeHolder>(true).cardType = gameControl.deck[0];

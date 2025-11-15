@@ -25,15 +25,6 @@ public class TableAnimationControl : MonoBehaviour
         CreateCardCloses(104);
     }
 
-    public void ResetValues()
-    {
-        //for (int i = 0; i < throwedCardsPos.childCount; i++)
-        //    Destroy(throwedCardsPos.GetChild(i).gameObject);
-
-        //for (int i = 0; i < cardCloses.Count; i++)
-        //    Destroy(cardCloses[i].gameObject);
-    }
-
     #region Setup
     void CreateCardsBlocks()
     {
@@ -205,9 +196,6 @@ public class TableAnimationControl : MonoBehaviour
 
     public void CreateDeckFromThrowedCards(int deckCount)
     {
-        //for (int i = 0; i < throwedCardsPos.childCount; i++)
-        //    Destroy(throwedCardsPos.GetChild(i).gameObject);
-
         for (int i = 0; i < throwedCardsPos.childCount; i++)
             throwedCardsPos.GetChild(i).gameObject.SetActive(false);
 
@@ -217,9 +205,6 @@ public class TableAnimationControl : MonoBehaviour
     IEnumerator DeckFromThrowedCards(int deckCount)
     {
         yield return new WaitForSecondsRealtime(.25f);
-
-        //for (int i = 0; i < cardCloses.Count; i++)
-        //    Destroy(cardCloses[i].gameObject);
 
         CreateCardCloses(deckCount);
 
@@ -277,12 +262,10 @@ public class TableAnimationControl : MonoBehaviour
             Destroy(cardCloses[i].gameObject);
         cardCloses.Clear();
         CreateCardCloses(104);
-        //StartCoroutine(ArrangeCardsBlocks());
     }
 
     public void FirsGroundCard()
     {
-        //firstCard.transform.SetParent(throwedCardsPos);
         cardCloses[cardCloses.Count - 1].FirstPick();
         cardCloses.Remove(cardCloses[cardCloses.Count - 1]);
     }

@@ -83,10 +83,8 @@ public class HandCompletedPanel : MonoBehaviour
             cards = actorControl.cardsInHand;
         }
 
-        //for (int i = 0; i < 11; i++)
         for (int i = 0; i < cards.Count; i++)
         {
-            //cardSprites[i].sprite = gameControl.cardImages.cardImages[CardSpriteConverter.GetCardSpriteInd(cards[i])];
             cardSprites[i].sprite = CardSpriteConverter.GetCardSpriteInd(cards[i], gameControl.gameConfig.deckStyles[gameControl.gameConfig.deckStyleInd]);
             cardSprites[i].gameObject.SetActive(true);
         }
@@ -143,10 +141,7 @@ public class HandCompletedPanel : MonoBehaviour
         cardSprites[cardSprites.Length - 1].gameObject.SetActive(false);
 
         int totalCard = cardSprites.Length;
-        //if (!isWin || (isWin && GameManager.Instance.IsMultiplayer()))
-        //{
-            totalCard--;
-        //}
+        totalCard--;
         
         for (int i = 0; i < totalCard; i++)
         {
