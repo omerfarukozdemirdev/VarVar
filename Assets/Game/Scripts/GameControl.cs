@@ -100,8 +100,8 @@ public class GameControl : MonoBehaviour
 
         string pName = "Guest";
 
-        if (PlayerPrefs.HasKey("PlayerName"))
-            pName = PlayerPrefs.GetString("PlayerName");
+        if (PlayerPrefs.HasKey(Constants.PlayerData.PlayerNameKey))
+            pName = PlayerPrefs.GetString(Constants.PlayerData.PlayerNameKey);
 
         actorControls[0].actorName = pName;
 

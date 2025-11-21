@@ -25,9 +25,9 @@ public class MenuController : MonoBehaviour
     {
         string pName = "Guest";
 
-        if (PlayerPrefs.HasKey("PlayerName"))
+        if (PlayerPrefs.HasKey(Constants.PlayerData.PlayerNameKey))
         {
-            pName = PlayerPrefs.GetString("PlayerName");
+            pName = PlayerPrefs.GetString(Constants.PlayerData.PlayerNameKey);
         }
         else
         {
@@ -69,19 +69,20 @@ public class MenuController : MonoBehaviour
         gameConfig.cardDealerInd = -1;
 
         FindObjectOfType<MakeNoise>().PlaySFX(30, 0);
-        UnityEngine.SceneManagement.SceneManager.LoadScene(3);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(4);
     }
 
     public void SetPlayerName()
     {
-        PlayerPrefs.SetString("PlayerName", playerNameTmp.text);
+        PlayerPrefs.SetString(Constants.PlayerData.PlayerNameKey, playerNameTmp.text);
+
     }
 
     public void SetFirstPlayerName()
     {
-        PlayerPrefs.SetString("PlayerName", firstPlayerNameTmp.text);
+        PlayerPrefs.SetString(Constants.PlayerData.PlayerNameKey, firstPlayerNameTmp.text);
         firstPlayerNameCanvas.SetActive(false);
-        playerNameTmp.text = PlayerPrefs.GetString("PlayerName");
+        playerNameTmp.text = PlayerPrefs.GetString(Constants.PlayerData.PlayerNameKey);
     }
 
     public void SetAvatar()
