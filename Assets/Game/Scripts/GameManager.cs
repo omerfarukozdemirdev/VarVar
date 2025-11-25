@@ -1,34 +1,43 @@
+using System;
+using Unity.Netcode;
+using Unity.Services.Qos.V2.Models;
 using UnityEngine;
+using UnityEngine.Playables;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;
 
-    public enum GameStat
-    {
-        menu,
-        lobby,
-        game,
-        handCompleted
-    }
+    public event Action<GameState> OnGameStateChanged;
 
-    public GameStat gameStat;
+    [SerializeField] private GameState _currentGameState;
+
 
     void Awake()
     {
-        if (Instance)
+        Instance = this;
+    }
+
+    public void ChangeGameState(GameState newGameState)
+    {
+        if (IsServer)
         {
-            DestroyImmediate(gameObject);
-        }
-        else
-        {
-            DontDestroyOnLoad(gameObject);
-            Instance = this;
+            //_currentGameState = newGameState;
+            //OnGameStateChanged?.Invoke(newGameState);
+            ChangeGameStateRpc(newGameState);
         }
     }
 
-    void Start()
+    [Rpc(SendTo.ClientsAndHost)]
+    private void ChangeGameStateRpc(GameState newGameState)
     {
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        _currentGameState = newGameState;
+        OnGameStateChanged?.Invoke(newGameState);
+        Debug.Log($"Game State: {newGameState}");
+    }
+
+    public GameState GetGameState()
+    {
+        return _currentGameState;
     }
 }

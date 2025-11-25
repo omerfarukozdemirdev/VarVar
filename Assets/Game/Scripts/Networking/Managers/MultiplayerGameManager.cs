@@ -121,4 +121,18 @@ public class MultiplayerGameManager : NetworkBehaviour
             NetworkManager.Singleton.OnClientConnectedCallback -= NetworkManager_Server_OnClientConnectedCallback;
         }
     }
+
+    public Lobby GetLobby()
+    {
+        if (NetworkManager.Singleton.IsHost)
+        {
+            return HostSingleton.Instance.HostManager.GetLobby();
+        }
+        else if (NetworkManager.Singleton.IsClient)
+        {
+            return ClientSingleton.Instance.ClientManager.GetLobby();
+        }
+        else
+            return HostSingleton.Instance.HostManager.GetLobby();
+    }
 }

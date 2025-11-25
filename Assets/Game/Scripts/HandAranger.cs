@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
 public enum CardSuit
@@ -9,6 +10,28 @@ public enum CardSuit
     Hearts,
     Clubs,
     Joker
+}
+
+public struct NetworkCardData : INetworkSerializable, System.IEquatable<NetworkCardData>
+{
+    // Orijinal Card sınıfının içerdiği veriler
+    public CardSuit suit; // CardSuit'un enum olduğunu varsayıyoruz.
+    public int value;
+
+    // INetworkSerializable uygulaması
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref suit);
+        serializer.SerializeValue(ref value);
+    }
+
+    // Gerekli diğer metotlar (Equals, GetHashCode vb.)
+    public bool Equals(NetworkCardData other)
+    {
+        return suit == other.suit && value == other.value;
+    }
+
+    // ...
 }
 
 [System.Serializable]

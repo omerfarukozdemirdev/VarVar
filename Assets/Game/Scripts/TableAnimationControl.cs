@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class TableAnimationControl : MonoBehaviour
@@ -187,6 +188,9 @@ public class TableAnimationControl : MonoBehaviour
         }
 
         yield return new WaitForSecondsRealtime(1f);
+
+        if (GameModeChecker.Instance.IsMultiplayerActive)
+            yield break;
 
         if (gameControl.actorControls.Count > 1)
         {

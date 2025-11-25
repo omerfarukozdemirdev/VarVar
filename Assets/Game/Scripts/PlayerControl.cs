@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Netcode;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -46,7 +47,8 @@ public class PlayerControl : MonoBehaviour
         throwedCardAreaAnimator = throwedCardArea.GetComponent<Animator>();
         finishCardAreaAnimator = finishCardArea.GetComponent<Animator>();
 
-        actorControl.player = true;
+        if(GameModeChecker.Instance.IsSinglePlayerActive)
+            actorControl.player = true;
 
         actorControl.totalCoins = PlayerPrefs.GetInt("CoinCount");
         DisableUICards();

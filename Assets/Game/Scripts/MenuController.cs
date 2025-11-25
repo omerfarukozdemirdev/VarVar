@@ -50,8 +50,6 @@ public class MenuController : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.gameStat = GameManager.GameStat.menu;
-
         //if (FindObjectOfType<MoneyController>().moneyCount<4000)
         //{
         //    playButton.interactable = false;
@@ -62,6 +60,10 @@ public class MenuController : MonoBehaviour
     public void PlayGame()
     {
         GoToPlayGame();
+    }
+
+    public void PlayMultiplayerGame()
+    {
     }
 
     void GoToPlayGame()

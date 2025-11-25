@@ -59,7 +59,7 @@ public class CharacterSelectUI : MonoBehaviour
     {
         SetRoomPlayerCountInfo();
 
-        if (NetworkManager.Singleton.ConnectedClientsList.Count == GetLobby().MaxPlayers)
+        if (NetworkManager.Singleton.ConnectedClientsList.Count == MultiplayerGameManager.Instance.GetLobby().MaxPlayers)
         {
             if (CharacterSelectReady.Instance.AreAllPlayersReady())
                 _roomPlayersStateText.text = "Oda sahibinin oyunu baþlatmasý bekleniyor...";
@@ -87,7 +87,7 @@ public class CharacterSelectUI : MonoBehaviour
     private void SetRoomPlayerCountInfo()
     {
         int currentConnectedPlayers = NetworkManager.Singleton.ConnectedClientsList.Count;
-        _roomPlayersCountText.text = currentConnectedPlayers.ToString() + "/" + GetLobby().MaxPlayers.ToString();
+        _roomPlayersCountText.text = currentConnectedPlayers.ToString() + "/" + MultiplayerGameManager.Instance.GetLobby().MaxPlayers.ToString();
     }
 
     private void CharacterSelectReady_OnUnreadyChanged()
@@ -95,7 +95,7 @@ public class CharacterSelectUI : MonoBehaviour
         if (NetworkManager.Singleton.IsHost)
             SetStartButtonInteractable(false);
 
-        if (NetworkManager.Singleton.ConnectedClientsList.Count == GetLobby().MaxPlayers)
+        if (NetworkManager.Singleton.ConnectedClientsList.Count == MultiplayerGameManager.Instance.GetLobby().MaxPlayers)
         {
             _roomPlayersStateText.text = "Tüm oyuncularýn hazýr olmasý bekleniyor...";
         }
@@ -107,7 +107,7 @@ public class CharacterSelectUI : MonoBehaviour
 
     private void CharacterSelectReady_OnAllPlayersReady()
     {
-        if (NetworkManager.Singleton.ConnectedClientsList.Count == GetLobby().MaxPlayers)
+        if (NetworkManager.Singleton.ConnectedClientsList.Count == MultiplayerGameManager.Instance.GetLobby().MaxPlayers)
         {
             _roomPlayersStateText.text = "Oda sahibinin oyunu baþlatmasý bekleniyor...";
             if (NetworkManager.Singleton.IsHost)
@@ -205,19 +205,5 @@ public class CharacterSelectUI : MonoBehaviour
     public bool IsPlayerReady()
     {
         return _isPlayerReady;
-    }
-
-    private Lobby GetLobby()
-    {
-        if (NetworkManager.Singleton.IsHost)
-        {
-            return HostSingleton.Instance.HostManager.GetLobby();
-        }        
-        else if(NetworkManager.Singleton.IsClient)
-        {
-            return ClientSingleton.Instance.ClientManager.GetLobby();
-        }
-        else 
-            return HostSingleton.Instance.HostManager.GetLobby();
     }
 }

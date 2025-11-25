@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameControl : MonoBehaviour
+public class GameControl : NetworkBehaviour
 {
     [Header("UI")]
     [SerializeField] GameObject desicitonPanel;
@@ -15,6 +16,8 @@ public class GameControl : MonoBehaviour
     [SerializeField] Text rewardBetUpText;
     [SerializeField] Text rewardMoneyText;
     [SerializeField] Text deckCountText;
+    [SerializeField] GameObject startingGameUI;
+    [SerializeField] GameObject waitingForPlayersUI;
 
     public GameObject completeHandWarningPanel;
     public GameObject completeHandWarningPanelWarning;
@@ -57,7 +60,7 @@ public class GameControl : MonoBehaviour
     [HideInInspector] public MakeNoise makeNoise;
 
     public int gameCounter;
-    [HideInInspector] public int gameLimit;
+    public int gameLimit;
     public Text gameTourText;
     public CoinController coinController;
     public DrinkController drinkController;
@@ -80,6 +83,16 @@ public class GameControl : MonoBehaviour
     [SerializeField] private SelectSoloModePanel selectSoloModePanel;
     public int playerCount; // oyuncu sayısı
     public List<ActorControl> players = new List<ActorControl>();
+
+    private void OnEnable()
+    {
+        GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+    }
 
     private void Awake()
     {
@@ -113,7 +126,16 @@ public class GameControl : MonoBehaviour
 
     private void Start()
     {
-        selectSoloModePanel.gameObject.SetActive(true);
+        if (GameModeChecker.Instance.IsMultiplayerActive)
+        {
+            selectSoloModePanel.gameObject.SetActive(false);
+        }
+        else
+        {
+            startingGameUI.SetActive(false);
+            waitingForPlayersUI.SetActive(false);
+            selectSoloModePanel.gameObject.SetActive(true);
+        }
     }
 
     private void Update()
@@ -212,7 +234,6 @@ public class GameControl : MonoBehaviour
         SetPlayers();
         Invoke("StartGame", .5f);
         selectSoloModePanel.gameObject.SetActive(false);
-
     }
 
     public void NextTouring()
@@ -976,6 +997,128 @@ public class GameControl : MonoBehaviour
         StopCoroutine(betTimerCoroutine);
     }
     #endregion
+
+
+    // multi
+    private void HandleGameStateChanged(GameState newState)
+    {
+        if (newState == GameState.Playing)
+        {
+            PlayerNetworkController[] networkPlayers = FindObjectsByType<PlayerNetworkController>(FindObjectsSortMode.None)
+                                                .OrderBy(p => p.OwnerClientId)
+                                                .ToArray();
+
+            playerCount = MultiplayerGameManager.Instance.GetLobby().MaxPlayers;
+            gameLimit = playerCount;
+
+            SetMultiPlayers();
+
+            if (NetworkManager.Singleton.IsHost)
+            {
+                CreateDeck();
+                ShuffleDeck();
+                ServerDealInitialHands(networkPlayers);
+                ChooseRandomCardDealer();
+                SetCardDealerClientRpc((byte)cardDealerInd);
+                PrepareGameClientRpc();
+            }
+        }
+    }
+
+    public void SetMultiPlayers()
+    {
+        PlayerNetworkController[] networkPlayers = FindObjectsByType<PlayerNetworkController>(FindObjectsSortMode.None)
+                                                .OrderBy(p => p.OwnerClientId)
+                                                .ToArray();
+        playerCount = networkPlayers.Length;
+        actorControls.ForEach(x => x.actorTransform.gameObject.SetActive(false));
+        actorControls.ForEach(x => x.gameObject.SetActive(false));
+        actorControls.Clear();
+
+        for (int i = 0; i < playerCount; i++)
+        {
+            PlayerNetworkController currentNetworkPlayer = networkPlayers[i];
+            ActorControl currentActor = players[i];
+
+            actorControls.Add(currentActor);
+            currentActor.gameObject.SetActive(true);
+            currentActor.actorTransform.gameObject.SetActive(true);
+            currentActor.SetActorName(networkPlayers[i].PlayerName.Value.ToString());
+            currentActor.player = currentNetworkPlayer.IsLocalPlayer;
+            if (currentActor.player)
+                playerControl.actorControl = currentActor;
+        }
+    }
+
+    public void ServerDealInitialHands(PlayerNetworkController[] networkPlayers)
+    {
+        const int initialHandSize = 9;
+
+        for (int i = 0; i < actorControls.Count; i++)
+        {
+            List<Card> initialHand = new List<Card>();
+            for (int c = 0; c < initialHandSize; c++)
+            {
+                if (deck.Count > 0)
+                {
+                    initialHand.Add(deck[0]);
+                    deck.RemoveAt(0);
+                }
+            }
+
+            // Sunucu belleğinde oyuncunun elini kaydet
+            actorControls[i].cardsInHand = initialHand;
+            actorControls[i].ArrangeHand();
+
+            // Card listesini NetworkCardData dizisine dönüştür
+            NetworkCardData[] networkData = actorControls[i].cardsInHand
+                .Select(c => new NetworkCardData { suit = c.suit, value = c.value })
+                .ToArray();
+
+            // Hedef Client ID'yi al
+            ulong targetClientId = networkPlayers[i].OwnerClientId;
+
+            // Hedefli RPC Parametrelerini Oluştur
+            ClientRpcParams clientRpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { targetClientId } }
+            };
+
+            ReceiveHandClientRpc(networkData, (byte)i);
+        }
+    }
+
+    // Hedef Client'a kartları gönderir
+    [Rpc(SendTo.ClientsAndHost)]
+    public void ReceiveHandClientRpc(NetworkCardData[] initialHandData, byte playerIndex)
+    {
+        List<Card> initialHand = initialHandData
+        .Select(nd => new Card { suit = nd.suit, value = nd.value })
+        .ToList();
+
+        // RPC ile gelen index'e göre ActorControl'ü bul
+         ActorControl targetActor = actorControls[playerIndex];
+
+        if (!targetActor.player)
+        {
+             return;
+        }
+
+        targetActor.cardsInHand = initialHand;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void SetCardDealerClientRpc(byte dealerIndex)
+    {
+        cardDealerInd = dealerIndex;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void PrepareGameClientRpc()
+    {
+        SortOrderOfPlayActors();
+        PrepeareStartGame();
+    }
 }
 
 

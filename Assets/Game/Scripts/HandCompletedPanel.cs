@@ -29,8 +29,6 @@ public class HandCompletedPanel : MonoBehaviour
     
     public void OpenPanel(ActorControl actorControl)
     {
-        GameManager.Instance.gameStat = GameManager.GameStat.handCompleted;
-
         if(actorControl == null)
         {
             completeHeaderText.text = "Herkes Pass Dedi";

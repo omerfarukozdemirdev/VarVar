@@ -105,6 +105,11 @@ public class ActorControl : MonoBehaviour
 
         actorNameText.text = actorName;
     }
+    public void SetActorName(string name)
+    {
+        actorName = name;
+        SetNameText(name);
+    }
 
     public void SetNameText(string name)
     {
@@ -538,7 +543,6 @@ public class ActorControl : MonoBehaviour
         iTween.ScaleTo(emojiContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
         iTween.ScaleTo(emojiContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce, "delay", 5f));
     }
-
 }
 
 public enum Gender
