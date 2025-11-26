@@ -14,8 +14,7 @@ public enum CardSuit
 
 public struct NetworkCardData : INetworkSerializable, System.IEquatable<NetworkCardData>
 {
-    // Orijinal Card sınıfının içerdiği veriler
-    public CardSuit suit; // CardSuit'un enum olduğunu varsayıyoruz.
+    public CardSuit suit;
     public int value;
 
     // INetworkSerializable uygulaması
@@ -25,13 +24,10 @@ public struct NetworkCardData : INetworkSerializable, System.IEquatable<NetworkC
         serializer.SerializeValue(ref value);
     }
 
-    // Gerekli diğer metotlar (Equals, GetHashCode vb.)
     public bool Equals(NetworkCardData other)
     {
         return suit == other.suit && value == other.value;
     }
-
-    // ...
 }
 
 [System.Serializable]
@@ -39,6 +35,27 @@ public class Card
 {
     public CardSuit suit;
     public int value;
+}
+
+public static class NetworkSerializationExtensions
+{
+    public static NetworkCardData ToNetworkCard(this Card card)
+    {
+        return new NetworkCardData
+        {
+            suit = card.suit,
+            value = card.value
+        };
+    }
+
+    public static Card ToCard(this NetworkCardData networkData)
+    {
+        return new Card
+        {
+            suit = networkData.suit,
+            value = networkData.value
+        };
+    }
 }
 
 [System.Serializable]

@@ -444,7 +444,7 @@ public class ActorControl : MonoBehaviour
             }
         }
 
-        gameControl.PickCard(this, pickFromDeck, false);
+        gameControl.PickCard(this, pickFromDeck);
     }
 
     void UpdateRadialFill(float value)

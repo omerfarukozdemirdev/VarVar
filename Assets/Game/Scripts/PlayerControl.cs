@@ -304,7 +304,29 @@ public class PlayerControl : MonoBehaviour
         finishCardArea.SetActive(false);
 
         Card card = cardPicked.GetComponentInChildren<CardTypeHolder>().cardType;
-        gameControl.ThrowCard(card, actorControl);
+        
+        if(GameModeChecker.Instance.IsMultiplayerActive)
+        {
+            //gameControl.ThrowCard(card, actorControl);
+
+            if (gameControl.playingActors[gameControl.playingInd].player)
+            {
+                gameControl.ThrowCard(card, actorControl);
+            }
+            else
+            {
+                NetworkCardData networkCardData = new NetworkCardData
+                {
+                    suit = card.suit,
+                    value = card.value
+                };
+                gameControl.SendThrowCardServerRpc(networkCardData);
+            }
+        }
+        else
+        {
+            gameControl.ThrowCard(card, actorControl);
+        }
 
         int ind = GetEmptySlot();
         for (int i = ind; i < cardIns.Length - 1; i++)

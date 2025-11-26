@@ -189,12 +189,21 @@ public class TableAnimationControl : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(1f);
 
-        if (GameModeChecker.Instance.IsMultiplayerActive)
-            yield break;
-
         if (gameControl.actorControls.Count > 1)
         {
-            gameControl.ActorDecisiton();
+            if (GameModeChecker.Instance.IsMultiplayerActive)
+            {
+                if (NetworkManager.Singleton.IsHost)
+                {
+                    gameControl.StartMultiplayerBettingPhase();
+                }
+
+                yield break;
+            }
+            else
+            {
+                gameControl.ActorDecisiton();
+            }
         }
     }
 
@@ -258,6 +267,13 @@ public class TableAnimationControl : MonoBehaviour
         yield return new WaitForSecondsRealtime(1f);
 
         gameControl.NextActor();
+
+        if(GameModeChecker.Instance.IsMultiplayerActive)
+        {
+            gameControl.networkPlayingInd++;
+            if (gameControl.networkPlayingInd > gameControl.playingActors.Count - 1)
+                gameControl.networkPlayingInd = 0;
+        }
     }
 
     public void Reset()

@@ -83,6 +83,7 @@ public class GameControl : NetworkBehaviour
     [SerializeField] private SelectSoloModePanel selectSoloModePanel;
     public int playerCount; // oyuncu sayısı
     public List<ActorControl> players = new List<ActorControl>();
+    public int networkPlayingInd;
 
     private void OnEnable()
     {
@@ -215,8 +216,8 @@ public class GameControl : NetworkBehaviour
     // seçilen oyuncu sayısına göre oyuncuları oluşturma
     public void SetPlayers()
     {
-        actorControls.ForEach(x=>x.actorTransform.gameObject.SetActive(false));
-        actorControls.ForEach(x=>x.gameObject.SetActive(false));
+        actorControls.ForEach(x => x.actorTransform.gameObject.SetActive(false));
+        actorControls.ForEach(x => x.gameObject.SetActive(false));
         actorControls.Clear();
 
         for (int i = 0; i < playerCount; i++)
@@ -539,6 +540,9 @@ public class GameControl : NetworkBehaviour
         }
         else
         {
+            if (GameModeChecker.Instance.IsMultiplayerActive)
+                return;
+
             if (!desicionActors[desicionInd].pass)
                 desicionActors[desicionInd].DecideBet();
 
@@ -604,6 +608,12 @@ public class GameControl : NetworkBehaviour
 
         yield return new WaitForSeconds(2.5f);
 
+        //if (GameModeChecker.Instance.IsMultiplayerActive)
+        //{
+
+        //    yield break;
+        //}
+
         NextActor();
 
         drinkController.drinkButton.SetActive(true);
@@ -634,7 +644,8 @@ public class GameControl : NetworkBehaviour
         }
         else
         {
-            playingActors[playingInd].PlayCard();
+            if (!GameModeChecker.Instance.IsMultiplayerActive)
+                playingActors[playingInd].PlayCard();
         }
 
         playingInd++;
@@ -668,7 +679,7 @@ public class GameControl : NetworkBehaviour
         throwedCards.Add(card);
     }
 
-    public void PickCard(ActorControl actorControl, bool fromDeck, bool onlineBot)
+    public void PickCard(ActorControl actorControl, bool fromDeck)
     {
         makeNoise.PlaySFX(15, 0);
 
@@ -680,10 +691,6 @@ public class GameControl : NetworkBehaviour
             tableAnimationControl.cardCloses.Remove(cardClose);
 
             actorControl.AddCard(deck[0]);
-
-            if (onlineBot)
-                actorControl.AddCard(deck[0]);
-
 
             deck.Remove(deck[0]);
 
@@ -699,7 +706,8 @@ public class GameControl : NetworkBehaviour
             StartCoroutine(PickCardFromThrowed(actorControl.actorTransform.GetChild(0).position));
         }
 
-        actorControl.PlayCard();
+        if (!GameModeChecker.Instance.IsMultiplayerActive)
+            actorControl.PlayCard();
     }
 
     IEnumerator PickCardFromThrowed(Vector3 pos)
@@ -751,6 +759,11 @@ public class GameControl : NetworkBehaviour
 
         playerControl.TakeCard(cardType);
         playerControl.lastTakedCardFromThrowed = cardType;
+
+        if (GameModeChecker.Instance.IsMultiplayerActive)
+        {
+            SendTakeCardFromThrowedServerRpc();
+        }
     }
 
     public void TakeCardFromDeck()
@@ -765,8 +778,12 @@ public class GameControl : NetworkBehaviour
         playerControl.TakeCard(deck[0]);
         deck.Remove(deck[0]);
 
-
         CheckDeckCardCount();
+
+        if (GameModeChecker.Instance.IsMultiplayerActive)
+        {
+            SendTakeCardFromDeckServerRpc();
+        }
     }
 
     public void CheckDeckCardCount()
@@ -832,8 +849,15 @@ public class GameControl : NetworkBehaviour
                 break;
         }
 
-        playerControl.actorControl.DecidePlayer();
-        desicionInd++;
+        if (GameModeChecker.Instance.IsMultiplayerActive)
+        {
+            SendPlayerDecisionServerRpc((byte)actorControls.IndexOf(playerControl.actorControl), (byte)ind);
+        }
+        else
+        {
+            playerControl.actorControl.DecidePlayer();
+            desicionInd++;
+        }
 
         StopTimer();
         desicitonPanel.SetActive(false);
@@ -1019,6 +1043,7 @@ public class GameControl : NetworkBehaviour
                 ShuffleDeck();
                 ServerDealInitialHands(networkPlayers);
                 ChooseRandomCardDealer();
+                SendDeckToClients();
                 SetCardDealerClientRpc((byte)cardDealerInd);
                 PrepareGameClientRpc();
             }
@@ -1078,12 +1103,14 @@ public class GameControl : NetworkBehaviour
             // Hedef Client ID'yi al
             ulong targetClientId = networkPlayers[i].OwnerClientId;
 
-            // Hedefli RPC Parametrelerini Oluştur
-            ClientRpcParams clientRpcParams = new ClientRpcParams
-            {
-                Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { targetClientId } }
-            };
+            //// Hedefli RPC Parametrelerini Oluştur
+            //ClientRpcParams clientRpcParams = new ClientRpcParams
+            //{
+            //    Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { targetClientId } }
+            //};
 
+            // Hedef Client'a Kartları Gönder
+            //if(i!=0)
             ReceiveHandClientRpc(networkData, (byte)i);
         }
     }
@@ -1097,14 +1124,34 @@ public class GameControl : NetworkBehaviour
         .ToList();
 
         // RPC ile gelen index'e göre ActorControl'ü bul
-         ActorControl targetActor = actorControls[playerIndex];
+        ActorControl targetActor = actorControls[playerIndex];
 
         if (!targetActor.player)
         {
-             return;
+            return;
         }
 
         targetActor.cardsInHand = initialHand;
+    }
+
+    public void SendDeckToClients()
+    {
+        NetworkCardData[] networkData = deck
+                .Select(c => new NetworkCardData { suit = c.suit, value = c.value })
+                .ToArray();
+
+        ReceiveDeckClientRpc(networkData);
+    }
+
+    // Clientlara deck gönderir
+    [Rpc(SendTo.ClientsAndHost)]
+    public void ReceiveDeckClientRpc(NetworkCardData[] serverDeck)
+    {
+        List<Card> clientDeck = serverDeck
+        .Select(nd => new Card { suit = nd.suit, value = nd.value })
+        .ToList();
+
+        deck = clientDeck;
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -1119,6 +1166,96 @@ public class GameControl : NetworkBehaviour
         SortOrderOfPlayActors();
         PrepeareStartGame();
     }
-}
 
+    public void StartMultiplayerBettingPhase()
+    {
+        ReceiveDecisionTurnClientRpc();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void ReceiveDecisionTurnClientRpc()
+    {
+        if (desicionActors[desicionInd].player)
+        {
+            OpenDesicitonPanel();
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    public void SendPlayerDecisionServerRpc(byte actorIndex, byte decisionType)
+    {
+        ActorControl actor = actorControls[actorIndex];
+
+        switch (decisionType)
+        {
+            case 0: // VAR
+                actor.pass = false;
+                actor.betUp = false;
+                break;
+            case 1: // PASS
+                actor.pass = true;
+                actor.betUp = false;
+                break;
+            case 2: // BETUP
+                actor.pass = false;
+                actor.betUp = true;
+                break;
+        }
+
+        MultiplayerCurrentDecisionClientRpc(actorIndex, decisionType);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void MultiplayerCurrentDecisionClientRpc(byte actorIndex, byte decisionType)
+    {
+        ActorControl actor = actorControls[actorIndex];
+
+        actor.pass = decisionType == 1;
+        desicionInd++;
+        actor.DecidePlayer();
+    }
+
+    [Rpc(SendTo.Server)]
+    public void SendTakeCardFromThrowedServerRpc()
+    {
+        SendTakeCardFromThrowedClientRpc();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void SendTakeCardFromThrowedClientRpc()
+    {
+        if (!playingActors[networkPlayingInd].player)
+        {
+            PickCard(playingActors[networkPlayingInd], false);
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    public void SendTakeCardFromDeckServerRpc()
+    {
+        SendTakeCardFromDeckClientRpc();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void SendTakeCardFromDeckClientRpc()
+    {
+        if (!playingActors[networkPlayingInd].player)
+        {
+            PickCard(playingActors[networkPlayingInd], true);
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    public void SendThrowCardServerRpc(NetworkCardData networkThrowedCardData)
+    {
+        SendThrowCardClientRpc(networkThrowedCardData);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void SendThrowCardClientRpc(NetworkCardData networkThrowedCardData)
+    {
+        Card card = networkThrowedCardData.ToCard();
+        ThrowCard(card, playingActors[networkPlayingInd]);
+    }
+}
 
