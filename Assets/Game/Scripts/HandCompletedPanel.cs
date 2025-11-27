@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ public class HandCompletedPanel : MonoBehaviour
     [SerializeField] Image actorAvatar;
     [SerializeField] Text actorNameText;
     [SerializeField] Text rewardText;
+    [SerializeField] GameObject nextTourButtonGameObject;
     public Image[] cardSprites;
 
     public GameObject nextButton;
@@ -88,6 +90,12 @@ public class HandCompletedPanel : MonoBehaviour
         }
 
         panelBG.SetActive(true);
+
+        if(GameModeChecker.Instance.IsMultiplayerActive && gameControl.gameCounter != gameControl.gameLimit)
+        {
+            var isHost = NetworkManager.Singleton.IsHost;
+            nextTourButtonGameObject.SetActive(isHost);
+        }
     }
 
     public void ClosePanel()

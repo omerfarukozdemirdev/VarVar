@@ -129,6 +129,7 @@ public class GameControl : NetworkBehaviour
     {
         if (GameModeChecker.Instance.IsMultiplayerActive)
         {
+            //actorControls.ForEach(x => x.gameObject.SetActive(false));
             selectSoloModePanel.gameObject.SetActive(false);
         }
         else
@@ -193,6 +194,11 @@ public class GameControl : NetworkBehaviour
 
         drinkController.drinkButton.SetActive(false);
         emojiController.emojiButton.SetActive(false);
+
+        if (GameModeChecker.Instance.IsMultiplayerActive)
+        {
+            networkPlayingInd = 0;
+        }
     }
 
     public void NewGame()
@@ -209,8 +215,15 @@ public class GameControl : NetworkBehaviour
 
     public void NextTour()
     {
-        NextTouring();
-        Invoke("StartGame", 1f);
+        if(GameModeChecker.Instance.IsMultiplayerActive)
+        {
+            NextTourClientRpc();
+        }
+        else
+        {
+            NextTouring();
+            Invoke("StartGame", 1f);
+        }
     }
 
     // seçilen oyuncu sayısına göre oyuncuları oluşturma
@@ -875,6 +888,11 @@ public class GameControl : NetworkBehaviour
     void PlayerHandCompleted()
     {
         OpenHandCompletedPanel(playerControl.actorControl);
+
+        if (GameModeChecker.Instance.IsMultiplayerActive)
+        {
+            SendPlayerHandCompletedServerRpc((byte)actorControls.IndexOf(playerControl.actorControl));
+        }
     }
 
     public void OpenHandCompletedPanel(ActorControl actorControl)
@@ -1066,6 +1084,7 @@ public class GameControl : NetworkBehaviour
             ActorControl currentActor = players[i];
 
             actorControls.Add(currentActor);
+            //actorControls[i].gameObject.SetActive(true);
             currentActor.gameObject.SetActive(true);
             currentActor.actorTransform.gameObject.SetActive(true);
             currentActor.SetActorName(networkPlayers[i].PlayerName.Value.ToString());
@@ -1256,6 +1275,48 @@ public class GameControl : NetworkBehaviour
     {
         Card card = networkThrowedCardData.ToCard();
         ThrowCard(card, playingActors[networkPlayingInd]);
+    }
+
+    [Rpc(SendTo.Server)]
+    public void SendPlayerHandCompletedServerRpc(byte actorIndex)
+    {
+        SendPlayerHandCompletedClientRpc(actorIndex);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void SendPlayerHandCompletedClientRpc(byte actorIndex)
+    {
+        if(actorControls[actorIndex].handWin)
+            return;
+
+        ActorControl actor = actorControls[0];
+        OpenHandCompletedPanel(actor);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void NextTourClientRpc()
+    {
+        NextTouring();
+
+        PlayerNetworkController[] networkPlayers = FindObjectsByType<PlayerNetworkController>(FindObjectsSortMode.None)
+                                    .OrderBy(p => p.OwnerClientId)
+                                    .ToArray();
+
+        playerCount = MultiplayerGameManager.Instance.GetLobby().MaxPlayers;
+        gameLimit = playerCount;
+
+        SetMultiPlayers();
+
+        if (NetworkManager.Singleton.IsHost)
+        {
+            CreateDeck();
+            ShuffleDeck();
+            ServerDealInitialHands(networkPlayers);
+            ChooseRandomCardDealer();
+            SendDeckToClients();
+            SetCardDealerClientRpc((byte)cardDealerInd);
+            PrepareGameClientRpc();
+        }
     }
 }
 

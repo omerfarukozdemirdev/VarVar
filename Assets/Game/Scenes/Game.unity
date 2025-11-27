@@ -3285,6 +3285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a9b11ce6c353481a821c4c8c426f0b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   desicitonPanel: {fileID: 381683010}
   desicitonPanelBetUpBTN: {fileID: 1925811964}
   desicitonPanelBetText: {fileID: 1900594752}
@@ -3351,6 +3352,7 @@ MonoBehaviour:
   - {fileID: 521327101}
   - {fileID: 521327100}
   - {fileID: 521327099}
+  networkPlayingInd: 0
 --- !u!4 &327959629
 Transform:
   m_ObjectHideFlags: 0
@@ -5600,6 +5602,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6924fcbe8df4406a04f24784a1c2b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  joker:
+    suit: 5
+    value: -1
+  cardsInHand: []
+  SpadesCards: []
+  HeartsCards: []
+  DiamondsCards: []
+  ClubsCards: []
+  runs: []
+  runGrps: []
+  matches: []
+  matchGrps: []
+  remainingCards: []
+  missingCards: []
+  handCompleted: 0
+  completeStep: 0
 --- !u!4 &634513079
 Transform:
   m_ObjectHideFlags: 0
@@ -19863,6 +19881,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 230444689}
     - target: {fileID: 5374562839631255791, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: nextTourButtonGameObject
+      value: 
+      objectReference: {fileID: 5374562838557262380}
+    - target: {fileID: 5374562839631255791, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: loserPlayerTabs.Array.size
       value: 6
       objectReference: {fileID: 0}
@@ -19926,6 +19948,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1281555981}
+    - target: {fileID: 5374562839740025286, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5374562839740025305, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: timerCircle
       value: 
@@ -19960,6 +19986,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5374562839741475481, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5374562839759063014, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5374562839759063033, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
@@ -20481,6 +20511,11 @@ PrefabInstance:
       addedObject: {fileID: 931363145}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+--- !u!1 &5374562838557262380 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5374562840061468270, guid: 1daaed398ced34889ac9a0842281176a, type: 3}
+  m_PrefabInstance: {fileID: 5374562838557262379}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5374562838557262381 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1817023897174224928, guid: 1daaed398ced34889ac9a0842281176a, type: 3}

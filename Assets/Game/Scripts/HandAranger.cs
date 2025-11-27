@@ -68,26 +68,26 @@ public class PerGrp
 
 public class HandAranger : MonoBehaviour
 {
-    private Card joker = new Card() { suit = CardSuit.Joker, value = -1 };
+    [SerializeField] private Card joker = new Card() { suit = CardSuit.Joker, value = -1 };
 
-    private List<Card> cardsInHand = new List<Card>();
-
-    private List<Card> SpadesCards = new List<Card>();
-    private List<Card> HeartsCards = new List<Card>();
-    private List<Card> DiamondsCards = new List<Card>();
-    private List<Card> ClubsCards = new List<Card>();
-
-    private List<PerGrp> runs = new List<PerGrp>();
-    private List<PerGrp> runGrps = new List<PerGrp>();
-
-    private List<PerGrp> matches = new List<PerGrp>();
-    private List<PerGrp> matchGrps = new List<PerGrp>();
-
-    private List<Card> remainingCards = new List<Card>();
-    private List<Card> missingCards = new List<Card>();
-
-    private bool handCompleted;
-    private int completeStep;
+    [SerializeField] private List<Card> cardsInHand = new List<Card>();
+     
+    [SerializeField] private List<Card> SpadesCards = new List<Card>();
+    [SerializeField] private List<Card> HeartsCards = new List<Card>();
+    [SerializeField] private List<Card> DiamondsCards = new List<Card>();
+    [SerializeField] private List<Card> ClubsCards = new List<Card>();
+     
+    [SerializeField] private List<PerGrp> runs = new List<PerGrp>();
+    [SerializeField] private List<PerGrp> runGrps = new List<PerGrp>();
+     
+    [SerializeField] private List<PerGrp> matches = new List<PerGrp>();
+    [SerializeField] private List<PerGrp> matchGrps = new List<PerGrp>();
+     
+    [SerializeField] private List<Card> remainingCards = new List<Card>();
+    [SerializeField] private List<Card> missingCards = new List<Card>();
+    
+    [SerializeField] private bool handCompleted;
+    [SerializeField] private int completeStep;
 
     //void Start()
     //{
