@@ -36,8 +36,8 @@ public class MenuController : MonoBehaviour
 
         playerNameTmp.text = pName;
 
-        gameConfig.avatarInd = 0;//PlayerPrefs.GetInt("Avatar");
-        SetAvatar();
+        var avatarInd = PlayerPrefs.GetInt(Constants.PlayerData.PlayerAvatarKey,0);
+        SetAvatar(avatarInd);
 
         InitTimers();
 
@@ -87,9 +87,9 @@ public class MenuController : MonoBehaviour
         playerNameTmp.text = PlayerPrefs.GetString(Constants.PlayerData.PlayerNameKey);
     }
 
-    public void SetAvatar()
+    public void SetAvatar(int avatarIndex)
     {
-        Avatar.sprite = gameConfig.avatars[gameConfig.avatarInd];
+        Avatar.sprite = gameConfig.avatars[avatarIndex];
     }
 
     void InitTimers()

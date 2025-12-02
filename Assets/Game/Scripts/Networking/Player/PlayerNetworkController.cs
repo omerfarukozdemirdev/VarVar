@@ -11,6 +11,7 @@ public class PlayerNetworkController : NetworkBehaviour
     public static event Action<PlayerNetworkController> OnPlayerDespawned;
 
     public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
+    public NetworkVariable<byte> PlayerAvatarIndex = new NetworkVariable<byte>();
 
     public override void OnNetworkSpawn()
     {
@@ -20,7 +21,7 @@ public class PlayerNetworkController : NetworkBehaviour
                 = HostSingleton.Instance.HostManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
             
             PlayerName.Value = userData.UserName;
-
+            PlayerAvatarIndex.Value = userData.UserAvatarIndex;
             OnPlayerSpawned?.Invoke(this);
         }
     }

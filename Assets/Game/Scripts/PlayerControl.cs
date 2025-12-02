@@ -305,27 +305,16 @@ public class PlayerControl : MonoBehaviour
 
         Card card = cardPicked.GetComponentInChildren<CardTypeHolder>().cardType;
         
+        gameControl.ThrowCard(card, actorControl);
+
         if(GameModeChecker.Instance.IsMultiplayerActive)
         {
-            //gameControl.ThrowCard(card, actorControl);
-
-            if (gameControl.playingActors[gameControl.playingInd].player)
+            NetworkCardData networkCardData = new NetworkCardData
             {
-                gameControl.ThrowCard(card, actorControl);
-            }
-            else
-            {
-                NetworkCardData networkCardData = new NetworkCardData
-                {
-                    suit = card.suit,
-                    value = card.value
-                };
-                gameControl.SendThrowCardServerRpc(networkCardData);
-            }
-        }
-        else
-        {
-            gameControl.ThrowCard(card, actorControl);
+                suit = card.suit,
+                value = card.value
+            };
+            gameControl.SendThrowCardServerRpc(networkCardData);
         }
 
         int ind = GetEmptySlot();
@@ -643,4 +632,14 @@ public class PlayerControl : MonoBehaviour
         }
     }
     #endregion
+
+    public List<Card> GetInHandsCards()
+    {
+        List<Card> cards = new List<Card>();
+        for(int i = 0; i<10;i++)
+        {
+            cards.Add(cardIns[i].GetComponentInChildren<CardTypeHolder>().cardType);
+        }
+        return cards;
+    }
 }

@@ -15,6 +15,7 @@ public class CharacterSelectPlayer : NetworkBehaviour
     [SerializeField] private Button _kickButton;
 
     public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
+    public NetworkVariable<byte> PlayerAvatarIndex = new NetworkVariable<byte>();
 
     private void Awake()
     {
@@ -95,6 +96,7 @@ public class CharacterSelectPlayer : NetworkBehaviour
         {
             UserData userData = HostSingleton.Instance.HostManager.NetworkServer.GetUserDataByClientId(OwnerClientId);
             PlayerName.Value = userData.UserName;
+            PlayerAvatarIndex.Value = userData.UserAvatarIndex;
         }
     }
 

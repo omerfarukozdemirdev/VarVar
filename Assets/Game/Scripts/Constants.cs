@@ -3,6 +3,7 @@ public static class Constants
     public static class PlayerData
     {
         public const string PlayerNameKey = "PlayerName";
+        public const string PlayerAvatarKey = "PlayerAvatar";
     }
 
     public static class SceneNames

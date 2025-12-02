@@ -93,6 +93,7 @@ public class HostManager : IDisposable
         UserData userData = new UserData
         {
             UserName = PlayerPrefs.GetString(Constants.PlayerData.PlayerNameKey, "Noname"),
+            UserAvatarIndex = (byte) PlayerPrefs.GetInt(Constants.PlayerData.PlayerAvatarKey, 0),
             UserAuthId = AuthenticationService.Instance.PlayerId
         };
         string payload = JsonUtility.ToJson(userData);

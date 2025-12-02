@@ -68,8 +68,11 @@ public class ActorControl : MonoBehaviour
         {
             totalCoins = 150;
 
-            nameGenerator = new NameGenerator();
-            InitGender();
+            if(GameModeChecker.Instance.IsSinglePlayerActive)
+            {
+                nameGenerator = new NameGenerator();
+                InitGender();
+            }
         }
         else
         {
@@ -114,6 +117,11 @@ public class ActorControl : MonoBehaviour
     public void SetNameText(string name)
     {
         actorNameText.text = name;
+    }
+
+    public void SetAvatar(byte index)
+    {
+        actorAvatar.sprite = gameControl.gameConfig.avatars[index];
     }
 
     public void ResetValues()

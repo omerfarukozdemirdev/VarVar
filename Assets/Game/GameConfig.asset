@@ -15,7 +15,26 @@ MonoBehaviour:
   cardDealerInd: -1
   avatarInd: 0
   avatars:
-  - {fileID: 21300000, guid: 4a150dbc984424a6db615c5c5d4b935f, type: 3}
+  - {fileID: 21300000, guid: e800035e0776840dfaae5641069cd7db, type: 3}
+  - {fileID: 21300000, guid: 7d12fe218416a444a8263aaf0372f6fb, type: 3}
+  - {fileID: 21300000, guid: b4603e534c3b4447894e2d9c9eb54731, type: 3}
+  - {fileID: 21300000, guid: a553f1f5e7e43479098526a5b0dea692, type: 3}
+  - {fileID: 21300000, guid: b58566adc32ef4349901f386cb3ba4a8, type: 3}
+  - {fileID: 21300000, guid: 7a06ccc5e37804d10bcd8fe644f99def, type: 3}
+  - {fileID: 21300000, guid: 1dea3ee1f73974b80bbc84a0bea78bdd, type: 3}
+  - {fileID: 21300000, guid: e79cb08d5bdda48dc8730812ae2201e9, type: 3}
+  - {fileID: 21300000, guid: 5b5137fcebed34a15a66e994ef08c850, type: 3}
+  - {fileID: 21300000, guid: c161a5e410e5347ba9e238022257fc7a, type: 3}
+  - {fileID: 21300000, guid: 7b1f773612109482ab1e9cdf5ef2e16a, type: 3}
+  - {fileID: 21300000, guid: 1b41a5dd17d4041a397a6dad28f21f08, type: 3}
+  - {fileID: 21300000, guid: 2081a974121f14477b0b2625f8714745, type: 3}
+  - {fileID: 21300000, guid: b10e2a84631f44641910d6c3d22c24df, type: 3}
+  - {fileID: 21300000, guid: da3a27993080141c9b8d77b16ad6ebe7, type: 3}
+  - {fileID: 21300000, guid: 957ca6a6a96904b468f163fb28d75af2, type: 3}
+  - {fileID: 21300000, guid: c3827a5b923d648b1a1e9ed2059dfb7c, type: 3}
+  - {fileID: 21300000, guid: 6385a0977c59f4ebd8fe119504fb61d6, type: 3}
+  - {fileID: 21300000, guid: 40010054d3f3244769fcf3f99c81e261, type: 3}
+  - {fileID: 21300000, guid: 14070f6f1b745463cbc7bfdf8bac4012, type: 3}
   maleAvatars:
   - {fileID: 21300000, guid: e800035e0776840dfaae5641069cd7db, type: 3}
   - {fileID: 21300000, guid: 7d12fe218416a444a8263aaf0372f6fb, type: 3}
@@ -137,34 +156,3 @@ MonoBehaviour:
   - {fileID: 2100000, guid: ece494c55a6364501a21599b23a6ec3c, type: 2}
   cardBackSprites:
   - {fileID: 21300000, guid: fae0481a5ecc74a7089b815f5451e76d, type: 3}
-  backgroundInd: 0
-  backGrounds:
-  - {fileID: 21300000, guid: 928b196a73dee4d80b36c00d4ec3a8ee, type: 3}
-  - {fileID: 21300000, guid: dc355d131112e4cbf89fef6608efb733, type: 3}
-  - {fileID: 21300000, guid: f7a17a23f8e5e4b4f8d9fbf913e86984, type: 3}
-  - {fileID: 21300000, guid: 9640ef1781dc74793aee71d4729fbd92, type: 3}
-  - {fileID: 21300000, guid: 564bd5c54b36a4003863b4ae2721ff4d, type: 3}
-  tableInd: 1
-  tables:
-  - {fileID: 21300000, guid: 6dd8f87d8457f4ef3ae2c4766c65022a, type: 3}
-  - {fileID: 21300000, guid: 4e248cd9dd15a4c82a6a181776b4c853, type: 3}
-  - {fileID: 21300000, guid: 2a195d593d0d5404f9bf6b4e1a52afa6, type: 3}
-  - {fileID: 21300000, guid: 6ccbe86a141964d8b8004260c3c02f79, type: 3}
-  - {fileID: 21300000, guid: 3dca6d0ce8d32482d97ee21d442c4ae0, type: 3}
-  shopMenuCoins:
-  - coincount: 250
-    prize: 1.99
-  - coincount: 500
-    prize: 2.99
-  - coincount: 750
-    prize: 3.99
-  - coincount: 1250
-    prize: 6.99
-  - coincount: 2500
-    prize: 12.99
-  - coincount: 5000
-    prize: 19.99
-  - coincount: 10000
-    prize: 29.99
-  - coincount: 20000
-    prize: 39.99
