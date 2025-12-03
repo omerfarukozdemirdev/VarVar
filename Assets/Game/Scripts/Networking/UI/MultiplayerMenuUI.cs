@@ -34,7 +34,7 @@ public class MultiplayerMenuUI : MonoBehaviour
 
         _warningTransform = _warningText.GetComponent<RectTransform>();
 
-        _hostButton.onClick.AddListener(StartHost);
+        //_hostButton.onClick.AddListener(StartHost);
         _clientButton.onClick.AddListener(StartClient);
         _lobbiesButton.onClick.AddListener(OpenLobbies);
     }
@@ -54,11 +54,10 @@ public class MultiplayerMenuUI : MonoBehaviour
         _welcomeText.text = $"welcome, <color=yellow>{playerName}</color>";
     }
 
-    private async void StartHost()
-    {
-        _hostButton.interactable = false;
-        await HostSingleton.Instance.HostManager.StartHostAsync();
-    }
+    //private async void StartHost()
+    //{
+    //    _hostButton.interactable = false;
+    //}
 
     private async void StartClient()
     {

@@ -16,7 +16,7 @@ using UnityEngine.SceneManagement;
 
 public class HostManager : IDisposable
 {
-    private const int MAX_CONNECTIONS = 4;
+    //private const int MAX_CONNECTIONS = 4;
     
     public NetworkServer NetworkServer { get; private set; }
     
@@ -25,11 +25,11 @@ public class HostManager : IDisposable
     private string _lobbyId;
     private Lobby _lobby;
 
-    public async UniTask StartHostAsync()
+    public async UniTask StartHostAsync(string lobbyName, int lobbyMaxPlayer, bool isPrivate)
     {
         try
         {
-            allocation = await RelayService.Instance.CreateAllocationAsync(MAX_CONNECTIONS);
+            allocation = await RelayService.Instance.CreateAllocationAsync(lobbyMaxPlayer);
         }
         catch(Exception exception)
         {
@@ -53,7 +53,7 @@ public class HostManager : IDisposable
         try
         {
             CreateLobbyOptions createLobbyOptions = new CreateLobbyOptions();
-            createLobbyOptions.IsPrivate = false;
+            createLobbyOptions.IsPrivate = isPrivate;
             createLobbyOptions.Data = new Dictionary<string, DataObject>()
             {
                 {
@@ -75,7 +75,7 @@ public class HostManager : IDisposable
             string playerName = PlayerPrefs.GetString(Constants.PlayerData.PlayerNameKey, "Unknown");
 
             Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(
-                $"{playerName}'s Lobby", MAX_CONNECTIONS, createLobbyOptions);
+                lobbyName, lobbyMaxPlayer, createLobbyOptions);
             
             _lobbyId = lobby.Id;
             _lobby = lobby;
