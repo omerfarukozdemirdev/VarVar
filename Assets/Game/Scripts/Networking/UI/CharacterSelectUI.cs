@@ -76,11 +76,11 @@ public class CharacterSelectUI : MonoBehaviour
     {
         if (NetworkManager.Singleton.IsHost)
         {
-            _joinCodeText.text = HostSingleton.Instance.HostManager.GetJoinCode();
+            _joinCodeText.text = HostSingleton.Instance.HostManager.GetLobby().LobbyCode;
         }
         else if (NetworkManager.Singleton.IsClient)
         {
-            _joinCodeText.text = ClientSingleton.Instance.ClientManager.GetJoinCode();
+            _joinCodeText.text = ClientSingleton.Instance.ClientManager.GetLobby().LobbyCode;
         }
     }
 
@@ -127,7 +127,7 @@ public class CharacterSelectUI : MonoBehaviour
         {
             try
             {
-                await LobbyService.Instance.UpdateLobbyAsync(HostSingleton.Instance.HostManager.GetLobbyId(), new UpdateLobbyOptions
+                await LobbyService.Instance.UpdateLobbyAsync(HostSingleton.Instance.HostManager.GetLobby().Id, new UpdateLobbyOptions
                 {
                     Data = new Dictionary<string, DataObject>
                     {
@@ -139,7 +139,7 @@ public class CharacterSelectUI : MonoBehaviour
                     }
                 });
 
-                await LobbyService.Instance.DeleteLobbyAsync(HostSingleton.Instance.HostManager.GetLobbyId());
+                await LobbyService.Instance.DeleteLobbyAsync(HostSingleton.Instance.HostManager.GetLobby().Id);
             }
             catch (LobbyServiceException lobbyServiceException)
             {

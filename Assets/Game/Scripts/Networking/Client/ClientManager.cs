@@ -1,8 +1,10 @@
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using Unity.Networking.Transport.Relay;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
@@ -14,10 +16,8 @@ using UnityEngine.SceneManagement;
 
 public class ClientManager : IDisposable
 {
-    private JoinAllocation _joinAllocation;
     private NetworkClient _networkClient;
-    private string _joinCode;
-    private Lobby _lobby;
+    private Lobby joinedLobby;
 
     public async UniTask<bool> InitAsync()
     {
@@ -40,48 +40,119 @@ public class ClientManager : IDisposable
         SceneManager.LoadScene(Constants.SceneNames.Menu);
     }
 
-    public async UniTask StartClientAsync(string joinCode)
+    public async UniTask JoinWithCode(string lobbyCode)
     {
         try
         {
-            _joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
+            joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode);
+
+            string relayJoinCode = joinedLobby.Data["RelayJoinCode"].Value;
+
+            JoinAllocation joinAllocation = await JoinRelay(relayJoinCode);
+
+            UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+            transport.SetRelayServerData(AllocationUtils.ToRelayServerData(joinAllocation, "dtls"));
+
+            UserData userData = new UserData
+            {
+                UserName = PlayerPrefs.GetString(Constants.PlayerData.PlayerNameKey, "Noname"),
+                UserAvatarIndex = (byte)PlayerPrefs.GetInt(Constants.PlayerData.PlayerAvatarKey, 0),
+                UserAuthId = AuthenticationService.Instance.PlayerId
+            };
+
+            string payload = JsonUtility.ToJson(userData);
+            byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
+            NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
+
+            NetworkManager.Singleton.StartClient();
         }
-        catch (Exception exception)
+        catch (LobbyServiceException e)
         {
-            Debug.LogError(exception);
-            return;
+            Debug.Log(e);
         }
-
-        _joinCode = joinCode;
-
-        UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-        transport.SetRelayServerData(AllocationUtils.ToRelayServerData(_joinAllocation, "dtls"));
-
-        UserData userData = new UserData
-        {
-            UserName = PlayerPrefs.GetString(Constants.PlayerData.PlayerNameKey, "Noname"),
-            UserAvatarIndex = (byte) PlayerPrefs.GetInt(Constants.PlayerData.PlayerAvatarKey, 0),
-            UserAuthId = AuthenticationService.Instance.PlayerId
-        };
-        string payload = JsonUtility.ToJson(userData);
-        byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
-        NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes; 
-
-        NetworkManager.Singleton.StartClient();
     }
-    public string GetJoinCode()
+
+    public async UniTask JoinWithId(string lobbyId)
     {
-        return _joinCode;
+        try
+        {
+            joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
+
+            string relayJoinCode = joinedLobby.Data["RelayJoinCode"].Value;
+
+            JoinAllocation joinAllocation = await JoinRelay(relayJoinCode);
+
+            UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+            transport.SetRelayServerData(AllocationUtils.ToRelayServerData(joinAllocation, "dtls"));
+
+            UserData userData = new UserData
+            {
+                UserName = PlayerPrefs.GetString(Constants.PlayerData.PlayerNameKey, "Noname"),
+                UserAvatarIndex = (byte)PlayerPrefs.GetInt(Constants.PlayerData.PlayerAvatarKey, 0),
+                UserAuthId = AuthenticationService.Instance.PlayerId
+            };
+
+            string payload = JsonUtility.ToJson(userData);
+            byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
+            NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
+
+            NetworkManager.Singleton.StartClient();
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+    public async UniTask QuickJoin()
+    {
+        try
+        {
+            joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
+
+            string relayJoinCode = joinedLobby.Data["RelayJoinCode"].Value;
+
+            JoinAllocation joinAllocation = await JoinRelay(relayJoinCode);
+
+            UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+            transport.SetRelayServerData(AllocationUtils.ToRelayServerData(joinAllocation, "dtls"));
+
+            UserData userData = new UserData
+            {
+                UserName = PlayerPrefs.GetString(Constants.PlayerData.PlayerNameKey, "Noname"),
+                UserAvatarIndex = (byte)PlayerPrefs.GetInt(Constants.PlayerData.PlayerAvatarKey, 0),
+                UserAuthId = AuthenticationService.Instance.PlayerId
+            };
+
+            string payload = JsonUtility.ToJson(userData);
+            byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
+            NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
+
+            NetworkManager.Singleton.StartClient();
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+    private async Task<JoinAllocation> JoinRelay(string joinCode)
+    {
+        try
+        {
+            JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
+            return joinAllocation;
+        }
+        catch (RelayServiceException e)
+        {
+            Debug.Log(e);
+            return default;
+        }
     }
 
     public Lobby GetLobby()
     {
-        return _lobby;
-    }
-
-    public void SetLobby(Lobby lobby)
-    {
-        _lobby = lobby;
+        return joinedLobby;
     }
 
     public void Disconnect()

@@ -15,103 +15,69 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class HostManager : IDisposable
-{
-    //private const int MAX_CONNECTIONS = 4;
-    
+{    
     public NetworkServer NetworkServer { get; private set; }
     
     private Allocation allocation;
-    private string _joinCode;
-    private string _lobbyId;
-    private Lobby _lobby;
+    private Lobby joinedLobby;
 
     public async UniTask StartHostAsync(string lobbyName, int lobbyMaxPlayer, bool isPrivate)
     {
         try
         {
+
+            joinedLobby = await LobbyService.Instance.CreateLobbyAsync(
+                lobbyName, lobbyMaxPlayer, new CreateLobbyOptions
+                {
+                    IsPrivate = isPrivate,
+                });
+
             allocation = await RelayService.Instance.CreateAllocationAsync(lobbyMaxPlayer);
-        }
-        catch(Exception exception)
-        {
-            Debug.LogError(exception);
-            return;
-        }
+            string relayJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
 
-        try
-        {
-            _joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-        }
-        catch(Exception exception)
-        {
-            Debug.LogError(exception);
-            return;
-        }
-
-        UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
-        transport.SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, "dtls"));
-
-        try
-        {
-            CreateLobbyOptions createLobbyOptions = new CreateLobbyOptions();
-            createLobbyOptions.IsPrivate = isPrivate;
-            createLobbyOptions.Data = new Dictionary<string, DataObject>()
+            await LobbyService.Instance.UpdateLobbyAsync(joinedLobby.Id, new UpdateLobbyOptions
             {
+                Data = new Dictionary<string, DataObject>
                 {
-                    "JoinCode", new DataObject
-                    (
-                        visibility: DataObject.VisibilityOptions.Public,
-                        value: _joinCode
-                    )
-                },
-                {
-                    "GameStarted", new DataObject
-                    (
-                        visibility: DataObject.VisibilityOptions.Public,
-                        value: "false"
-                    )
+                    {"RelayJoinCode", new DataObject(DataObject.VisibilityOptions.Member, relayJoinCode)}
                 }
-            };
+            });
 
-            string playerName = PlayerPrefs.GetString(Constants.PlayerData.PlayerNameKey, "Unknown");
-
-            Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(
-                lobbyName, lobbyMaxPlayer, createLobbyOptions);
-            
-            _lobbyId = lobby.Id;
-            _lobby = lobby;
+            UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+            transport.SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, "dtls"));
 
             HostSingleton.Instance.StartCoroutine(HeartbeatLobby(15f));
+
+            NetworkServer = new NetworkServer(NetworkManager.Singleton);
+
+            UserData userData = new UserData
+            {
+                UserName = PlayerPrefs.GetString(Constants.PlayerData.PlayerNameKey, "Noname"),
+                UserAvatarIndex = (byte)PlayerPrefs.GetInt(Constants.PlayerData.PlayerAvatarKey, 0),
+                UserAuthId = AuthenticationService.Instance.PlayerId
+            };
+            string payload = JsonUtility.ToJson(userData);
+            byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
+            NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
+
+            NetworkManager.Singleton.StartHost();
+
+            NetworkServer.OnClientLeft += HandleClientLeft;
+            Debug.Log(joinedLobby.LobbyCode);
+            NetworkManager.Singleton.SceneManager.LoadScene(Constants.SceneNames.Room, LoadSceneMode.Single);
         }
         catch(LobbyServiceException lobbyServiceException)
         {
             Debug.LogError(lobbyServiceException);
             return;
         }
-
-        NetworkServer = new NetworkServer(NetworkManager.Singleton); 
-
-        UserData userData = new UserData
-        {
-            UserName = PlayerPrefs.GetString(Constants.PlayerData.PlayerNameKey, "Noname"),
-            UserAvatarIndex = (byte) PlayerPrefs.GetInt(Constants.PlayerData.PlayerAvatarKey, 0),
-            UserAuthId = AuthenticationService.Instance.PlayerId
-        };
-        string payload = JsonUtility.ToJson(userData);
-        byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
-        NetworkManager.Singleton.NetworkConfig.ConnectionData = payloadBytes;
-
-        NetworkManager.Singleton.StartHost();
-        
-        NetworkServer.OnClientLeft += HandleClientLeft;
-
-        NetworkManager.Singleton.SceneManager.LoadScene(Constants.SceneNames.Room, LoadSceneMode.Single);
     }
 
     private async void HandleClientLeft(string authId)
     {
         try
         {
-            await LobbyService.Instance.RemovePlayerAsync(_lobbyId, authId);
+            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, authId);
         }
         catch(LobbyServiceException lobbyServiceException)
         {
@@ -125,24 +91,14 @@ public class HostManager : IDisposable
 
         while(true)
         {
-            LobbyService.Instance.SendHeartbeatPingAsync(_lobbyId);
+            LobbyService.Instance.SendHeartbeatPingAsync(joinedLobby.Id);
             yield return delay;
         }
     }
 
-    public string GetJoinCode()
-    {
-        return _joinCode;
-    }
-
-    public string GetLobbyId()
-    {
-        return _lobbyId;
-    }
-
     public Lobby GetLobby()
     {
-        return _lobby;
+        return joinedLobby;
     }
 
     public void Dispose()
@@ -154,18 +110,18 @@ public class HostManager : IDisposable
     {
         HostSingleton.Instance.StopCoroutine(nameof(HeartbeatLobby));
 
-        if(!string.IsNullOrEmpty(_lobbyId))
+        if(!string.IsNullOrEmpty(joinedLobby.Id))
         {
             try
             {
-                await LobbyService.Instance.DeleteLobbyAsync(_lobbyId);
+                await LobbyService.Instance.DeleteLobbyAsync(joinedLobby.Id);
             }
             catch(LobbyServiceException lobbyServiceException)
             {
                 Debug.Log(lobbyServiceException);
             }
 
-            _lobbyId = string.Empty;
+            joinedLobby = null;
         }
 
         NetworkServer.OnClientLeft -= HandleClientLeft;

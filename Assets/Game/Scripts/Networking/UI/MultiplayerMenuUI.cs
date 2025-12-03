@@ -13,6 +13,7 @@ public class MultiplayerMenuUI : MonoBehaviour
     [SerializeField] private LobbiesListUI _lobbiesListUI;
     [SerializeField] private Button _hostButton;
     [SerializeField] private Button _clientButton;
+    [SerializeField] private Button _quickJoinButton;
     [SerializeField] private Button _lobbiesButton;
     [SerializeField] private TMP_InputField _joinCodeInputField;
     [SerializeField] private GameObject _lobbiesParentGameObject;
@@ -34,8 +35,8 @@ public class MultiplayerMenuUI : MonoBehaviour
 
         _warningTransform = _warningText.GetComponent<RectTransform>();
 
-        //_hostButton.onClick.AddListener(StartHost);
         _clientButton.onClick.AddListener(StartClient);
+        _quickJoinButton.onClick.AddListener(QuickJoin);
         _lobbiesButton.onClick.AddListener(OpenLobbies);
     }
 
@@ -54,11 +55,6 @@ public class MultiplayerMenuUI : MonoBehaviour
         _welcomeText.text = $"welcome, <color=yellow>{playerName}</color>";
     }
 
-    //private async void StartHost()
-    //{
-    //    _hostButton.interactable = false;
-    //}
-
     private async void StartClient()
     {
         if(_joinCodeInputField.text == string.Empty || _joinCodeInputField.text.Contains(" "))
@@ -67,7 +63,12 @@ public class MultiplayerMenuUI : MonoBehaviour
             return;
         }
 
-        await ClientSingleton.Instance.ClientManager.StartClientAsync(_joinCodeInputField.text);
+        await ClientSingleton.Instance.ClientManager.JoinWithCode(_joinCodeInputField.text);
+    }
+
+    private async void QuickJoin()
+    {
+        await ClientSingleton.Instance.ClientManager.QuickJoin();
     }
 
     private void OpenLobbies()

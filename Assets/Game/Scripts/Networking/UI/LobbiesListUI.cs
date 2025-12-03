@@ -73,10 +73,7 @@ public class LobbiesListUI : MonoBehaviour
 
         try
         {
-            Lobby joiningLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobby.Id);
-            string joinCode = joiningLobby.Data["JoinCode"].Value;
-            ClientSingleton.Instance.ClientManager.SetLobby(joiningLobby);
-            await ClientSingleton.Instance.ClientManager.StartClientAsync(joinCode);
+            await ClientSingleton.Instance.ClientManager.JoinWithId(lobby.Id);
         }
         catch (LobbyServiceException lobbyServiceException)
         {
