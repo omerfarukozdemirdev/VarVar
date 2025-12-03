@@ -34,8 +34,13 @@ public class EmojiController : MonoBehaviour
 
     void EmojiButtonOnClick(int index)
     {
+        gameControl.SendEmojiServerRpc((byte)gameControl.actorControls.IndexOf(gameControl.playerControl.actorControl), (byte)index);
         CloseEmojiPanel();
         CloseEmojiButton();
+
+        if (GameModeChecker.Instance.IsMultiplayerActive)
+            return;
+
         var emojiContent = gameControl.actorControls[0].emoji.transform.GetChild(0);
         emojiContent.GetComponent<Image>().sprite = emojis[index];
         iTween.ScaleTo(emojiContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));

@@ -37,8 +37,13 @@ public class DrinkController : MonoBehaviour
     {
         if (gameControl.actorControls[0].totalCoins >= gameControl.drinkController.drinks[index].Price)
         {
+            gameControl.SendDrinkServerRpc((byte)gameControl.actorControls.IndexOf(gameControl.playerControl.actorControl), (byte)index);
             CloseDrinkPanel();
             CloseDrinkButton();
+
+            if (GameModeChecker.Instance.IsMultiplayerActive)
+                return;
+
             var drinkContent = gameControl.actorControls[0].drink.transform.GetChild(0);
             drinkContent.GetComponent<Image>().sprite = drinks[index].Icon;
             iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));

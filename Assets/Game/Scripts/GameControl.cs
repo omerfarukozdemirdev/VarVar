@@ -112,7 +112,7 @@ public class GameControl : NetworkBehaviour
             throwedCardObjs[i].SetActive(false);
         }
 
-        if(GameModeChecker.Instance.IsSinglePlayerActive)
+        if (GameModeChecker.Instance.IsSinglePlayerActive)
         {
             actorControls[0].actorAvatar.sprite = gameConfig.avatars[PlayerPrefs.GetInt(Constants.PlayerData.PlayerAvatarKey)];
 
@@ -134,7 +134,6 @@ public class GameControl : NetworkBehaviour
     {
         if (GameModeChecker.Instance.IsMultiplayerActive)
         {
-            //actorControls.ForEach(x => x.gameObject.SetActive(false));
             selectSoloModePanel.gameObject.SetActive(false);
         }
         else
@@ -221,7 +220,7 @@ public class GameControl : NetworkBehaviour
 
     public void NextTour()
     {
-        if(GameModeChecker.Instance.IsMultiplayerActive)
+        if (GameModeChecker.Instance.IsMultiplayerActive)
         {
             NextTourClientRpc();
         }
@@ -627,24 +626,21 @@ public class GameControl : NetworkBehaviour
 
         yield return new WaitForSeconds(2.5f);
 
-        //if (GameModeChecker.Instance.IsMultiplayerActive)
-        //{
-
-        //    yield break;
-        //}
-
         NextActor();
 
         drinkController.drinkButton.SetActive(true);
         emojiController.emojiButton.SetActive(true);
 
-        actorControls.ForEach(x =>
+        if (GameModeChecker.Instance.IsSinglePlayerActive)
         {
-            if (!x.player)
+            actorControls.ForEach(x =>
             {
-                x.StartEmojiCoroutine();
-            }
-        });
+                if (!x.player)
+                {
+                    x.StartEmojiCoroutine();
+                }
+            });
+        }
     }
 
     public void NextActor()
@@ -709,7 +705,7 @@ public class GameControl : NetworkBehaviour
             cardClose.Pick(actorControl.actorTransform.GetChild(0).position);
             tableAnimationControl.cardCloses.Remove(cardClose);
 
-            if(GameModeChecker.Instance.IsSinglePlayerActive)
+            if (GameModeChecker.Instance.IsSinglePlayerActive)
                 actorControl.AddCard(deck[0]);
 
             deck.Remove(deck[0]);
@@ -756,7 +752,7 @@ public class GameControl : NetworkBehaviour
 
         throwedCards.Add(cardType);
 
-        if (GameModeChecker.Instance.IsSinglePlayerActive ||(GameModeChecker.Instance.IsMultiplayerActive && playingActors[networkPlayingInd].player))
+        if (GameModeChecker.Instance.IsSinglePlayerActive || (GameModeChecker.Instance.IsMultiplayerActive && playingActors[networkPlayingInd].player))
             actorControl.RemoveCard(cardType);
 
         float yOffset = 0;
@@ -1052,6 +1048,7 @@ public class GameControl : NetworkBehaviour
 
 
     // multi
+    // tum oyuncular oyun sahnesine girdikten sonra oyunu baslatir
     private void HandleGameStateChanged(GameState newState)
     {
         if (newState == GameState.Playing)
@@ -1078,6 +1075,7 @@ public class GameControl : NetworkBehaviour
         }
     }
 
+    // oyuncularin yerlerini, isimlerini, avatarlarını set eder
     public void SetMultiPlayers()
     {
         PlayerNetworkController[] networkPlayers = FindObjectsByType<PlayerNetworkController>(FindObjectsSortMode.None)
@@ -1094,7 +1092,6 @@ public class GameControl : NetworkBehaviour
             ActorControl currentActor = players[i];
 
             actorControls.Add(currentActor);
-            //actorControls[i].gameObject.SetActive(true);
             currentActor.gameObject.SetActive(true);
             currentActor.actorTransform.gameObject.SetActive(true);
             currentActor.SetActorName(networkPlayers[i].PlayerName.Value.ToString());
@@ -1105,6 +1102,7 @@ public class GameControl : NetworkBehaviour
         }
     }
 
+    // server tarafindan oyunculara ilk kartlari dagitir
     public void ServerDealInitialHands(PlayerNetworkController[] networkPlayers)
     {
         const int initialHandSize = 9;
@@ -1121,26 +1119,10 @@ public class GameControl : NetworkBehaviour
                 }
             }
 
-            // Sunucu belleğinde oyuncunun elini kaydet
-            //actorControls[i].cardsInHand = initialHand;
-            //actorControls[i].ArrangeHand();
-
-            // Card listesini NetworkCardData dizisine dönüştür
             NetworkCardData[] networkData = initialHand
                 .Select(c => new NetworkCardData { suit = c.suit, value = c.value })
                 .ToArray();
 
-            // Hedef Client ID'yi al
-            ulong targetClientId = networkPlayers[i].OwnerClientId;
-
-            //// Hedefli RPC Parametrelerini Oluştur
-            //ClientRpcParams clientRpcParams = new ClientRpcParams
-            //{
-            //    Send = new ClientRpcSendParams { TargetClientIds = new ulong[] { targetClientId } }
-            //};
-
-            // Hedef Client'a Kartları Gönder
-            //if(i!=0)
             ReceiveHandClientRpc(networkData, (byte)i);
         }
     }
@@ -1153,7 +1135,6 @@ public class GameControl : NetworkBehaviour
         .Select(nd => new Card { suit = nd.suit, value = nd.value })
         .ToList();
 
-        // RPC ile gelen index'e göre ActorControl'ü bul
         ActorControl targetActor = actorControls[playerIndex];
 
         if (!targetActor.player)
@@ -1165,6 +1146,7 @@ public class GameControl : NetworkBehaviour
         targetActor.ArrangeHand();
     }
 
+    // server tarafindan tum clientlara deck gonderir
     public void SendDeckToClients()
     {
         NetworkCardData[] networkData = deck
@@ -1185,12 +1167,14 @@ public class GameControl : NetworkBehaviour
         deck = clientDeck;
     }
 
+    // Clientlara  dealer index gönderir
     [Rpc(SendTo.ClientsAndHost)]
     public void SetCardDealerClientRpc(byte dealerIndex)
     {
         cardDealerInd = dealerIndex;
     }
 
+    // Clientlarda oyunu başlatır
     [Rpc(SendTo.ClientsAndHost)]
     public void PrepareGameClientRpc()
     {
@@ -1198,11 +1182,13 @@ public class GameControl : NetworkBehaviour
         PrepeareStartGame();
     }
 
+    // multiplayer bahis asamasini baslatir
     public void StartMultiplayerBettingPhase()
     {
         ReceiveDecisionTurnClientRpc();
     }
 
+    // client tarafindan bahis asamasini baslatir
     [Rpc(SendTo.ClientsAndHost)]
     public void ReceiveDecisionTurnClientRpc()
     {
@@ -1212,6 +1198,7 @@ public class GameControl : NetworkBehaviour
         }
     }
 
+    // client tarafindan servera oyuncu kararini gonderir
     [Rpc(SendTo.Server)]
     public void SendPlayerDecisionServerRpc(byte actorIndex, byte decisionType)
     {
@@ -1236,6 +1223,7 @@ public class GameControl : NetworkBehaviour
         MultiplayerCurrentDecisionClientRpc(actorIndex, decisionType);
     }
 
+    // server tarafindan tum clientlara oyuncu kararini gonderir
     [Rpc(SendTo.ClientsAndHost)]
     public void MultiplayerCurrentDecisionClientRpc(byte actorIndex, byte decisionType)
     {
@@ -1246,12 +1234,14 @@ public class GameControl : NetworkBehaviour
         actor.DecidePlayer();
     }
 
+    // client tarafindan servera atilan karti gonderir
     [Rpc(SendTo.Server)]
     public void SendTakeCardFromThrowedServerRpc()
     {
         SendTakeCardFromThrowedClientRpc();
     }
 
+    // tum clientlarda atilan karttan kart alma islemini gerceklestirir
     [Rpc(SendTo.ClientsAndHost)]
     public void SendTakeCardFromThrowedClientRpc()
     {
@@ -1261,12 +1251,14 @@ public class GameControl : NetworkBehaviour
         }
     }
 
+    // client tarafindan servera desteden kart alma islemini gonderir
     [Rpc(SendTo.Server)]
     public void SendTakeCardFromDeckServerRpc()
     {
         SendTakeCardFromDeckClientRpc();
     }
 
+    // tum clientlarda desteden kart alma islemini gerceklestirir
     [Rpc(SendTo.ClientsAndHost)]
     public void SendTakeCardFromDeckClientRpc()
     {
@@ -1276,12 +1268,14 @@ public class GameControl : NetworkBehaviour
         }
     }
 
+    // client tarafindan servera atilan karti gonderir
     [Rpc(SendTo.Server)]
     public void SendThrowCardServerRpc(NetworkCardData networkThrowedCardData)
     {
         SendThrowCardClientRpc(networkThrowedCardData);
     }
 
+    // tum clientlarda atilan karti gerceklestirir
     [Rpc(SendTo.ClientsAndHost)]
     public void SendThrowCardClientRpc(NetworkCardData networkThrowedCardData)
     {
@@ -1292,6 +1286,7 @@ public class GameControl : NetworkBehaviour
         }
     }
 
+    // client tarafindan servera oyuncu elini tamamladigini gonderir
     [Rpc(SendTo.Server)]
     public void SendPlayerHandCompletedServerRpc(byte actorIndex)
     {
@@ -1299,6 +1294,7 @@ public class GameControl : NetworkBehaviour
         PingHandEndClientRpc();
     }
 
+    // server tarafindan tum clientlara oyuncu elini tamamladigini gonderir
     [Rpc(SendTo.ClientsAndHost)]
     public void PingHandEndClientRpc()
     {
@@ -1312,8 +1308,9 @@ public class GameControl : NetworkBehaviour
         }
     }
 
+    // client tarafindan servera oyuncu elini gonderir
     [Rpc(SendTo.Server)]
-    public void SendClientHandServerRpc(byte actorIndex,NetworkCardData[] playerCards)
+    public void SendClientHandServerRpc(byte actorIndex, NetworkCardData[] playerCards)
     {
         networkReceivedClientHandCounter++;
 
@@ -1325,7 +1322,7 @@ public class GameControl : NetworkBehaviour
 
         if (networkReceivedClientHandCounter >= playerCount)
         {
-            for(int i = 0; i < actorControls.Count; i++)
+            for (int i = 0; i < actorControls.Count; i++)
             {
                 NetworkCardData[] networkCardData = actorControls[i].cardsInHand
                 .Select(c => new NetworkCardData { suit = c.suit, value = c.value })
@@ -1340,8 +1337,9 @@ public class GameControl : NetworkBehaviour
         SendPlayerHandCompletedClientRpc((byte)networkWinInd);
     }
 
+    // server tarafindan tum clientlara oyuncu elini gonderir
     [Rpc(SendTo.ClientsAndHost)]
-    public void SendAllHandClientRpc(byte playerIndex,NetworkCardData[] playerCards, bool isPlayerWin)
+    public void SendAllHandClientRpc(byte playerIndex, NetworkCardData[] playerCards, bool isPlayerWin)
     {
         List<Card> clientDeck = playerCards
             .Select(nd => new Card { suit = nd.suit, value = nd.value })
@@ -1351,15 +1349,17 @@ public class GameControl : NetworkBehaviour
         actorControls[playerIndex].handWin = isPlayerWin;
     }
 
+    // server tarafindan tum clientlara oyuncu elini tamamladigini gonderir
     [Rpc(SendTo.ClientsAndHost)]
     public void SendPlayerHandCompletedClientRpc(byte winPlayerIndex)
     {
-        if(playerControl.actorControl.handWin)
+        if (playerControl.actorControl.handWin)
             return;
 
         OpenHandCompletedPanel(actorControls[winPlayerIndex]);
     }
 
+    // tum oyuncular tur atladiginda cagrilir
     [Rpc(SendTo.ClientsAndHost)]
     public void NextTourClientRpc()
     {
@@ -1385,5 +1385,32 @@ public class GameControl : NetworkBehaviour
             PrepareGameClientRpc();
         }
     }
-}
 
+    // client tarafindan gönderilen emoji servera iletilir
+    [Rpc(SendTo.Server)]
+    public void SendEmojiServerRpc(byte actorIndex, byte emojiIndex)
+    {
+        BroadcastEmojiClientRpc(actorIndex, emojiIndex);
+    }
+
+    // server tarafindan tum clientlara emoji gonderir
+    [Rpc(SendTo.ClientsAndHost)]
+    public void BroadcastEmojiClientRpc(byte actorIndex, byte emojiIndex)
+    {
+        actorControls[actorIndex].ShowEmoji(emojiIndex);
+    }
+
+    // client tarafindan gönderilen icki servera iletilir
+    [Rpc(SendTo.Server)]
+    public void SendDrinkServerRpc(byte actorIndex, byte drinkIndex)
+    {
+        BroadcastDrinkClientRpc(actorIndex, drinkIndex);
+    }
+
+    // server tarafindan tum clientlara icki gonderir
+    [Rpc(SendTo.ClientsAndHost)]
+    public void BroadcastDrinkClientRpc(byte actorIndex, byte drinkIndex)
+    {
+        actorControls[actorIndex].ShowDrink(drinkIndex);
+    }
+}

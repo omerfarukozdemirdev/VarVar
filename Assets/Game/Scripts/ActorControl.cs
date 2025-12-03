@@ -66,7 +66,7 @@ public class ActorControl : MonoBehaviour
     {
         if (!player)
         {
-            totalCoins = 150;
+            totalCoins = 5000;
 
             if(GameModeChecker.Instance.IsSinglePlayerActive)
             {
@@ -485,9 +485,10 @@ public class ActorControl : MonoBehaviour
 
         iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
 
-        TakeDrink();
         timerCircle.gameObject.SetActive(false);
 
+        if(GameModeChecker.Instance.IsSinglePlayerActive)
+            TakeDrink();
     }
 
     void TakeDrink()
@@ -550,6 +551,23 @@ public class ActorControl : MonoBehaviour
         emojiContent.GetComponent<Image>().sprite = gameControl.emojiController.emojis[Random.Range(0, gameControl.emojiController.emojis.Length)];
         iTween.ScaleTo(emojiContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
         iTween.ScaleTo(emojiContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce, "delay", 5f));
+    }
+
+    public void ShowEmoji(int index)
+    {
+        var emojiContent = emoji.transform.GetChild(0);
+
+        emojiContent.GetComponent<Image>().sprite = gameControl.emojiController.emojis[index];
+        iTween.ScaleTo(emojiContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
+        iTween.ScaleTo(emojiContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce, "delay", 5f));
+    }
+
+    public void ShowDrink(int index)
+    {
+        var drinkContent = drink.transform.GetChild(0);
+        drinkContent.GetComponent<Image>().sprite = gameControl.drinkController.drinks[index].Icon;
+        iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
+        iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce, "delay", 12f));
     }
 }
 
