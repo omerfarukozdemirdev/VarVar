@@ -213,6 +213,16 @@ public class GameControl : NetworkBehaviour
 
     public void Menu()
     {
+        if(GameModeChecker.Instance.IsMultiplayerActive)
+        {
+            if (NetworkManager.Singleton.IsHost)
+            {
+                HostSingleton.Instance.HostManager.Shutdown();
+            }
+
+            ClientSingleton.Instance.ClientManager.Disconnect();
+        }
+
         FindObjectOfType<MakeNoise>().PlaySFX(26, 0);
         gameConfig.cardDealerInd = -1;
         UnityEngine.SceneManagement.SceneManager.LoadScene(2);

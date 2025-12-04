@@ -46,7 +46,7 @@ public class HostManager : IDisposable
             UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
             transport.SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, "dtls"));
 
-            HostSingleton.Instance.StartCoroutine(HeartbeatLobby(15f));
+            //HostSingleton.Instance.StartCoroutine(HeartbeatLobby(15f));
 
             NetworkServer = new NetworkServer(NetworkManager.Singleton);
 
@@ -108,7 +108,7 @@ public class HostManager : IDisposable
 
     public async void Shutdown()
     {
-        HostSingleton.Instance.StopCoroutine(nameof(HeartbeatLobby));
+        //HostSingleton.Instance.StopCoroutine(nameof(HeartbeatLobby));
 
         if(!string.IsNullOrEmpty(joinedLobby.Id))
         {
