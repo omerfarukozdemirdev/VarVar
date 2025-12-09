@@ -103,7 +103,7 @@ public class MenuController : MonoBehaviour
         
         if (!PlayerPrefs.HasKey("PlayTime"))
         {
-            PlayerPrefs.SetInt("PlayTime", 200);
+            PlayerPrefs.SetInt("PlayTime", 20);
         }
 
         playTimeTmp.text = PlayerPrefs.GetInt("PlayTime").ToString();

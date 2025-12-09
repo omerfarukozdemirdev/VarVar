@@ -576,6 +576,17 @@ public class PlayerControl : MonoBehaviour
                 ind = i;
                 cardThrowed = cardIns[i].GetChild(0).GetChild(0);
                 gameControl.ThrowCard(card, actorControl);
+
+                if (GameModeChecker.Instance.IsMultiplayerActive)
+                {
+                    NetworkCardData networkCardData = new NetworkCardData
+                    {
+                        suit = card.suit,
+                        value = card.value
+                    };
+                    gameControl.SendThrowCardServerRpc(networkCardData);
+                }
+
                 break;
             }
         }
@@ -618,6 +629,11 @@ public class PlayerControl : MonoBehaviour
         currentActorController.gameControl.deck.Remove(gameControl.deck[0]);
 
         currentActorController.gameControl.CheckDeckCardCount();
+
+        if (GameModeChecker.Instance.IsMultiplayerActive)
+        {
+            GameControl.Instance.SendTakeCardFromDeckServerRpc();
+        }
     }
 
     // süre bittiğinde kartların raycasttarget ı kapatılıyor ve kart atıldığında açılıyor. böylece oto kart çekilip oto kart atıldığı anda 
