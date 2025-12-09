@@ -1518,11 +1518,11 @@ public class GameControl : NetworkBehaviour
                 //}
             break;
             case GameState.Playing:
-                SetMultiPlayers();
-                if (NetworkManager.Singleton.IsHost)
-                {
-                    SortOrderOfPlayActorsClientRpc();
-                }
+                //SetMultiPlayers();
+                //if (NetworkManager.Singleton.IsHost)
+                //{
+                //    SortOrderOfPlayActorsClientRpc();
+                //}
                 break;
         }
     }
