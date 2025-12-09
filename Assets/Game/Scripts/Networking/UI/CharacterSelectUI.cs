@@ -143,7 +143,6 @@ public class CharacterSelectUI : MonoBehaviour
             }
             catch (LobbyServiceException lobbyServiceException)
             {
-                Debug.LogError($"Failed to update or delete lobby: {lobbyServiceException}");
             }
 
             NetworkManager.Singleton.SceneManager.LoadScene(Constants.SceneNames.Game, LoadSceneMode.Single);

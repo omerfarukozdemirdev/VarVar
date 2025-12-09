@@ -136,43 +136,26 @@ public class MultiplayerGameManager : NetworkBehaviour
             return HostSingleton.Instance.HostManager.GetLobby();
     }
 
-    // dosyasýnýn içine eklenecek
-
     public bool AmITheNextHost()
     {
-        // Eðer listede kimse yoksa veya hata varsa false dön
         if (_playerDataNetworkList.Count == 0) return false;
 
         ulong myClientId = NetworkManager.Singleton.LocalClientId;
         ulong lowestClientId = ulong.MaxValue;
 
-        // Listeyi dön ve Host (0) hariç en küçük ID'yi bul
         foreach (var playerData in _playerDataNetworkList)
         {
-            // Host zaten düþtü varsayýyoruz, o yüzden 0'ý veya düþen host ID'sini dikkate alma
-            // Ancak bu fonksiyon host düþmeden hemen önce çalýþacaðý için
-            // Kendimiz dýþýndaki en düþük ID'ye bakmalýyýz.
-
-            // Basit mantýk: Listeyi ClientId'ye göre sýrala.
-            // Eðer ben listenin baþýndaysam (veya Host'tan sonraki ilk kiþi isem) Host benim.
-
             if (playerData.ClientId < lowestClientId && playerData.ClientId != 0)
             {
                 lowestClientId = playerData.ClientId;
             }
         }
-
-        // Eðer Host (0) gittiyse, en küçük ID bensem, yeni Host benim.
-        // Not: Gerçek senaryoda Host ID'si 0 olmayabilir ama genelde 0'dýr.
-        // Biz burada basitçe: "Benim ID'm, kalanlar arasýndaki en küçük mü?" diye bakýyoruz.
         return myClientId == lowestClientId;
     }
 
-    // dosyasýnýn içine uygun bir yere ekle:
 
     public IEnumerable<PlayerDataSerializable> GetPlayerDataList()
     {
-        // NetworkList'i normal bir listeye çevirip döndürüyoruz
         List<PlayerDataSerializable> list = new List<PlayerDataSerializable>();
         foreach (var player in _playerDataNetworkList)
         {

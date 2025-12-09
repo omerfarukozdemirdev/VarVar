@@ -26,8 +26,6 @@ public class PlayerNetworkController : NetworkBehaviour
         }
     }
 
-
-
     public override void OnNetworkDespawn()
     {
         if(IsServer)

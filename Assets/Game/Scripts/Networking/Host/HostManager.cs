@@ -46,8 +46,6 @@ public class HostManager : IDisposable
             UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
             transport.SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, "dtls"));
 
-            //HostSingleton.Instance.StartCoroutine(HeartbeatLobby(15f));
-
             NetworkServer = new NetworkServer(NetworkManager.Singleton);
 
             UserData userData = new UserData
@@ -63,7 +61,6 @@ public class HostManager : IDisposable
             NetworkManager.Singleton.StartHost();
 
             NetworkServer.OnClientLeft += HandleClientLeft;
-            Debug.Log(joinedLobby.LobbyCode);
 
             if (loadScene)
             {
@@ -112,8 +109,6 @@ public class HostManager : IDisposable
 
     public async void Shutdown()
     {
-        //HostSingleton.Instance.StopCoroutine(nameof(HeartbeatLobby));
-
         if(!string.IsNullOrEmpty(joinedLobby.Id))
         {
             try
@@ -133,18 +128,14 @@ public class HostManager : IDisposable
         NetworkServer?.Dispose();
     }
 
-    //
 
     public async UniTask StartHostMigrationAsync()
     {
-
-        // Eski bilgilerle odayý tekrar kuruyoruz
-        // Not: Orijinal StartHostAsync fonksiyonunu çaðýrýyoruz
         await StartHostAsync(
             MigrationBackup.LobbyName,
             MigrationBackup.MaxPlayers,
             MigrationBackup.IsPrivate,
-            loadScene: false // <-- Sahne yükleme, Game sahnesinde kal!
+            loadScene: false
         );
 
     }

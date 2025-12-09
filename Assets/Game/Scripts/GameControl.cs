@@ -89,6 +89,7 @@ public class GameControl : NetworkBehaviour
     public int networkWinInd;
     public int networkReceivedClientHandCounter;
     public bool IsNetworkMigrationActive;
+    public bool isIntentionalDisconnect = false;
 
     private void OnEnable()
     {
@@ -220,6 +221,8 @@ public class GameControl : NetworkBehaviour
     {
         if(GameModeChecker.Instance.IsMultiplayerActive)
         {
+            isIntentionalDisconnect = true;
+
             if (NetworkManager.Singleton.IsHost)
             {
                 HostSingleton.Instance.HostManager.Shutdown();
@@ -1094,21 +1097,6 @@ public class GameControl : NetworkBehaviour
                     PrepareGameClientRpc();
                 }
                 break;
-            case GameState.Playing:
-
-                break;
-                //case GameState.MigrateStart:
-                //    break;
-                //case GameState.MigrateComplete:
-                //    networkPlayers = FindObjectsByType<PlayerNetworkController>(FindObjectsSortMode.None)
-                //    .OrderBy(p => p.OwnerClientId)
-                //    .ToArray();
-
-                //    playerCount = MultiplayerGameManager.Instance.GetLobby().MaxPlayers;
-                //    gameLimit = playerCount;
-
-                //    SetMultiPlayers();
-                //    break;
         }
     }
 
@@ -1456,118 +1444,15 @@ public class GameControl : NetworkBehaviour
 
     public void OnMigrationStart()
     {
-        Debug.Log("MIGRATION: Start...");
-
         Time.timeScale = 0f;
-
         IsNetworkMigrationActive = true;
         WaitingForPlayersUI.Instance.Show();
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    public void OnMigrationHandleClientRpc()
-    {
-        Debug.Log("MIGRATION: Handling...");
-
-        //Time.timeScale = 1f;
-
-        //PlayerNetworkController[] networkPlayers = FindObjectsByType<PlayerNetworkController>(FindObjectsSortMode.None)
-        //.OrderBy(p => p.OwnerClientId)
-        //.ToArray();
-
-        //playerCount = MultiplayerGameManager.Instance.GetLobby().MaxPlayers;
-        //gameLimit = playerCount;
-        //SetMultiPlayers();
-
-        switch(GameManager.Instance.GetGameState())
-        {
-            case GameState.PrepareGame:
-
-                //Time.timeScale = 1f;
-
-                StopAllCoroutines();
-
-                desicitonPanel.SetActive(false);
-
-                PlayerNetworkController[] networkPlayers = FindObjectsByType<PlayerNetworkController>(FindObjectsSortMode.None)
-.OrderBy(p => p.OwnerClientId)
-.ToArray();
-
-                playerCount = MultiplayerGameManager.Instance.GetLobby().MaxPlayers;
-                gameLimit = playerCount;
-
-                ResetValues();
-
-                gameConfig.cardDealerInd = cardDealerInd;
-
-                tableAnimationControl.Reset();
-                playerControl.ResetValues();
-
-                SetMultiPlayers();
-
-
-                //if (NetworkManager.Singleton.IsHost)
-                //{
-                //    CreateDeck();
-                //    ShuffleDeck();
-                //    ServerDealInitialHands(networkPlayers);
-                //    ChooseRandomCardDealer();
-                //    SendDeckToClients();
-                //    SetCardDealerClientRpc((byte)cardDealerInd);
-                //    PrepareGameClientRpc();
-                //}
-            break;
-            case GameState.Playing:
-                //SetMultiPlayers();
-                //if (NetworkManager.Singleton.IsHost)
-                //{
-                //    SortOrderOfPlayActorsClientRpc();
-                //}
-                break;
-        }
-    }
-
-    [Rpc(SendTo.ClientsAndHost)]
     public void OnMigrationCompletedClientRpc()
     {
-        Debug.Log("MIGRATION: Completed...");
-
         Time.timeScale = 1f;
-
-
-        switch (GameManager.Instance.GetGameState())
-        {
-            case GameState.Playing:
-
-                //Time.timeScale = 1f;
-
-                //StopAllCoroutines();
-
-                //desicitonPanel.SetActive(false);
-
-                //                PlayerNetworkController[] networkPlayers = FindObjectsByType<PlayerNetworkController>(FindObjectsSortMode.None)
-                //.OrderBy(p => p.OwnerClientId)
-                //.ToArray();
-
-                //                playerCount = MultiplayerGameManager.Instance.GetLobby().MaxPlayers;
-                //gameLimit = playerCount;
-
-                //ResetValues();
-
-                //gameConfig.cardDealerInd = cardDealerInd;
-
-                //tableAnimationControl.Reset();
-                //playerControl.ResetValues();
-
-                //SetMultiPlayers();
-
-                if (NetworkManager.Singleton.IsHost)
-                {
-                    //NextActorClientRpc();
-                }
-                break;
-        }
-
         IsNetworkMigrationActive = false;
     }
 
@@ -1579,7 +1464,7 @@ public class GameControl : NetworkBehaviour
                 OnMigrationStart();
                 break;
             case MigrationState.MigrateHandle:
-                OnMigrationHandleClientRpc();
+                //OnMigrationHandleClientRpc();
                 break;
             case MigrationState.MigrateComplete:
                 OnMigrationCompletedClientRpc();
@@ -1608,8 +1493,6 @@ public class GameControl : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost)]
     public void NextActorClientRpc()
     {
-        //NextActor();
-
         if (playingActors[playingInd].player)
         {
             makeNoise.PlaySFX(31, 0);
@@ -1641,45 +1524,27 @@ public class GameControl : NetworkBehaviour
 
         var playingActorsIndex = playingActors.IndexOf(actor);
 
-        //playingActors.Remove(actor);
-
-        //networkPlayingInd--;
-        //playingInd--;
-
-        //if (networkPlayingInd > playingActors.Count - 1)
-        //    networkPlayingInd = 0;
-
         OnPlayerLeft(playingActorsIndex);
     }
 
     public void OnPlayerLeft(int leaverIndex)
     {
-        Debug.Log("Oyuncu Ayrıldı: " + leaverIndex);
-
-        // Önce oyuncuyu listeden çıkar (veya null yapıp listeyi temizle)
         playingActors.RemoveAt(leaverIndex);
 
-        // SENARYO 1: Çıkan kişi, şu an oynayan kişiden önceyse
         if (leaverIndex < networkPlayingInd)
         {
             networkPlayingInd--;
         }
-        // SENARYO 2: Tam sırası gelen kişi çıktıysa
         else if (leaverIndex == networkPlayingInd)
         {
-            // Normalde index aynı kalır (sıra arkadakine geçer)
-            // Ancak son oyuncu çıktıysa, sıra başa (0) dönmelidir.
             if (networkPlayingInd >= playingActors.Count)
             {
                 networkPlayingInd = 0;
             }
         }
 
-        // SENARYO 3 (leaverIndex > NetworkPlayingInd) için işlem gerekmez.
-
         if (playingActors.Count > 0)
         {
-            // Formül: (Şu anki Oyuncu + 1) / Oyuncu Sayısı'ndan kalan
             playingInd = (networkPlayingInd + 1) % playingActors.Count;
         }
         else
@@ -1687,8 +1552,6 @@ public class GameControl : NetworkBehaviour
             playingInd = 0;
             networkPlayingInd = 0;
         }
-
-        Debug.Log($"Yeni Sıra: {networkPlayingInd}, Bir Sonraki: {playingInd}");
 
         if (leaverIndex == networkPlayingInd)
         {
@@ -1701,7 +1564,6 @@ public class GameControl : NetworkBehaviour
                 makeNoise.PlaySFX(31, 0);
                 DisableEnableTakeCardBtns(true);
 
-                // playingActors[playingInd] yerine parametreden gelen indexi kullanıyoruz
                 iTween.ScaleTo(playingActors[networkPlayingInd].transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.2f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
 
                 playerControl.StartTimer(playingActors[networkPlayingInd]);

@@ -4,8 +4,8 @@ public static class MigrationBackup
 {
     public static List<PlayerDataSerializable> Players = new List<PlayerDataSerializable>();
     public static string LobbyName;
-    public static int MaxPlayers; // EKLENDÝ
-    public static bool IsPrivate; // EKLENDÝ
+    public static int MaxPlayers;
+    public static bool IsPrivate;
 
     public static void Clear()
     {

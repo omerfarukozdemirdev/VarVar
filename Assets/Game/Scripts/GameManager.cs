@@ -30,7 +30,6 @@ public class GameManager : NetworkBehaviour
     {
         _currentGameState = newGameState;
         OnGameStateChanged?.Invoke(newGameState);
-        Debug.Log($"Game State: {newGameState}");
     }
 
     public GameState GetGameState()

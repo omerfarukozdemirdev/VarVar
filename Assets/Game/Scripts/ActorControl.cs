@@ -605,51 +605,6 @@ public class ActorControl : MonoBehaviour
 
             passCounter++;
         }
-        //else
-        //{
-        //    if (betUp)
-        //    {
-        //        speechBalloon.SetActive(true);
-
-        //        if (gameControl.betUp)
-        //        {
-        //            speechBalloon.transform.GetChild(0).gameObject.SetActive(true);
-        //            gameControl.makeNoise.PlaySFX(9, 0);
-        //        }
-
-        //        else
-        //        {
-        //            speechBalloon.transform.GetChild(2).gameObject.SetActive(true);
-        //            gameControl.makeNoise.PlaySFX(10, 0);
-        //        }
-
-        //        gameControl.BetUP(this);
-        //    }
-        //    else
-        //    {
-        //        speechBalloon.SetActive(true);
-        //        speechBalloon.transform.GetChild(0).gameObject.SetActive(true);
-
-        //        gameControl.makeNoise.PlaySFX(9, 0);
-        //    }
-
-        //    iTween.ScaleFrom(speechBalloon, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
-
-        //    yield return new WaitForSeconds(.5f);
-
-        //    if (gameControl.betUp)
-        //        SetMoney(1000);
-        //    else
-        //        SetMoney(500);
-
-        //    gameControl.makeNoise.PlaySFX(7, 0);
-
-        //    iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
-        //}
-
-        //yield return new WaitForSeconds(.5f);
-
-        //gameControl.ActorDecisiton();
     }
 }
 

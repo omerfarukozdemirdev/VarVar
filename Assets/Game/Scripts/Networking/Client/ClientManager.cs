@@ -78,33 +78,23 @@ public class ClientManager : IDisposable
     {
         try
         {
-            // 1. Önce girmeyi dene
             try
             {
                 joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
             }
             catch (LobbyServiceException e)
             {
-                // 2. Eðer "Zaten üyesin" (Conflict/409) hatasý alýrsak
                 if (e.Reason == LobbyExceptionReason.LobbyConflict)
                 {
-                    Debug.LogWarning("MIGRATION: Zaten bu lobideyiz. Veriler güncelleniyor...");
-                    // Tekrar girmek yerine mevcut bilgiyi çek
                     joinedLobby = await LobbyService.Instance.GetLobbyAsync(lobbyId);
                 }
                 else
                 {
-                    // Baþka bir hata ise (örn: oda dolu, oda yok) dýþarý fýrlat
                     throw e;
                 }
             }
 
-            // --- BURADAN SONRASI AYNI ---
-
-            // Relay kodunu al
             string relayJoinCode = joinedLobby.Data["RelayJoinCode"].Value;
-
-            Debug.Log($"MIGRATION: Relay Kodu Alýndý: {relayJoinCode}");
 
             JoinAllocation joinAllocation = await JoinRelay(relayJoinCode);
 
@@ -126,20 +116,13 @@ public class ClientManager : IDisposable
         }
         catch (LobbyServiceException e)
         {
-            Debug.LogError($"Lobby Baðlantý Hatasý: {e}");
-            // Burada throw diyerek hatayý ReconnectToMigrationAsync'e bildirebilirsin
-            // ki orada loop devam etsin veya menu'ye dönsün.
-
             GoToMenu();
 
             throw;
         }
         catch (Exception ex)
         {
-            Debug.Log($"Genel Hata: {ex}");
-
             GoToMenu();
-
         }
     }
 
@@ -204,19 +187,12 @@ public class ClientManager : IDisposable
         _networkClient?.Dispose();
     }
 
-    //
-
     public async UniTask ReconnectToMigrationAsync()
     {
-        Debug.Log("MIGRATION: Yeni odaya baðlanýlmaya çalýþýlýyor...");
-
-        // 10 deneme yapacaðýz (veya sonsuza kadar döngü de olabilir)
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 4; i++)
         {
-            Debug.Log($"MIGRATION: Deneme {i + 1}/20");
             try
             {
-                // Eski odanýn ismine sahip bir lobi arýyoruz
                 var queryOptions = new QueryLobbiesOptions
                 {
                     Filters = new List<QueryFilter>
@@ -227,28 +203,21 @@ public class ClientManager : IDisposable
 
                 var queryResponse = await LobbyService.Instance.QueryLobbiesAsync(queryOptions);
 
-                // Eðer uygun bir oda bulunduysa
                 if (queryResponse.Results.Count > 0)
                 {
-                    Debug.Log("MIGRATION: Oda bulundu! Baðlanýlýyor...");
-                    
-                    var foundLobby = queryResponse.Results[0]; // Ýlk bulunaný al
+                    var foundLobby = queryResponse.Results[0];
 
-                    await JoinWithId(foundLobby.Id); // Baðlan
+                    await JoinWithId(foundLobby.Id);
                     
-                    return; // Baþarýlý, çýk
+                    return;
                 }
             }
             catch (Exception e)
             {
-                Debug.LogWarning($"Arama hatasý: {e.Message}");
             }
-
-            Debug.Log("MIGRATION: Oda henüz hazýr deðil, bekleniyor...");
-            await UniTask.Delay(2000, ignoreTimeScale: true); // 2 saniye bekle tekrar dene
+            await UniTask.Delay(2000, ignoreTimeScale: true);
         }
 
-        Debug.LogError("MIGRATION: Yeni host bulunamadý. Menüye dönülüyor.");
         GoToMenu();
     }
 }

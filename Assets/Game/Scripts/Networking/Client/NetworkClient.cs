@@ -15,61 +15,51 @@ public class NetworkClient : IDisposable
         networkManager.OnClientDisconnectCallback += OnClientDisconnect;
     }
 
-    //
-
     private async void OnClientDisconnect(ulong clientId)
     {
         if (clientId != 0 && clientId != _networkManager.LocalClientId) { return; }
 
         if (SceneManager.GetActiveScene().name == Constants.SceneNames.Game)
         {
-            GameControl.Instance.HandleMigrationStateChanged(MigrationState.MigrateStart);
-
-            Debug.Log("Host ayrýldý. Migration baþlýyor...");
-
-            // --- YEDEKLEME BAÞLANGICI ---
-
-            // 1. Önceki verileri temizle
-            MigrationBackup.Clear();
-
-            // 2. Oyuncu Listesini Kopyala (MultiplayerGameManager yok olmadan önce!)
-            var playerList = MultiplayerGameManager.Instance.GetPlayerDataList();
-            // NOT: GetPlayerDataList diye bir metodun yoksa aþaðýda ekleyeceðiz.
-            MigrationBackup.Players.AddRange(playerList);
-
-            // 3. Lobby Ýsmini Yedekle
-            // Þu anki Lobby verisine eriþmemiz lazým.
-            var currentLobby = MultiplayerGameManager.Instance.GetLobby();
-            if (currentLobby != null)
+            if (GameControl.Instance.isIntentionalDisconnect)
             {
-                MigrationBackup.LobbyName = currentLobby.Name;
-                MigrationBackup.MaxPlayers = currentLobby.MaxPlayers; // EKLENDÝ
-                MigrationBackup.IsPrivate = currentLobby.IsPrivate;   // EKLENDÝ
+                Disconnect();
+                GameControl.Instance.isIntentionalDisconnect = false;
+                return;
             }
 
-            // --- YEDEKLEME BÝTÝÞÝ ---
-
-            bool iAmHeir = MultiplayerGameManager.Instance.AmITheNextHost();
-
-            //Time.timeScale = 0f;
-            _networkManager.Shutdown();
-
-            await UniTask.Delay(1000, ignoreTimeScale: true);
-
-            if (iAmHeir)
+            if (clientId == 0 || clientId == _networkManager.LocalClientId)
             {
-                Debug.Log("HOST MIGRATION: Yeni Host ben oluyorum!");
 
-                // Singleton yapýna göre HostSingleton'a eriþiyoruz
-                // Eðer senin projende HostSingleton ismi farklýysa (örn: GameManager) onu kullan.
-                await HostSingleton.Instance.HostManager.StartHostMigrationAsync();
-            }
-            else
-            {
-                Debug.Log("HOST MIGRATION: Yeni Host aranýyor...");
+                GameControl.Instance.HandleMigrationStateChanged(MigrationState.MigrateStart);
 
-                // Client Singleton üzerinden yeniden baðlanma döngüsünü baþlat
-                await ClientSingleton.Instance.ClientManager.ReconnectToMigrationAsync();
+                MigrationBackup.Clear();
+
+                var playerList = MultiplayerGameManager.Instance.GetPlayerDataList();
+                MigrationBackup.Players.AddRange(playerList);
+
+                var currentLobby = MultiplayerGameManager.Instance.GetLobby();
+                if (currentLobby != null)
+                {
+                    MigrationBackup.LobbyName = currentLobby.Name;
+                    MigrationBackup.MaxPlayers = currentLobby.MaxPlayers;
+                    MigrationBackup.IsPrivate = currentLobby.IsPrivate;
+                }
+
+                bool iAmHeir = MultiplayerGameManager.Instance.AmITheNextHost();
+
+                _networkManager.Shutdown();
+
+                await UniTask.Delay(1000, ignoreTimeScale: true);
+
+                if (iAmHeir)
+                {
+                    await HostSingleton.Instance.HostManager.StartHostMigrationAsync();
+                }
+                else
+                {
+                    await ClientSingleton.Instance.ClientManager.ReconnectToMigrationAsync();
+                }
             }
         }
         else
