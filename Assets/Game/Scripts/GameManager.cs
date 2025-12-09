@@ -12,7 +12,6 @@ public class GameManager : NetworkBehaviour
 
     [SerializeField] private GameState _currentGameState;
 
-
     void Awake()
     {
         Instance = this;
@@ -22,8 +21,6 @@ public class GameManager : NetworkBehaviour
     {
         if (IsServer)
         {
-            //_currentGameState = newGameState;
-            //OnGameStateChanged?.Invoke(newGameState);
             ChangeGameStateRpc(newGameState);
         }
     }

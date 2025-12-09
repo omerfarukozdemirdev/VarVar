@@ -21,7 +21,7 @@ public class HostManager : IDisposable
     private Allocation allocation;
     private Lobby joinedLobby;
 
-    public async UniTask StartHostAsync(string lobbyName, int lobbyMaxPlayer, bool isPrivate)
+    public async UniTask StartHostAsync(string lobbyName, int lobbyMaxPlayer, bool isPrivate, bool loadScene = true)
     {
         try
         {
@@ -64,7 +64,11 @@ public class HostManager : IDisposable
 
             NetworkServer.OnClientLeft += HandleClientLeft;
             Debug.Log(joinedLobby.LobbyCode);
-            NetworkManager.Singleton.SceneManager.LoadScene(Constants.SceneNames.Room, LoadSceneMode.Single);
+
+            if (loadScene)
+            {
+                NetworkManager.Singleton.SceneManager.LoadScene(Constants.SceneNames.Room, LoadSceneMode.Single);
+            }
         }
         catch(LobbyServiceException lobbyServiceException)
         {
@@ -127,5 +131,21 @@ public class HostManager : IDisposable
         NetworkServer.OnClientLeft -= HandleClientLeft;
 
         NetworkServer?.Dispose();
+    }
+
+    //
+
+    public async UniTask StartHostMigrationAsync()
+    {
+
+        // Eski bilgilerle odayý tekrar kuruyoruz
+        // Not: Orijinal StartHostAsync fonksiyonunu çaðýrýyoruz
+        await StartHostAsync(
+            MigrationBackup.LobbyName,
+            MigrationBackup.MaxPlayers,
+            MigrationBackup.IsPrivate,
+            loadScene: false // <-- Sahne yükleme, Game sahnesinde kal!
+        );
+
     }
 }

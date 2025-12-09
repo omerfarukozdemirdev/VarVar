@@ -3393,7 +3393,7 @@ MonoBehaviour:
   disconnetPopup: {fileID: 5374562838557262382}
   disconnetPopupNickName: {fileID: 5374562838557262381}
   TestMode: 0
-  timeOutTimer: 15
+  timeOutTimer: 150
   betTimer: 12
   betTimerFilled: {fileID: 1333306696}
   selectSoloModePanel: {fileID: 415774672}
@@ -3408,6 +3408,7 @@ MonoBehaviour:
   networkPlayingInd: 0
   networkWinInd: 0
   networkReceivedClientHandCounter: 0
+  IsNetworkMigrationActive: 0
 --- !u!4 &327959629
 Transform:
   m_ObjectHideFlags: 0
@@ -18260,6 +18261,7 @@ MonoBehaviour:
   _animationDuration: 0.5
   _playersLoaded:
     m_InternalValue: 0
+  _migrationWaitTime: 10
 --- !u!1001 &5139159923076281143
 PrefabInstance:
   m_ObjectHideFlags: 0

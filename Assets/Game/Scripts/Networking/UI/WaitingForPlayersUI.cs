@@ -22,7 +22,7 @@ public class WaitingForPlayersUI : MonoBehaviour
         Hide();
     }
 
-    private void Show()
+    public void Show()
     {
         gameObject.SetActive(true);
     }

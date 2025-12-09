@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ActorControl : MonoBehaviour
 {
     public bool player;
+    public bool onlineBot;
 
     public Transform actorTransform;
     public List<Card> cardsInHand;
@@ -568,6 +569,87 @@ public class ActorControl : MonoBehaviour
         drinkContent.GetComponent<Image>().sprite = gameControl.drinkController.drinks[index].Icon;
         iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
         iTween.ScaleTo(drinkContent.gameObject, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce, "delay", 12f));
+    }
+
+    public void DecidePassPlayer()
+    {
+        StartCoroutine(DecidePass());
+    }
+
+    IEnumerator DecidePass()
+    {
+        gameControl.makeNoise.PlaySFX(14, 0);
+        iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * 1.5f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+
+        for (int i = 0; i < speechBalloon.transform.childCount; i++)
+            speechBalloon.transform.GetChild(i).gameObject.SetActive(false);
+
+        if (player)
+            yield return new WaitForSeconds(.1f);
+        else
+            yield return new WaitForSeconds(Random.Range(.5f, 1.2f));
+
+        if (pass)
+        {
+            gameControl.makeNoise.PlaySFX(8, 0);
+
+            speechBalloon.SetActive(true);
+            speechBalloon.transform.GetChild(1).gameObject.SetActive(true);
+
+            iTween.ScaleFrom(speechBalloon, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
+
+            yield return new WaitForSeconds(.5f);
+
+            GetComponent<CanvasGroup>().alpha = .1f;
+            iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one * .9f, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+
+            passCounter++;
+        }
+        //else
+        //{
+        //    if (betUp)
+        //    {
+        //        speechBalloon.SetActive(true);
+
+        //        if (gameControl.betUp)
+        //        {
+        //            speechBalloon.transform.GetChild(0).gameObject.SetActive(true);
+        //            gameControl.makeNoise.PlaySFX(9, 0);
+        //        }
+
+        //        else
+        //        {
+        //            speechBalloon.transform.GetChild(2).gameObject.SetActive(true);
+        //            gameControl.makeNoise.PlaySFX(10, 0);
+        //        }
+
+        //        gameControl.BetUP(this);
+        //    }
+        //    else
+        //    {
+        //        speechBalloon.SetActive(true);
+        //        speechBalloon.transform.GetChild(0).gameObject.SetActive(true);
+
+        //        gameControl.makeNoise.PlaySFX(9, 0);
+        //    }
+
+        //    iTween.ScaleFrom(speechBalloon, iTween.Hash("scale", Vector3.zero, "time", .3f, "easetype", iTween.EaseType.easeOutBounce));
+
+        //    yield return new WaitForSeconds(.5f);
+
+        //    if (gameControl.betUp)
+        //        SetMoney(1000);
+        //    else
+        //        SetMoney(500);
+
+        //    gameControl.makeNoise.PlaySFX(7, 0);
+
+        //    iTween.ScaleTo(transform.GetChild(0).gameObject, iTween.Hash("scale", Vector3.one, "time", .3f, "easetype", iTween.EaseType.easeOutQuad));
+        //}
+
+        //yield return new WaitForSeconds(.5f);
+
+        //gameControl.ActorDecisiton();
     }
 }
 

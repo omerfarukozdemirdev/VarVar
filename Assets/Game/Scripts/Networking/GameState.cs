@@ -1,6 +1,8 @@
 public enum GameState : byte
 {
     WaitingForPlayers,
+    Countdown,
+    PrepareGame,
     Playing,
-    GameOver
+    EndTour
 }
