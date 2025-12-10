@@ -55,6 +55,7 @@ public class MenuController : MonoBehaviour
         //    playButton.interactable = false;
         //    lowMoneyMessage.SetActive(true);
         //}
+        Time.timeScale = 1;
     }
 
     public void PlayGame()

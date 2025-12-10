@@ -107,9 +107,9 @@ public class HostManager : IDisposable
         Shutdown();
     }
 
-    public async void Shutdown()
+    public async UniTask Shutdown()
     {
-        if(!string.IsNullOrEmpty(joinedLobby.Id))
+        if (joinedLobby != null && !string.IsNullOrEmpty(joinedLobby.Id))
         {
             try
             {
@@ -123,9 +123,11 @@ public class HostManager : IDisposable
             joinedLobby = null;
         }
 
-        NetworkServer.OnClientLeft -= HandleClientLeft;
-
-        NetworkServer?.Dispose();
+        if (NetworkServer != null)
+        {
+            NetworkServer.OnClientLeft -= HandleClientLeft;
+            NetworkServer.Dispose();
+        }
     }
 
 

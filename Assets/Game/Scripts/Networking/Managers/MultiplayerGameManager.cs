@@ -14,6 +14,8 @@ public class MultiplayerGameManager : NetworkBehaviour
 
     private NetworkList<PlayerDataSerializable> _playerDataNetworkList = new NetworkList<PlayerDataSerializable>();
 
+    private bool isShuttingDown = false;
+
     private void Awake()
     {
         Instance = this;
@@ -35,18 +37,36 @@ public class MultiplayerGameManager : NetworkBehaviour
 
     private void NetworkManager_Server_OnClientDisconnectedCallback(ulong clientId)
     {
+        if (isShuttingDown) return;
+        
         for (int i = 0; i < _playerDataNetworkList.Count; ++i)
         {
-            PlayerDataSerializable playerData = _playerDataNetworkList[i];
-            if (playerData.ClientId == clientId)
+            if (_playerDataNetworkList[i].ClientId == clientId)
             {
                 _playerDataNetworkList.RemoveAt(i);
+                break;
+            }
+        }
+
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == Constants.SceneNames.Game)
+        {
+            if (GameManager.Instance.GetGameState() == GameState.PrepareGame)
+            {
+                KickAllPlayersAndShutdown();
+                return;
+            }
+
+            if (_playerDataNetworkList.Count <= 1)
+            {
+                KickAllPlayersAndShutdown();
             }
         }
     }
 
     private void NetworkManager_Server_OnClientConnectedCallback(ulong clientId)
     {
+        if (isShuttingDown) return;
+
         for (int i = 0; i < _playerDataNetworkList.Count; ++i)
         {
             if (_playerDataNetworkList[i].ClientId == clientId)
@@ -162,5 +182,64 @@ public class MultiplayerGameManager : NetworkBehaviour
             list.Add(player);
         }
         return list;
+    }
+
+    private async void KickAllPlayersAndShutdown()
+    {
+        if (isShuttingDown) return;
+
+        isShuttingDown = true;
+
+        if (NetworkManager.Singleton == null)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(Constants.SceneNames.Menu);
+            Time.timeScale = 1;
+            return;
+        }
+
+        if (NetworkManager.Singleton.IsServer)
+        {
+            ForceDisconnectClientRpc();
+
+            float timeOut = 3.0f;
+            while (NetworkManager.Singleton.ConnectedClientsIds.Count > 1 && timeOut > 0)
+            {
+                timeOut -= Time.unscaledDeltaTime;
+                await UniTask.Yield();
+            }
+
+            await UniTask.Delay(100, ignoreTimeScale: true);
+        }
+
+        if (HostSingleton.Instance?.HostManager != null)
+        {
+            await HostSingleton.Instance.HostManager.Shutdown();
+        }
+
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening)
+        {
+            NetworkManager.Singleton.Shutdown();
+        }
+
+        isShuttingDown = false;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(Constants.SceneNames.Menu);
+        Time.timeScale = 1;
+    }
+
+    [ClientRpc]
+    private void ForceDisconnectClientRpc()
+    {
+        if (NetworkManager.Singleton.IsHost) return;
+
+        if (ClientSingleton.Instance?.ClientManager != null)
+        {
+            ClientSingleton.Instance.ClientManager.Disconnect();
+        }
+        else
+        {
+            NetworkManager.Singleton.Shutdown();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(Constants.SceneNames.Menu);
+            Time.timeScale = 1;
+        }
     }
 }

@@ -21,6 +21,12 @@ public class NetworkClient : IDisposable
 
         if (SceneManager.GetActiveScene().name == Constants.SceneNames.Game)
         {
+            if (GameManager.Instance.GetGameState() == GameState.PrepareGame)
+            {
+                Disconnect();
+                return;
+            }
+
             if (GameControl.Instance.isIntentionalDisconnect)
             {
                 Disconnect();
@@ -55,6 +61,17 @@ public class NetworkClient : IDisposable
                 if (iAmHeir)
                 {
                     await HostSingleton.Instance.HostManager.StartHostMigrationAsync();
+
+                    if (MigrationBackup.Players.Count <= 2)
+                    {
+                        await UniTask.Delay(500, ignoreTimeScale: true);
+
+                        HostSingleton.Instance.HostManager.Shutdown();
+
+                        SceneManager.LoadScene(Constants.SceneNames.Menu);
+                        Time.timeScale = 1;
+                        return;
+                    }
                 }
                 else
                 {
@@ -73,11 +90,20 @@ public class NetworkClient : IDisposable
         if(SceneManager.GetActiveScene().name == Constants.SceneNames.Room)
         {
             SceneManager.LoadScene(Constants.SceneNames.Menu);
+            Time.timeScale = 1;
         }
         else if(SceneManager.GetActiveScene().name == Constants.SceneNames.Game)
         {
-            var gamecontrol = GameControl.Instance;
-            gamecontrol.ClientDisconnectServerRpc((byte)gamecontrol.actorControls.IndexOf(gamecontrol.playerControl.actorControl));
+            if(GameManager.Instance.GetGameState() == GameState.PrepareGame)
+            {
+                SceneManager.LoadScene(Constants.SceneNames.Menu);
+            }
+            else if(GameManager.Instance.GetGameState() == GameState.Playing)
+            {
+                var gamecontrol = GameControl.Instance;
+                gamecontrol.ClientDisconnectServerRpc((byte)gamecontrol.actorControls.IndexOf(gamecontrol.playerControl.actorControl));
+            }
+
             Time.timeScale = 1;
         }
 
