@@ -20,6 +20,7 @@ public class MultiplayerMenuUI : MonoBehaviour
     [SerializeField] private RectTransform _lobbiesBackgroundTransform;
     [SerializeField] private TMP_Text _welcomeText;
     [SerializeField] private TMP_Text _warningText;
+    public GameObject lobbyClickBlocker;
 
     [Header("Settings")]
     [SerializeField] private float _animationDuration = 1f;

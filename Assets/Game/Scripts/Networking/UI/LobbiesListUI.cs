@@ -59,7 +59,7 @@ public class LobbiesListUI : MonoBehaviour
         }
         catch (LobbyServiceException lobbyServiceException)
         {
-            Debug.LogError(lobbyServiceException);
+            Debug.Log(lobbyServiceException);
         }
 
         _isRefreshing = false;
@@ -69,6 +69,7 @@ public class LobbiesListUI : MonoBehaviour
     {
         if (_isJoining) { return; }
 
+        MultiplayerMenuUI.Instance.lobbyClickBlocker.SetActive(true);
         _isJoining = true;
 
         try
@@ -80,8 +81,8 @@ public class LobbiesListUI : MonoBehaviour
             Debug.Log(lobbyServiceException);
             MultiplayerMenuUI.Instance.AnimateWarningText("Game has started!");
             RefreshList();
+            MultiplayerMenuUI.Instance.lobbyClickBlocker.SetActive(false);
         }
-
         _isJoining = false;
     }
 }

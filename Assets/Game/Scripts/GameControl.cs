@@ -210,6 +210,8 @@ public class GameControl : NetworkBehaviour
             networkPlayingInd = 0;
             networkReceivedClientHandCounter = 0;
         }
+
+        GameManager.Instance.ChangeGameState(GameState.WaitingForPlayers);
     }
 
     public void NewGame()

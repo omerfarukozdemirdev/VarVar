@@ -21,7 +21,7 @@ public class NetworkClient : IDisposable
 
         if (SceneManager.GetActiveScene().name == Constants.SceneNames.Game)
         {
-            if (GameManager.Instance.GetGameState() == GameState.PrepareGame)
+            if (GameManager.Instance.GetGameState() == GameState.PrepareGame || GameManager.Instance.GetGameState() == GameState.WaitingForPlayers)
             {
                 Disconnect();
                 return;
@@ -94,7 +94,7 @@ public class NetworkClient : IDisposable
         }
         else if(SceneManager.GetActiveScene().name == Constants.SceneNames.Game)
         {
-            if(GameManager.Instance.GetGameState() == GameState.PrepareGame)
+            if(GameManager.Instance.GetGameState() == GameState.PrepareGame || GameManager.Instance.GetGameState() == GameState.WaitingForPlayers)
             {
                 SceneManager.LoadScene(Constants.SceneNames.Menu);
             }

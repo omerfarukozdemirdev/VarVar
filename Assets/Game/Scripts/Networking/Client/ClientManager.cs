@@ -46,6 +46,8 @@ public class ClientManager : IDisposable
     {
         try
         {
+            MultiplayerMenuUI.Instance.lobbyClickBlocker.SetActive(true);
+
             joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync(lobbyCode);
 
             string relayJoinCode = joinedLobby.Data["RelayJoinCode"].Value;
@@ -71,6 +73,7 @@ public class ClientManager : IDisposable
         catch (LobbyServiceException e)
         {
             Debug.Log(e);
+            MultiplayerMenuUI.Instance.lobbyClickBlocker.SetActive(false);
         }
     }
 
@@ -130,6 +133,7 @@ public class ClientManager : IDisposable
     {
         try
         {
+            MultiplayerMenuUI.Instance.lobbyClickBlocker.SetActive(true);
             joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
 
             string relayJoinCode = joinedLobby.Data["RelayJoinCode"].Value;
@@ -155,6 +159,7 @@ public class ClientManager : IDisposable
         catch (LobbyServiceException e)
         {
             Debug.Log(e);
+            MultiplayerMenuUI.Instance.lobbyClickBlocker.SetActive(false);
         }
     }
 

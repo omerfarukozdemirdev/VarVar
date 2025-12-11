@@ -50,7 +50,7 @@ public class MultiplayerGameManager : NetworkBehaviour
 
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == Constants.SceneNames.Game)
         {
-            if (GameManager.Instance.GetGameState() == GameState.PrepareGame)
+            if (GameManager.Instance.GetGameState() == GameState.PrepareGame || GameManager.Instance.GetGameState() == GameState.WaitingForPlayers)
             {
                 KickAllPlayersAndShutdown();
                 return;

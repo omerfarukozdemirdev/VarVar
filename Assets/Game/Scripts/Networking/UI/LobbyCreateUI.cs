@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class LobbyCreateUI : MonoBehaviour
 {
     [SerializeField] private Button createButton;
+    [SerializeField] private Button closeButton;
     [SerializeField] private TMP_InputField lobbyNameInputField;
     [SerializeField] private TMP_InputField lobbyRoomCapInputField;
     [SerializeField] private Toggle isPrivateToggle;
@@ -23,6 +24,7 @@ public class LobbyCreateUI : MonoBehaviour
     public void OnCreateLobbyButtonClicked()
     {
         createButton.interactable = false;
+        closeButton.interactable = false;
         CreateLobby();
     }
 

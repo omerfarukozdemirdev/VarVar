@@ -28,6 +28,7 @@ public class LobbyItem : MonoBehaviour
 
     public void OnJoinButtonClicked()
     {
+        _joinButton.interactable = false;
         _lobbiesListUI.JoinAsync(_lobby);
     }
 }
