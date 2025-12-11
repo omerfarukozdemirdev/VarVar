@@ -62,9 +62,9 @@ public class CharacterSelectUI : MonoBehaviour
         if (NetworkManager.Singleton.ConnectedClientsList.Count == MultiplayerGameManager.Instance.GetLobby().MaxPlayers)
         {
             if (CharacterSelectReady.Instance.AreAllPlayersReady())
-                _roomPlayersStateText.text = "Oda sahibinin oyunu baþlatmasý bekleniyor...";
+                _roomPlayersStateText.text = "Oda sahibinin oyunu baslatmasi bekleniyor...";
             else
-                _roomPlayersStateText.text = "Tüm oyuncularýn hazýr olmasý bekleniyor...";
+                _roomPlayersStateText.text = "Tum oyuncularin hazir olmasi bekleniyor...";
         }
         else
         {
@@ -97,7 +97,7 @@ public class CharacterSelectUI : MonoBehaviour
 
         if (NetworkManager.Singleton.ConnectedClientsList.Count == MultiplayerGameManager.Instance.GetLobby().MaxPlayers)
         {
-            _roomPlayersStateText.text = "Tüm oyuncularýn hazýr olmasý bekleniyor...";
+            _roomPlayersStateText.text = "Tum oyuncularin hazir olmasi bekleniyor...";
         }
         else
         {
@@ -109,7 +109,7 @@ public class CharacterSelectUI : MonoBehaviour
     {
         if (NetworkManager.Singleton.ConnectedClientsList.Count == MultiplayerGameManager.Instance.GetLobby().MaxPlayers)
         {
-            _roomPlayersStateText.text = "Oda sahibinin oyunu baþlatmasý bekleniyor...";
+            _roomPlayersStateText.text = "Oda sahibinin oyunu baslatmasi bekleniyor...";
             if (NetworkManager.Singleton.IsHost)
                 SetStartButtonInteractable(true);
         }

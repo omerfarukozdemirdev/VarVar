@@ -2080,7 +2080,7 @@ MonoBehaviour:
   m_HeartbeatTimeoutMS: 500
   m_ConnectTimeoutMS: 1000
   m_MaxConnectAttempts: 5
-  m_DisconnectTimeoutMS: 1000
+  m_DisconnectTimeoutMS: 7500
   ConnectionData:
     Address: 127.0.0.1
     Port: 7777
