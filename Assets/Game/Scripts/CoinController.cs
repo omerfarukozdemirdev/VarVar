@@ -18,8 +18,8 @@ public class CoinController : MonoBehaviour
         coinCount += count;
         PlayerPrefs.SetInt("CoinCount", coinCount);
 
-        coinAttraction.SetActive(false);
-        coinAttraction.SetActive(true);
+        //coinAttraction.SetActive(false);
+        //coinAttraction.SetActive(true);
         SetCoinCountText();
 
     }

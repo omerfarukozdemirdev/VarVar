@@ -20,7 +20,11 @@ public class BuyCoin : MonoBehaviour
         moneyController = FindObjectOfType<MoneyController>();
         coinController = FindObjectOfType<CoinController>();
         amountText.text = amount.ToString() + " Coin";
-        priceText.text = price.ToString() + " Chip";
+
+        if (price > 0)
+            priceText.text = price.ToString() + " Chip";
+        else
+            priceText.text = "Free";
     }
 
     public void Buy()
